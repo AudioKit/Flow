@@ -78,8 +78,6 @@ public struct PatchView: View {
               _ cx: GraphicsContext,
               _ layout: Layout) {
 
-        let inputs = node.inputs
-        let outputs = node.outputs
         let rect = layout.nodeRects[id]
         let pos = rect.origin
 
@@ -91,7 +89,7 @@ public struct PatchView: View {
         cx.draw(Text(node.name), at: pos + CGSize(width: rect.size.width/2, height: 20), anchor: .center)
 
         var i = 0
-        for input in inputs {
+        for input in node.inputs {
             let rect = layout.inputRects[.init(node: id, port: i)]!
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
@@ -100,7 +98,7 @@ public struct PatchView: View {
         }
 
         i = 0
-        for output in outputs {
+        for output in node.outputs {
             let rect = layout.outputRects[.init(node: id, port: i)]!
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
