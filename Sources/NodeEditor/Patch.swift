@@ -1,21 +1,21 @@
 
 import Foundation
 
-struct Patch {
+public struct Patch {
     var nodes: [Node]
     var wires: [Wire]
 }
 
 typealias NodeID = Int
 
-struct Node {
+public struct Node {
     var name: String
     var position: CGPoint
     var inputs: [String]
     var outputs: [String]
 }
 
-struct Wire {
+public struct Wire {
     var from: NodeID
     var output: Int
     var to: NodeID
