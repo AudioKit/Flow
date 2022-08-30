@@ -1,7 +1,7 @@
 
 import Foundation
 
-public struct Patch {
+public struct Patch: Equatable {
     var nodes: [Node]
     var wires: [Wire]
 
@@ -13,7 +13,7 @@ public struct Patch {
 
 public typealias NodeID = Int
 
-public struct Node {
+public struct Node: Equatable {
     var name: String
     var position: CGPoint
     var inputs: [String]
@@ -27,7 +27,7 @@ public struct Node {
     }
 }
 
-public struct Wire {
+public struct Wire: Equatable, Hashable {
     var from: NodeID
     var output: Int
     var to: NodeID
