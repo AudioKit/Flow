@@ -40,12 +40,13 @@ public struct PatchView: View {
         let inputs = node.inputs
         let outputs = node.outputs
 
-        let rect = rect(node: node).offset(by: (id == dragInfo.node ? dragInfo.offset : .zero))
+        let shouldOffset = id == dragInfo.node || selection.contains(id)
+        let rect = rect(node: node).offset(by: (shouldOffset ? dragInfo.offset : .zero))
         let pos = rect.origin
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
 
-        let selected = rect.intersects(dragInfo.selectionRect) || selection.contains(id)
+        let selected = dragInfo.selectionRect != .zero ? rect.intersects(dragInfo.selectionRect) : selection.contains(id)
         cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
 
         cx.draw(Text(node.name), at: pos + CGSize(width: rect.size.width/2, height: 20), anchor: .center)
@@ -128,6 +129,9 @@ public struct PatchView: View {
                 for node in patch.nodes {
                     if rect(node: node).contains(value.startLocation) {
                         patch.nodes[idx].position += value.translation
+                        for id in selection where id != idx {
+                            patch.nodes[id].position += value.translation
+                        }
                         return
                     }
                     idx += 1
