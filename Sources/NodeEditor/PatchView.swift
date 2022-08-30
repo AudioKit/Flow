@@ -42,7 +42,9 @@ public struct PatchView: View {
         let pos = rect.origin
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
-        cx.fill(bg, with: .color(Color(white: 0.2, opacity: 0.6)))
+
+        let selected = rect.intersects(dragInfo.selectionRect)
+        cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
 
         cx.draw(Text(node.name), at: pos + CGSize(width: rect.size.width/2, height: 20), anchor: .center)
 
