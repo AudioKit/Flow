@@ -90,8 +90,7 @@ public struct PatchView: View {
 
     func draw(_ node: Node,
               _ id: NodeID,
-              _ cx: GraphicsContext,
-              _ layout: Layout) {
+              _ cx: GraphicsContext) {
 
         let shouldOffset = id == dragInfo.node || selection.contains(id)
         let offset = (shouldOffset ? dragInfo.offset : .zero)
@@ -204,7 +203,7 @@ public struct PatchView: View {
             var id = 0
             id = 0
             for node in patch.nodes {
-                draw(node, id, cx, layout)
+                draw(node, id, cx)
                 id += 1
             }
 
