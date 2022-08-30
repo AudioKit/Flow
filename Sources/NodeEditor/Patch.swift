@@ -41,6 +41,13 @@ public struct Node: Equatable {
         self.inputs = inputs
         self.outputs = outputs
     }
+
+    func translate(by offset: CGSize) -> Node {
+        var result = self
+        result.position.x += offset.width
+        result.position.y += offset.height
+        return result
+    }
 }
 
 public struct Wire: Equatable, Hashable {
