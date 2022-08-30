@@ -80,11 +80,6 @@ public struct PatchView: View {
             cx.draw(Text(output.name).font(.caption), at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0), anchor: .trailing)
             i += 1
         }
-
-        if dragInfo.selectionRect != .zero {
-            let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
-            cx.stroke(rectPath, with: .color(.cyan))
-        }
     }
 
     let gradient = Gradient(colors: [.magenta, .cyan])
@@ -166,6 +161,11 @@ public struct PatchView: View {
                 let outputRect = outputRect(node: patch.nodes[wire.from], output: wire.output).offset(by: offset(for: wire.from))
                 let inputRect = inputRect(node: patch.nodes[wire.to], input: wire.input).offset(by: offset(for: wire.to))
                 strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
+            }
+
+            if dragInfo.selectionRect != .zero {
+                let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
+                cx.stroke(rectPath, with: .color(.cyan))
             }
         }.gesture(dragGesture)
     }
