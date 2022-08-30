@@ -63,22 +63,18 @@ public struct PatchView: View {
 
         cx.draw(Text(node.name), at: pos + CGSize(width: rect.size.width/2, height: 20), anchor: .center)
 
-        var i = 0
-        for input in node.inputs {
+        for (i, input) in node.inputs.enumerated() {
             let rect = inputRect(node: node, input: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
             cx.draw(Text(input.name).font(.caption), at: rect.center + CGSize(width: (portSize.width/2 + portSpacing), height: 0), anchor: .leading)
-            i += 1
         }
 
-        i = 0
-        for output in node.outputs {
+        for (i, output) in node.outputs.enumerated() {
             let rect = outputRect(node: node, output: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
             cx.draw(Text(output.name).font(.caption), at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0), anchor: .trailing)
-            i += 1
         }
     }
 
@@ -118,6 +114,7 @@ public struct PatchView: View {
                             return
                         }
                     }
+
                     if rect(node: node).contains(value.startLocation) {
                         state = DragInfo(node: idx, offset: value.translation)
                         return
@@ -127,8 +124,7 @@ public struct PatchView: View {
                 state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
             }
             .onEnded { value in
-                var idx = 0
-                for node in patch.nodes {
+                for (idx, node) in patch.nodes.enumerated() {
                     for (outputIndex, _) in node.outputs.enumerated() {
                         if outputRect(node: node, output: outputIndex).contains(value.startLocation) {
                             for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
@@ -155,12 +151,10 @@ public struct PatchView: View {
 
                 selection = Set<NodeID>()
                 let selectionRect = CGRect(origin: value.startLocation, size: value.translation)
-                idx = 0
-                for node in patch.nodes {
+                for (idx, node) in patch.nodes.enumerated() {
                     if selectionRect.intersects(rect(node: node)) {
                         selection.insert(idx)
                     }
-                    idx += 1
                 }
             }
     }
@@ -170,10 +164,8 @@ public struct PatchView: View {
 
             cx.addFilter(.shadow(radius: 5))
 
-            var id = 0
-            for node in patch.nodes {
-                draw(node, id, cx)
-                id += 1
+            for (idx, node) in patch.nodes.enumerated() {
+                draw(node, idx, cx)
             }
 
             for wire in patch.wires {
