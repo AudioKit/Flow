@@ -155,18 +155,14 @@ public struct PatchView: View {
 
             }
             .onEnded { value in
-                for (idx, node) in patch.nodes.enumerated() {
-                    if let outputIndex = findOutput(node: node, point: value.startLocation) {
-                        for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
-                            if let inputIndex = findInput(node: destinationNode, point: value.location) {
-                                patch.wires.append(Wire(from: idx, output: outputIndex, to: destinationIndex, input: inputIndex))
-                            }
-                        }
-                        return
-                    }
-                }
 
-                if let nodeIndex = findNode(point: value.startLocation) {
+                if let (nodeIndex, outputIndex) = findOutput(point: value.startLocation) {
+                    for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
+                        if let inputIndex = findInput(node: destinationNode, point: value.location) {
+                            patch.wires.append(Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
+                        }
+                    }
+                } else if let nodeIndex = findNode(point: value.startLocation) {
                     patch.nodes[nodeIndex].position += value.translation
                     for id in selection where id != nodeIndex {
                         patch.nodes[id].position += value.translation
