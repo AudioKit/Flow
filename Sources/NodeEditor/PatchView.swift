@@ -19,7 +19,7 @@ struct PatchView: View {
               _ cx: GraphicsContext,
               _ inputRects: inout [PortInfo: CGRect],
               _ outputRects: inout [PortInfo: CGRect]) {
-        
+
         let inputs = node.inputs
         let outputs = node.outputs
 
@@ -63,7 +63,46 @@ struct PatchView: View {
         }
     }
 
+    let gradient = Gradient(colors: [.magenta, .cyan])
+
+    func strokeWire(cx: GraphicsContext, from: CGPoint, to: CGPoint) {
+
+        let d = 0.4 * abs(to.x - from.x)
+        var path = Path()
+        path.move(to: from)
+        path.addCurve(to: to,
+                      control1: CGPoint(x: from.x + d, y: from.y),
+                      control2: CGPoint(x: to.x - d, y: to.y))
+
+        cx.stroke(path,
+                  with: .linearGradient(gradient, startPoint: from, endPoint: to),
+                  style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
+
+    }
+
     var body: some View {
-        Text("placeholder")
+        Canvas { cx, size in
+
+            var inputRects: [PortInfo: CGRect] = [:]
+            var outputRects: [PortInfo: CGRect] = [:]
+
+            cx.addFilter(.shadow(radius: 5))
+
+            var id = 0
+            for node in patch.nodes {
+                draw(node, id, cx, &inputRects, &outputRects)
+                id += 1
+            }
+
+            for wire in patch.wires {
+
+                if let outputRect = outputRects[PortInfo(node: wire.from, port: wire.output)],
+                   let inputRect = inputRects[PortInfo(node: wire.to, port: wire.input)] {
+
+                    strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
+
+                }
+            }
+        }
     }
 }
