@@ -152,7 +152,7 @@ public struct PatchView: View {
                 } else {
                     state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
                 }
-                
+
             }
             .onEnded { value in
                 for (idx, node) in patch.nodes.enumerated() {
@@ -164,21 +164,20 @@ public struct PatchView: View {
                         }
                         return
                     }
-
-                    if rect(node: node).contains(value.startLocation) {
-                        patch.nodes[idx].position += value.translation
-                        for id in selection where id != idx {
-                            patch.nodes[id].position += value.translation
-                        }
-                        return
-                    }
                 }
 
-                selection = Set<NodeID>()
-                let selectionRect = CGRect(origin: value.startLocation, size: value.translation)
-                for (idx, node) in patch.nodes.enumerated() {
-                    if selectionRect.intersects(rect(node: node)) {
-                        selection.insert(idx)
+                if let nodeIndex = findNode(point: value.startLocation) {
+                    patch.nodes[nodeIndex].position += value.translation
+                    for id in selection where id != nodeIndex {
+                        patch.nodes[id].position += value.translation
+                    }
+                } else {
+                    selection = Set<NodeID>()
+                    let selectionRect = CGRect(origin: value.startLocation, size: value.translation)
+                    for (idx, node) in patch.nodes.enumerated() {
+                        if selectionRect.intersects(rect(node: node)) {
+                            selection.insert(idx)
+                        }
                     }
                 }
             }
