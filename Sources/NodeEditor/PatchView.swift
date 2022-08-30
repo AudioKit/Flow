@@ -93,7 +93,10 @@ public struct PatchView: View {
               _ cx: GraphicsContext,
               _ layout: Layout) {
 
-        let rect = layout.nodeRects[id]
+        let shouldOffset = id == dragInfo.node || selection.contains(id)
+        let offset = (shouldOffset ? dragInfo.offset : .zero)
+        let rect = rect(node: node).offset(by: offset)
+
         let pos = rect.origin
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
@@ -105,7 +108,7 @@ public struct PatchView: View {
 
         var i = 0
         for input in node.inputs {
-            let rect = layout.inputRects[.init(node: id, port: i)]!
+            let rect = inputRect(node: node, input: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
             cx.draw(Text(input.name).font(.caption), at: rect.center + CGSize(width: (portSize.width/2 + portSpacing), height: 0), anchor: .leading)
@@ -114,7 +117,7 @@ public struct PatchView: View {
 
         i = 0
         for output in node.outputs {
-            let rect = layout.outputRects[.init(node: id, port: i)]!
+            let rect = outputRect(node: node, output: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
             cx.draw(Text(output.name).font(.caption), at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0), anchor: .trailing)
