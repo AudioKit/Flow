@@ -38,8 +38,8 @@ public struct PatchView: View {
         let inputs = node.inputs
         let outputs = node.outputs
 
-        let rect = rect(node: node)
-        let pos = node.position // + (node.name == dragInfo.node ? dragInfo.offset : .zero)
+        let rect = rect(node: node).offset(by: (id == dragInfo.node ? dragInfo.offset : .zero))
+        let pos = rect.origin
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
         cx.fill(bg, with: .color(Color(white: 0.2, opacity: 0.6)))
@@ -92,6 +92,27 @@ public struct PatchView: View {
 
     }
 
+    struct DragInfo {
+        var node: NodeID = 0
+        var offset: CGSize = .zero
+    }
+
+    @GestureState var dragInfo = DragInfo()
+
+    var dragGesture: some Gesture {
+        DragGesture(minimumDistance: 0)
+            .updating($dragInfo) { value, state, _ in
+                var idx = 0
+                for node in patch.nodes {
+                    if rect(node: node).contains(value.startLocation) {
+                        state = DragInfo(node: idx, offset: value.translation)
+                        return
+                    }
+                    idx += 1
+                }
+            }
+    }
+
     public var body: some View {
         Canvas { cx, size in
 
@@ -115,6 +136,6 @@ public struct PatchView: View {
 
                 }
             }
-        }
+        }.gesture(dragGesture)
     }
 }
