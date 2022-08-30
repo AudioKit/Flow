@@ -77,6 +77,13 @@ public struct PatchView: View {
         return nil
     }
 
+    /// Search for a node which intersects a point.
+    func findNode(point: CGPoint) -> NodeID? {
+        patch.nodes.enumerated().first { (index, node) in
+            rect(node: node).contains(point)
+        }?.0
+    }
+
     func draw(_ node: Node,
               _ id: NodeID,
               _ cx: GraphicsContext) {
@@ -143,11 +150,9 @@ public struct PatchView: View {
                     return
                 }
 
-                for (idx, node) in patch.nodes.enumerated() {
-                    if rect(node: node).contains(value.startLocation) {
-                        state = DragInfo(node: idx, offset: value.translation)
-                        return
-                    }
+                if let nodeIndex = findNode(point: value.startLocation) {
+                    state = DragInfo(node: nodeIndex, offset: value.translation)
+                    return
                 }
 
                 state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
