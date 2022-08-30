@@ -67,6 +67,16 @@ public struct PatchView: View {
         return nil
     }
 
+    /// Search for an output in the whole patch.
+    func findOutput(point: CGPoint) -> (NodeID, Int)? {
+        for (nodeIndex, node) in patch.nodes.enumerated() {
+            if let portIndex = findOutput(node: node, point: point) {
+                return (nodeIndex, portIndex)
+            }
+        }
+        return nil
+    }
+
     func draw(_ node: Node,
               _ id: NodeID,
               _ cx: GraphicsContext) {
@@ -127,12 +137,13 @@ public struct PatchView: View {
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { value, state, _ in
-                for (idx, node) in patch.nodes.enumerated() {
-                    if let portIndex = findOutput(node: node, point: value.startLocation) {
-                        state = DragInfo(output: portIndex, node: idx, offset: value.translation)
-                        return
-                    }
 
+                if let (nodeIndex, portIndex) = findOutput(point: value.startLocation) {
+                    state = DragInfo(output: portIndex, node: nodeIndex, offset: value.translation)
+                    return
+                }
+
+                for (idx, node) in patch.nodes.enumerated() {
                     if rect(node: node).contains(value.startLocation) {
                         state = DragInfo(node: idx, offset: value.translation)
                         return
