@@ -147,15 +147,12 @@ public struct PatchView: View {
 
                 if let (nodeIndex, portIndex) = findOutput(point: value.startLocation) {
                     state = DragInfo(output: portIndex, node: nodeIndex, offset: value.translation)
-                    return
-                }
-
-                if let nodeIndex = findNode(point: value.startLocation) {
+                } else if let nodeIndex = findNode(point: value.startLocation) {
                     state = DragInfo(node: nodeIndex, offset: value.translation)
-                    return
+                } else {
+                    state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
                 }
-
-                state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
+                
             }
             .onEnded { value in
                 for (idx, node) in patch.nodes.enumerated() {
