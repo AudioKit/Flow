@@ -73,6 +73,11 @@ public struct PatchView: View {
             y += portSize.height + portSpacing
             i += 1
         }
+
+        if dragInfo.selectionRect != .zero {
+            let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
+            cx.stroke(rectPath, with: .color(.cyan))
+        }
     }
 
     let gradient = Gradient(colors: [.magenta, .cyan])
@@ -95,6 +100,7 @@ public struct PatchView: View {
     struct DragInfo {
         var node: NodeID = 0
         var offset: CGSize = .zero
+        var selectionRect: CGRect = .zero
     }
 
     @GestureState var dragInfo = DragInfo()
@@ -110,6 +116,8 @@ public struct PatchView: View {
                     }
                     idx += 1
                 }
+
+                state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
             }
             .onEnded { value in
                 var idx = 0
