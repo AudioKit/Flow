@@ -181,6 +181,10 @@ public struct PatchView: View {
                 strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
             }
 
+            if let output = dragInfo.output {
+                let outputRect = outputRect(node: patch.nodes[dragInfo.node], output: output)
+                strokeWire(cx: cx, from: outputRect.center, to: outputRect.center + dragInfo.offset)
+            }
             if dragInfo.selectionRect != .zero {
                 let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
                 cx.stroke(rectPath, with: .color(.cyan))
