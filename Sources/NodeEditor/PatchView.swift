@@ -1,5 +1,3 @@
-
-
 import Foundation
 import SwiftUI
 
@@ -7,7 +5,7 @@ import SwiftUI
 ///
 /// Draws everything using a single Canvas with manual layout. We found this is faster than
 /// using a View for each Node.
-struct PatchView: View {
+public struct PatchView: View {
     @Binding var patch: Patch
 
     let portSize = CGSize(width: 20, height: 20)
@@ -84,7 +82,7 @@ struct PatchView: View {
 
     }
 
-    var body: some View {
+    public var body: some View {
         Canvas { cx, size in
 
             var inputRects: [PortInfo: CGRect] = [:]
