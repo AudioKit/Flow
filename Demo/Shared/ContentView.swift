@@ -5,7 +5,6 @@ class DemoData: ObservableObject {
     @Published var patch: Patch
 
     init() {
-        var nodes: [Node] = []
 
         let generator = Node(name: "generator",
                              position: CGPoint(x: 100, y: 100),
@@ -26,9 +25,7 @@ class DemoData: ObservableObject {
                                         type: .signal)],
                           outputs: [])
 
-        nodes.append(generator)
-        nodes.append(processor)
-        nodes.append(output)
+        let nodes = [generator, processor, output]
 
         let wire1 = Wire(from: 0, output: 0, to: 1, input: 0)
         let wire2 = Wire(from: 1, output: 0, to: 2, input: 0)
