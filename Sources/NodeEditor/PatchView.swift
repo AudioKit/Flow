@@ -29,12 +29,27 @@ public struct PatchView: View {
         var outputRects: [PortInfo: CGRect] = [:]
     }
 
+    /// Calculates the boudning rectangle for a node.
     func rect(node: Node) -> CGRect {
 
         let maxio = max(node.inputs.count, node.outputs.count)
         let size = CGSize(width: nodeWidth, height: CGFloat(maxio * 30 + 40))
 
         return CGRect(origin: node.position, size: size)
+    }
+
+    /// Calculates the bounding rectangle for an input port (not including the name).
+    func inputRect(node: Node, input: Int) -> CGRect {
+        let pos = rect(node: node).origin
+        let y = 40 + CGFloat(input) * (portSize.height + portSpacing)
+        return CGRect(origin: pos + CGSize(width: portSpacing, height: y), size: portSize)
+    }
+
+    /// Calculates the bounding rectangle for an output port (not including the name).
+    func outputRect(node: Node, output: Int) -> CGRect {
+        let pos = rect(node: node).origin
+        let y = 40 + CGFloat(output) * (portSize.height + portSpacing)
+        return CGRect(origin: pos + CGSize(width: nodeWidth - portSpacing - portSize.width, height: y), size: portSize)
     }
 
     var layout: Layout {
