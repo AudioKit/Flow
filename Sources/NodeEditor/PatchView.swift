@@ -47,6 +47,16 @@ public struct PatchView: View {
         return dragInfo.offset
     }
 
+    /// Search for outputs.
+    func findOutput(node: Node, point: CGPoint) -> Int? {
+        for (portIndex, _) in node.outputs.enumerated() {
+            if outputRect(node: node, output: portIndex).contains(point) {
+                return portIndex
+            }
+        }
+        return nil
+    }
+
     func draw(_ node: Node,
               _ id: NodeID,
               _ cx: GraphicsContext) {
@@ -125,18 +135,16 @@ public struct PatchView: View {
             }
             .onEnded { value in
                 for (idx, node) in patch.nodes.enumerated() {
-                    for (outputIndex, _) in node.outputs.enumerated() {
-                        if outputRect(node: node, output: outputIndex).contains(value.startLocation) {
-                            for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
-                                for (inputIndex, _) in destinationNode.inputs.enumerated() {
-                                    if inputRect(node: destinationNode, input: inputIndex).contains(value.location) {
-                                        patch.wires.append(Wire(from: idx, output: outputIndex, to: destinationIndex, input: inputIndex))
-                                        return
-                                    }
+                    if let outputIndex = findOutput(node: node, point: value.startLocation) {
+                        for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
+                            for (inputIndex, _) in destinationNode.inputs.enumerated() {
+                                if inputRect(node: destinationNode, input: inputIndex).contains(value.location) {
+                                    patch.wires.append(Wire(from: idx, output: outputIndex, to: destinationIndex, input: inputIndex))
+                                    return
                                 }
                             }
-                            return
                         }
+                        return
                     }
 
                     if rect(node: node).contains(value.startLocation) {
