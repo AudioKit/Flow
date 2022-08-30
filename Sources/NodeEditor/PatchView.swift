@@ -57,6 +57,16 @@ public struct PatchView: View {
         return nil
     }
 
+    /// Search for inputs.
+    func findInput(node: Node, point: CGPoint) -> Int? {
+        for (portIndex, _) in node.inputs.enumerated() {
+            if inputRect(node: node, input: portIndex).contains(point) {
+                return portIndex
+            }
+        }
+        return nil
+    }
+
     func draw(_ node: Node,
               _ id: NodeID,
               _ cx: GraphicsContext) {
@@ -135,11 +145,8 @@ public struct PatchView: View {
                 for (idx, node) in patch.nodes.enumerated() {
                     if let outputIndex = findOutput(node: node, point: value.startLocation) {
                         for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
-                            for (inputIndex, _) in destinationNode.inputs.enumerated() {
-                                if inputRect(node: destinationNode, input: inputIndex).contains(value.location) {
-                                    patch.wires.append(Wire(from: idx, output: outputIndex, to: destinationIndex, input: inputIndex))
-                                    return
-                                }
+                            if let inputIndex = findInput(node: destinationNode, point: value.location) {
+                                patch.wires.append(Wire(from: idx, output: outputIndex, to: destinationIndex, input: inputIndex))
                             }
                         }
                         return
