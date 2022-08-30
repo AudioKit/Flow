@@ -54,6 +54,16 @@ public struct PatchView: View {
         }?.0
     }
 
+    /// Search for an input in the whole patch.
+    func findInput(point: CGPoint) -> (NodeID, Int)? {
+        for (nodeIndex, node) in patch.nodes.enumerated() {
+            if let portIndex = findInput(node: node, point: point) {
+                return (nodeIndex, portIndex)
+            }
+        }
+        return nil
+    }
+
     /// Search for outputs.
     func findOutput(node: Node, point: CGPoint) -> Int? {
         node.outputs.enumerated().first { (portIndex, _) in
@@ -151,10 +161,8 @@ public struct PatchView: View {
             .onEnded { value in
 
                 if let (nodeIndex, outputIndex) = findOutput(point: value.startLocation) {
-                    for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
-                        if let inputIndex = findInput(node: destinationNode, point: value.location) {
-                            patch.wires.append(Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
-                        }
+                    if let (destinationIndex, inputIndex) = findInput(point: value.location) {
+                        patch.wires.append(Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
                     patch.nodes[nodeIndex].position += value.translation
