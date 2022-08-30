@@ -8,6 +8,10 @@ import SwiftUI
 public struct PatchView: View {
     @Binding var patch: Patch
 
+    public init(patch: Binding<Patch>) {
+        _patch = patch
+    }
+
     let portSize = CGSize(width: 20, height: 20)
     let portSpacing: CGFloat = 10
 
