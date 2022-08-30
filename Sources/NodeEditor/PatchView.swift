@@ -139,6 +139,7 @@ public struct PatchView: View {
                                     }
                                 }
                             }
+                            return
                         }
                     }
 
