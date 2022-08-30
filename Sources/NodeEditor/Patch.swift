@@ -13,13 +13,29 @@ public struct Patch: Equatable {
 
 public typealias NodeID = Int
 
+public enum ConnectionType: Equatable, Hashable {
+    case control
+    case signal
+    case custom(String)
+}
+
+public struct Port: Equatable, Hashable {
+    var name: String
+    var type: ConnectionType
+
+    public init(name: String, type: ConnectionType) {
+        self.name = name
+        self.type = type
+    }
+}
+
 public struct Node: Equatable {
     var name: String
     var position: CGPoint
-    var inputs: [String]
-    var outputs: [String]
+    var inputs: [Port]
+    var outputs: [Port]
 
-    public init(name: String, position: CGPoint, inputs: [String], outputs: [String]) {
+    public init(name: String, position: CGPoint, inputs: [Port], outputs: [Port]) {
         self.name = name
         self.position = position
         self.inputs = inputs

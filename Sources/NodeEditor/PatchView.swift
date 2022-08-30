@@ -46,7 +46,7 @@ struct PatchView: View {
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
 
-            cx.draw(Text(input).font(.caption), at: rect.center + CGSize(width: (portSize.width/2 + portSpacing), height: 0), anchor: .leading)
+            cx.draw(Text(input.name).font(.caption), at: rect.center + CGSize(width: (portSize.width/2 + portSpacing), height: 0), anchor: .leading)
 
             y += portSize.height + portSpacing
             i += 1
@@ -60,7 +60,7 @@ struct PatchView: View {
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
 
-            cx.draw(Text(output).font(.caption), at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0), anchor: .trailing)
+            cx.draw(Text(output.name).font(.caption), at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0), anchor: .trailing)
 
             y += portSize.height + portSpacing
             i += 1
