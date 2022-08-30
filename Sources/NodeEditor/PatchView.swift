@@ -56,12 +56,9 @@ public struct PatchView: View {
 
     /// Search for outputs.
     func findOutput(node: Node, point: CGPoint) -> Int? {
-        for (portIndex, _) in node.outputs.enumerated() {
-            if outputRect(node: node, output: portIndex).contains(point) {
-                return portIndex
-            }
-        }
-        return nil
+        node.outputs.enumerated().first { (portIndex, _) in
+            outputRect(node: node, output: portIndex).contains(point)
+        }?.0
     }
 
     /// Search for an output in the whole patch.
