@@ -3,6 +3,10 @@
 import Foundation
 import SwiftUI
 
+/// Draws and interacts with the patch.
+///
+/// Draws everything using a single Canvas with manual layout. We found this is faster than
+/// using a View for each Node.
 struct PatchView: View {
     @Binding var patch: Patch
 
