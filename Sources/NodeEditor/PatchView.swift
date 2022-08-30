@@ -33,15 +33,13 @@ public struct PatchView: View {
 
     func draw(_ node: Node,
               _ id: NodeID,
+              _ rect: CGRect,
               _ cx: GraphicsContext,
               _ inputRects: inout [PortInfo: CGRect],
               _ outputRects: inout [PortInfo: CGRect]) {
 
         let inputs = node.inputs
         let outputs = node.outputs
-
-        let shouldOffset = id == dragInfo.node || selection.contains(id)
-        let rect = rect(node: node).offset(by: (shouldOffset ? dragInfo.offset : .zero))
         let pos = rect.origin
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
@@ -152,14 +150,24 @@ public struct PatchView: View {
     public var body: some View {
         Canvas { cx, size in
 
+            var nodeRects: [CGRect] = []
             var inputRects: [PortInfo: CGRect] = [:]
             var outputRects: [PortInfo: CGRect] = [:]
 
             cx.addFilter(.shadow(radius: 5))
 
             var id = 0
+
             for node in patch.nodes {
-                draw(node, id, cx, &inputRects, &outputRects)
+                let shouldOffset = id == dragInfo.node || selection.contains(id)
+                let rect = rect(node: node).offset(by: (shouldOffset ? dragInfo.offset : .zero))
+                nodeRects.append(rect)
+                id += 1
+            }
+
+            id = 0
+            for node in patch.nodes {
+                draw(node, id, nodeRects[id], cx, &inputRects, &outputRects)
                 id += 1
             }
 
