@@ -146,7 +146,6 @@ public struct PatchView: View {
                         }
                         return
                     }
-                    idx += 1
                 }
 
                 selection = Set<NodeID>()
