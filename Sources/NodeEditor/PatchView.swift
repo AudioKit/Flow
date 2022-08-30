@@ -118,11 +118,9 @@ public struct PatchView: View {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { value, state, _ in
                 for (idx, node) in patch.nodes.enumerated() {
-                    for (portIndex, _) in node.outputs.enumerated() {
-                        if outputRect(node: node, output: portIndex).contains(value.startLocation) {
-                            state = DragInfo(output: portIndex, node: idx, offset: value.translation)
-                            return
-                        }
+                    if let portIndex = findOutput(node: node, point: value.startLocation) {
+                        state = DragInfo(output: portIndex, node: idx, offset: value.translation)
+                        return
                     }
 
                     if rect(node: node).contains(value.startLocation) {
