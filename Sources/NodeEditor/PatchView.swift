@@ -111,6 +111,16 @@ public struct PatchView: View {
                     idx += 1
                 }
             }
+            .onEnded { value in
+                var idx = 0
+                for node in patch.nodes {
+                    if rect(node: node).contains(value.startLocation) {
+                        patch.nodes[idx].position += value.translation
+                        return
+                    }
+                    idx += 1
+                }
+            }
     }
 
     public var body: some View {

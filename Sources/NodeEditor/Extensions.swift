@@ -38,6 +38,10 @@ extension CGPoint {
     }
 }
 
+public func +=(lhs: inout CGPoint, rhs: CGSize) {
+    lhs = lhs + rhs
+}
+
 extension Color {
     static let magenta = Color(.sRGB, red: 1, green: 0, blue: 1, opacity: 1)
 }
