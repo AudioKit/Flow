@@ -14,12 +14,12 @@ struct PatchView: View {
         var port: Int
     }
 
-    func drawnode(_ node: Node,
-                    _ id: NodeID,
-                    _ cx: GraphicsContext,
-                    _ inputRects: inout [PortInfo: CGRect],
-                    _ outputRects: inout [PortInfo: CGRect]) {
-
+    func draw(_ node: Node,
+              _ id: NodeID,
+              _ cx: GraphicsContext,
+              _ inputRects: inout [PortInfo: CGRect],
+              _ outputRects: inout [PortInfo: CGRect]) {
+        
         let inputs = node.inputs
         let outputs = node.outputs
 
