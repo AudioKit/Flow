@@ -13,7 +13,7 @@ public struct Patch: Equatable {
 
 public typealias NodeID = Int
 
-public enum ConnectionType: Equatable, Hashable {
+public enum PortType: Equatable, Hashable {
     case control
     case signal
     case custom(String)
@@ -21,9 +21,9 @@ public enum ConnectionType: Equatable, Hashable {
 
 public struct Port: Equatable, Hashable {
     var name: String
-    var type: ConnectionType
+    var type: PortType
 
-    public init(name: String, type: ConnectionType) {
+    public init(name: String, type: PortType) {
         self.name = name
         self.type = type
     }
