@@ -43,8 +43,8 @@ public struct PatchView: View {
 
     /// Offset to apply to a node based on selection and gesture state.
     func offset(for id: NodeID) -> CGSize {
-        let shouldOffset = id == dragInfo.node || selection.contains(id)
-        return (shouldOffset ? dragInfo.offset : .zero)
+        guard dragInfo.output == nil && (id == dragInfo.node || selection.contains(id)) else { return .zero }
+        return dragInfo.offset
     }
 
     func draw(_ node: Node,
@@ -100,6 +100,7 @@ public struct PatchView: View {
     }
 
     struct DragInfo {
+        var output: Int? = nil
         var node: NodeID = 0
         var offset: CGSize = .zero
         var selectionRect: CGRect = .zero
@@ -110,13 +111,17 @@ public struct PatchView: View {
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { value, state, _ in
-                var idx = 0
-                for node in patch.nodes {
+                for (idx, node) in patch.nodes.enumerated() {
+                    for (portIndex, _) in node.outputs.enumerated() {
+                        if outputRect(node: node, output: portIndex).contains(value.startLocation) {
+                            state = DragInfo(output: portIndex, node: idx, offset: value.translation)
+                            return
+                        }
+                    }
                     if rect(node: node).contains(value.startLocation) {
                         state = DragInfo(node: idx, offset: value.translation)
                         return
                     }
-                    idx += 1
                 }
 
                 state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
@@ -124,6 +129,19 @@ public struct PatchView: View {
             .onEnded { value in
                 var idx = 0
                 for node in patch.nodes {
+                    for (outputIndex, _) in node.outputs.enumerated() {
+                        if outputRect(node: node, output: outputIndex).contains(value.startLocation) {
+                            for (destinationIndex, destinationNode) in patch.nodes.enumerated() {
+                                for (inputIndex, _) in destinationNode.inputs.enumerated() {
+                                    if inputRect(node: destinationNode, input: inputIndex).contains(value.location) {
+                                        patch.wires.append(Wire(from: idx, output: outputIndex, to: destinationIndex, input: inputIndex))
+                                        return
+                                    }
+                                }
+                            }
+                        }
+                    }
+
                     if rect(node: node).contains(value.startLocation) {
                         patch.nodes[idx].position += value.translation
                         for id in selection where id != idx {
