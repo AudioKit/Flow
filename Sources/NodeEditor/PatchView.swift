@@ -18,17 +18,6 @@ public struct PatchView: View {
 
     @State var selection = Set<NodeID>()
 
-    struct PortInfo: Hashable {
-        var node: NodeID
-        var port: Int
-    }
-
-    struct Layout {
-        var nodeRects: [CGRect] = []
-        var inputRects: [PortInfo: CGRect] = [:]
-        var outputRects: [PortInfo: CGRect] = [:]
-    }
-
     /// Calculates the boudning rectangle for a node.
     func rect(node: Node) -> CGRect {
 
@@ -56,43 +45,6 @@ public struct PatchView: View {
     func offset(for id: NodeID) -> CGSize {
         let shouldOffset = id == dragInfo.node || selection.contains(id)
         return (shouldOffset ? dragInfo.offset : .zero)
-    }
-
-    var layout: Layout {
-        var result = Layout()
-
-        var id = 0
-
-        for node in patch.nodes {
-            let shouldOffset = id == dragInfo.node || selection.contains(id)
-            let offset = (shouldOffset ? dragInfo.offset : .zero)
-            let rect = rect(node: node).offset(by: offset)
-            result.nodeRects.append(rect)
-
-            let pos = rect.origin
-
-            var y: CGFloat = 40
-            var i = 0
-            for _ in node.inputs {
-                let rect = CGRect(origin: pos + CGSize(width: portSpacing, height: y), size: portSize)
-                result.inputRects[PortInfo(node: id, port: i)] = rect
-                y += portSize.height + portSpacing
-                i += 1
-            }
-
-            y = 40
-            i = 0
-            for _ in node.outputs {
-                let rect = CGRect(origin: pos + CGSize(width: rect.size.width - portSpacing - portSize.width, height: y), size: portSize)
-                result.outputRects[PortInfo(node: id, port: i)] = rect
-                y += portSize.height + portSpacing
-                i += 1
-            }
-
-            id += 1
-        }
-
-        return result
     }
 
     func draw(_ node: Node,
@@ -204,23 +156,16 @@ public struct PatchView: View {
 
             cx.addFilter(.shadow(radius: 5))
 
-            let layout = self.layout
-
             var id = 0
-            id = 0
             for node in patch.nodes {
                 draw(node, id, cx)
                 id += 1
             }
 
             for wire in patch.wires {
-
-                if let outputRect = layout.outputRects[PortInfo(node: wire.from, port: wire.output)],
-                   let inputRect = layout.inputRects[PortInfo(node: wire.to, port: wire.input)] {
-
-                    strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
-
-                }
+                let outputRect = outputRect(node: patch.nodes[wire.from], output: wire.output).offset(by: offset(for: wire.from))
+                let inputRect = inputRect(node: patch.nodes[wire.to], input: wire.input).offset(by: offset(for: wire.to))
+                strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
             }
         }.gesture(dragGesture)
     }
