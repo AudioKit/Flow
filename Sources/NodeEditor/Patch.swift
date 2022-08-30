@@ -42,7 +42,7 @@ public struct Node: Equatable {
         self.outputs = outputs
     }
 
-    func translate(by offset: CGSize) -> Node {
+    public func translate(by offset: CGSize) -> Node {
         var result = self
         result.position.x += offset.width
         result.position.y += offset.height
