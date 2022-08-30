@@ -52,6 +52,12 @@ public struct PatchView: View {
         return CGRect(origin: pos + CGSize(width: nodeWidth - portSpacing - portSize.width, height: y), size: portSize)
     }
 
+    /// Offset to apply to a node based on selection and gesture state.
+    func offset(for id: NodeID) -> CGSize {
+        let shouldOffset = id == dragInfo.node || selection.contains(id)
+        return (shouldOffset ? dragInfo.offset : .zero)
+    }
+
     var layout: Layout {
         var result = Layout()
 
@@ -93,8 +99,7 @@ public struct PatchView: View {
               _ id: NodeID,
               _ cx: GraphicsContext) {
 
-        let shouldOffset = id == dragInfo.node || selection.contains(id)
-        let offset = (shouldOffset ? dragInfo.offset : .zero)
+        let offset = self.offset(for: id)
         let rect = rect(node: node).offset(by: offset)
 
         let pos = rect.origin
