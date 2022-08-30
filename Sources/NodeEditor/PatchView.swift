@@ -59,7 +59,8 @@ public struct PatchView: View {
 
         for node in patch.nodes {
             let shouldOffset = id == dragInfo.node || selection.contains(id)
-            let rect = rect(node: node).offset(by: (shouldOffset ? dragInfo.offset : .zero))
+            let offset = (shouldOffset ? dragInfo.offset : .zero)
+            let rect = rect(node: node).offset(by: offset)
             result.nodeRects.append(rect)
 
             let pos = rect.origin
