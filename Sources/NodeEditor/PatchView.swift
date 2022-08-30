@@ -23,12 +23,54 @@ public struct PatchView: View {
         var port: Int
     }
 
+    struct Layout {
+        var nodeRects: [CGRect] = []
+        var inputRects: [PortInfo: CGRect] = [:]
+        var outputRects: [PortInfo: CGRect] = [:]
+    }
+
     func rect(node: Node) -> CGRect {
 
         let maxio = max(node.inputs.count, node.outputs.count)
         let size = CGSize(width: nodeWidth, height: CGFloat(maxio * 30 + 40))
 
         return CGRect(origin: node.position, size: size)
+    }
+
+    var layout: Layout {
+        var result = Layout()
+
+        var id = 0
+
+        for node in patch.nodes {
+            let shouldOffset = id == dragInfo.node || selection.contains(id)
+            let rect = rect(node: node).offset(by: (shouldOffset ? dragInfo.offset : .zero))
+            result.nodeRects.append(rect)
+
+            let pos = rect.origin
+
+            var y: CGFloat = 40
+            var i = 0
+            for _ in node.inputs {
+                let rect = CGRect(origin: pos + CGSize(width: portSpacing, height: y), size: portSize)
+                result.inputRects[PortInfo(node: id, port: i)] = rect
+                y += portSize.height + portSpacing
+                i += 1
+            }
+
+            y = 40
+            i = 0
+            for _ in node.outputs {
+                let rect = CGRect(origin: pos + CGSize(width: rect.size.width - portSpacing - portSize.width, height: y), size: portSize)
+                result.outputRects[PortInfo(node: id, port: i)] = rect
+                y += portSize.height + portSpacing
+                i += 1
+            }
+
+            id += 1
+        }
+
+        return result
     }
 
     func draw(_ node: Node,
