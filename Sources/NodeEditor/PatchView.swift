@@ -16,6 +16,8 @@ public struct PatchView: View {
     let portSpacing: CGFloat = 10
     let nodeWidth: CGFloat = 200
 
+    @State var selection = Set<NodeID>()
+
     struct PortInfo: Hashable {
         var node: NodeID
         var port: Int
@@ -43,7 +45,7 @@ public struct PatchView: View {
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
 
-        let selected = rect.intersects(dragInfo.selectionRect)
+        let selected = rect.intersects(dragInfo.selectionRect) || selection.contains(id)
         cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
 
         cx.draw(Text(node.name), at: pos + CGSize(width: rect.size.width/2, height: 20), anchor: .center)
@@ -127,6 +129,16 @@ public struct PatchView: View {
                     if rect(node: node).contains(value.startLocation) {
                         patch.nodes[idx].position += value.translation
                         return
+                    }
+                    idx += 1
+                }
+
+                selection = Set<NodeID>()
+                let selectionRect = CGRect(origin: value.startLocation, size: value.translation)
+                idx = 0
+                for node in patch.nodes {
+                    if selectionRect.intersects(rect(node: node)) {
+                        selection.insert(idx)
                     }
                     idx += 1
                 }
