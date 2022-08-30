@@ -47,20 +47,20 @@ public struct PatchView: View {
         return dragInfo.offset
     }
 
-    /// Search for outputs.
-    func findOutput(node: Node, point: CGPoint) -> Int? {
-        for (portIndex, _) in node.outputs.enumerated() {
-            if outputRect(node: node, output: portIndex).contains(point) {
+    /// Search for inputs.
+    func findInput(node: Node, point: CGPoint) -> Int? {
+        for (portIndex, _) in node.inputs.enumerated() {
+            if inputRect(node: node, input: portIndex).contains(point) {
                 return portIndex
             }
         }
         return nil
     }
 
-    /// Search for inputs.
-    func findInput(node: Node, point: CGPoint) -> Int? {
-        for (portIndex, _) in node.inputs.enumerated() {
-            if inputRect(node: node, input: portIndex).contains(point) {
+    /// Search for outputs.
+    func findOutput(node: Node, point: CGPoint) -> Int? {
+        for (portIndex, _) in node.outputs.enumerated() {
+            if outputRect(node: node, output: portIndex).contains(point) {
                 return portIndex
             }
         }
