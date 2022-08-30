@@ -14,10 +14,19 @@ public struct PatchView: View {
 
     let portSize = CGSize(width: 20, height: 20)
     let portSpacing: CGFloat = 10
+    let nodeWidth: CGFloat = 200
 
     struct PortInfo: Hashable {
         var node: NodeID
         var port: Int
+    }
+
+    func rect(node: Node) -> CGRect {
+
+        let maxio = max(node.inputs.count, node.outputs.count)
+        let size = CGSize(width: nodeWidth, height: CGFloat(maxio * 30 + 40))
+
+        return CGRect(origin: node.position, size: size)
     }
 
     func draw(_ node: Node,
@@ -29,16 +38,13 @@ public struct PatchView: View {
         let inputs = node.inputs
         let outputs = node.outputs
 
-        let maxio = max(inputs.count, outputs.count)
-
-        let size = CGSize(width: 200, height: maxio * 30 + 40)
-
+        let rect = rect(node: node)
         let pos = node.position // + (node.name == dragInfo.node ? dragInfo.offset : .zero)
 
-        let bg = Path(roundedRect: CGRect(origin: pos, size: size), cornerRadius: 5)
+        let bg = Path(roundedRect: rect, cornerRadius: 5)
         cx.fill(bg, with: .color(Color(white: 0.2, opacity: 0.6)))
 
-        cx.draw(Text(node.name), at: pos + CGSize(width: size.width/2, height: 20), anchor: .center)
+        cx.draw(Text(node.name), at: pos + CGSize(width: rect.size.width/2, height: 20), anchor: .center)
 
         var y: CGFloat = 40
         var i = 0
@@ -57,7 +63,7 @@ public struct PatchView: View {
         y = 40
         i = 0
         for output in outputs {
-            let rect = CGRect(origin: pos + CGSize(width: size.width - portSpacing - portSize.width, height: y), size: portSize)
+            let rect = CGRect(origin: pos + CGSize(width: rect.size.width - portSpacing - portSize.width, height: y), size: portSize)
             outputRects[.init(node: id, port: i)] = rect
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
