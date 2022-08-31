@@ -1,4 +1,3 @@
-import Foundation
 import SwiftUI
 
 /// Draws and interacts with the patch.
@@ -16,16 +15,20 @@ public struct PatchView: View {
     /// State for all gestures.
     @GestureState var dragInfo = DragInfo()
 
+    /// Initialize the patch view with a patch and a selection
+    /// - Parameters:
+    ///   - patch: Patch to display
+    ///   - selection: set of nodes currently selected
     public init(patch: Binding<Patch>, selection: Binding<Set<NodeID>>) {
         _patch = patch
         _selection = selection
     }
 
+    // Constants, for now
     let portSize = CGSize(width: 20, height: 20)
     let portSpacing: CGFloat = 10
     let nodeWidth: CGFloat = 200
     let menuBarHeight: CGFloat = 40
-
     let gradient = Gradient(colors: [.magenta, .cyan])
 
     public var body: some View {
@@ -34,35 +37,10 @@ public struct PatchView: View {
             let viewport = CGRect(origin: .zero, size: size)
             cx.addFilter(.shadow(radius: 5))
 
-            // Draw wires.
-            for wire in patch.wires where wire != dragInfo.hideWire {
-                let fromPoint = outputRect(node: patch.nodes[wire.originNode],
-                                           output: wire.outputPort).offset(by: offset(for: wire.originNode)).center
-                let toPoint = inputRect(node: patch.nodes[wire.destinationNode],
-                                        input: wire.inputPort).offset(by: offset(for: wire.destinationNode)).center
-
-                let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
-                if viewport.intersects(bounds) {
-                    strokeWire(cx: cx, from: fromPoint, to: toPoint)
-                }
-            }
-
-            // Draw nodes.
-            for (idx, node) in patch.nodes.enumerated() {
-                draw(node: node, id: idx, cx: cx, viewport: viewport)
-            }
-
-            // Draw a wire we're dragging.
-            if let output = dragInfo.output {
-                let outputRect = outputRect(node: patch.nodes[dragInfo.node], output: output)
-                strokeWire(cx: cx, from: outputRect.center, to: outputRect.center + dragInfo.offset)
-            }
-
-            // Draw selection rect.
-            if dragInfo.selectionRect != .zero {
-                let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
-                cx.stroke(rectPath, with: .color(.cyan))
-            }
+            drawWires(cx: cx, viewport: viewport)
+            drawNodes(cx: cx, viewport: viewport)
+            drawDraggedWire(cx: cx, viewport: viewport)
+            drawSelectionRect(cx: cx, viewport: viewport)
 
         }.gesture(dragGesture)
     }

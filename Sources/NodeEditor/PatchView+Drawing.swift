@@ -44,7 +44,41 @@ extension PatchView {
         }
     }
 
-    func strokeWire(cx: GraphicsContext, from: CGPoint, to: CGPoint) {
+    func drawNodes(cx: GraphicsContext, viewport: CGRect) {
+        for (idx, node) in patch.nodes.enumerated() {
+            draw(node: node, id: idx, cx: cx, viewport: viewport)
+        }
+    }
+
+    func drawWires(cx: GraphicsContext, viewport: CGRect) {
+        for wire in patch.wires where wire != dragInfo.hideWire {
+            let fromPoint = outputRect(node: patch.nodes[wire.originNode],
+                                       output: wire.outputPort).offset(by: offset(for: wire.originNode)).center
+            let toPoint = inputRect(node: patch.nodes[wire.destinationNode],
+                                    input: wire.inputPort).offset(by: offset(for: wire.destinationNode)).center
+
+            let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
+            if viewport.intersects(bounds) {
+                strokeWire(from: fromPoint, to: toPoint, cx: cx)
+            }
+        }
+    }
+
+    func drawDraggedWire(cx: GraphicsContext, viewport: CGRect) {
+        if let output = dragInfo.output {
+            let outputRect = outputRect(node: patch.nodes[dragInfo.node], output: output)
+            strokeWire(from: outputRect.center, to: outputRect.center + dragInfo.offset, cx: cx)
+        }
+    }
+
+    func drawSelectionRect(cx: GraphicsContext, viewport: CGRect) {
+        if dragInfo.selectionRect != .zero {
+            let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
+            cx.stroke(rectPath, with: .color(.cyan))
+        }
+    }
+
+    func strokeWire(from: CGPoint, to: CGPoint, cx: GraphicsContext) {
 
         let d = 0.4 * abs(to.x - from.x)
         var path = Path()
