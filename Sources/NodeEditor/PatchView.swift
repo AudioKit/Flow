@@ -16,6 +16,7 @@ public struct PatchView: View {
     let portSpacing: CGFloat = 10
     let nodeWidth: CGFloat = 200
 
+    /// Selected nodes (should probably be a binding)
     @State var selection = Set<NodeID>()
 
     /// Calculates the boudning rectangle for a node.
