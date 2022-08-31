@@ -4,7 +4,7 @@ extension PatchView {
     /// State for all gestures.
     struct DragInfo {
         var output: PortIndex? = nil
-        var node: NodeIndex = 0
+        var nodeIndex: NodeIndex = 0
         var offset: CGSize = .zero
         var selectionRect: CGRect = .zero
         var hideWire: Wire?
@@ -24,17 +24,17 @@ extension PatchView {
             .updating($dragInfo) { value, state, _ in
 
                 if let (nodeIndex, portIndex) = findOutput(point: value.startLocation) {
-                    state = DragInfo(output: portIndex, node: nodeIndex, offset: value.translation)
+                    state = DragInfo(output: portIndex, nodeIndex: nodeIndex, offset: value.translation)
                 } else if let (nodeIndex, inputIndex) = findInput(point: value.startLocation) {
                     // Is a wire attached to the input?
                     if let wire = patch.wires.first(where: { ($0.destination, $0.input) == (nodeIndex, inputIndex) }) {
                         let offset = inputRect(node: patch.nodes[nodeIndex], input: inputIndex).center
                         - outputRect(node: patch.nodes[wire.origin], output: wire.output).center
                         + value.translation
-                        state = DragInfo(output: wire.output, node: wire.origin, offset: offset, hideWire: wire)
+                        state = DragInfo(output: wire.output, nodeIndex: wire.origin, offset: offset, hideWire: wire)
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
-                    state = DragInfo(node: nodeIndex, offset: value.translation)
+                    state = DragInfo(nodeIndex: nodeIndex, offset: value.translation)
                 } else {
                     state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
                 }
