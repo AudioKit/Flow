@@ -21,6 +21,7 @@ public struct PatchView: View {
     let portSize = CGSize(width: 20, height: 20)
     let portSpacing: CGFloat = 10
     let nodeWidth: CGFloat = 200
+    let menuBarHeight: CGFloat = 40
 
     /// Calculates the boudning rectangle for a node.
     func rect(node: Node) -> CGRect {
@@ -34,14 +35,14 @@ public struct PatchView: View {
     /// Calculates the bounding rectangle for an input port (not including the name).
     func inputRect(node: Node, input: PortID) -> CGRect {
         let pos = rect(node: node).origin
-        let y = 40 + CGFloat(input) * (portSize.height + portSpacing)
+        let y = menuBarHeight + CGFloat(input) * (portSize.height + portSpacing)
         return CGRect(origin: pos + CGSize(width: portSpacing, height: y), size: portSize)
     }
 
     /// Calculates the bounding rectangle for an output port (not including the name).
     func outputRect(node: Node, output: PortID) -> CGRect {
         let pos = rect(node: node).origin
-        let y = 40 + CGFloat(output) * (portSize.height + portSpacing)
+        let y = menuBarHeight + CGFloat(output) * (portSize.height + portSpacing)
         return CGRect(origin: pos + CGSize(width: nodeWidth - portSpacing - portSize.width, height: y), size: portSize)
     }
 
