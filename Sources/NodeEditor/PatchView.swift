@@ -6,18 +6,21 @@ import SwiftUI
 /// Draws everything using a single Canvas with manual layout. We found this is faster than
 /// using a View for each Node.
 public struct PatchView: View {
+
+    /// Data model.
     @Binding var patch: Patch
 
-    public init(patch: Binding<Patch>) {
+    /// Selected nodes.
+    @Binding var selection: Set<NodeID>
+
+    public init(patch: Binding<Patch>, selection: Binding<Set<NodeID>>) {
         _patch = patch
+        _selection = selection
     }
 
     let portSize = CGSize(width: 20, height: 20)
     let portSpacing: CGFloat = 10
     let nodeWidth: CGFloat = 200
-
-    /// Selected nodes (should probably be a binding)
-    @State var selection = Set<NodeID>()
 
     /// Calculates the boudning rectangle for a node.
     func rect(node: Node) -> CGRect {

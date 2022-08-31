@@ -55,8 +55,9 @@ class DemoData: ObservableObject {
 struct ContentView: View {
 
     @State var demoData = DemoData()
+    @State var selection = Set<NodeID>()
 
     var body: some View {
-        PatchView(patch: $demoData.patch)
+        PatchView(patch: $demoData.patch, selection: $selection)
     }
 }
