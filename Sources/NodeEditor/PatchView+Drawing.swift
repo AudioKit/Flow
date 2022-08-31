@@ -52,10 +52,10 @@ extension PatchView {
 
     func drawWires(cx: GraphicsContext, viewport: CGRect) {
         for wire in patch.wires where wire != dragInfo.hideWire {
-            let fromPoint = outputRect(node: patch.nodes[wire.origin],
-                                       output: wire.output).offset(by: offset(for: wire.origin)).center
-            let toPoint = inputRect(node: patch.nodes[wire.destination],
-                                    input: wire.input).offset(by: offset(for: wire.destination)).center
+            let fromPoint = outputRect(node: patch.nodes[wire.output.nodeIndex],
+                                       output: wire.output.portIndex).offset(by: offset(for: wire.output.nodeIndex)).center
+            let toPoint = inputRect(node: patch.nodes[wire.input.nodeIndex],
+                                    input: wire.input.portIndex).offset(by: offset(for: wire.input.nodeIndex)).center
 
             let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
             if viewport.intersects(bounds) {

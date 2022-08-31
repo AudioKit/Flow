@@ -38,10 +38,10 @@ public extension PatchView {
     }
 
     /// Search for an input in the whole patch.
-    func findInput(point: CGPoint) -> (NodeIndex, PortIndex)? {
+    func findInput(point: CGPoint) -> PortID? {
         for (nodeIndex, node) in patch.nodes.enumerated() {
             if let portIndex = findInput(node: node, point: point) {
-                return (nodeIndex, portIndex)
+                return PortID(nodeIndex, portIndex)
             }
         }
         return nil
@@ -55,10 +55,10 @@ public extension PatchView {
     }
 
     /// Search for an output in the whole patch.
-    func findOutput(point: CGPoint) -> (NodeIndex, PortIndex)? {
+    func findOutput(point: CGPoint) -> PortID? {
         for (nodeIndex, node) in patch.nodes.enumerated() {
             if let portIndex = findOutput(node: node, point: point) {
-                return (nodeIndex, portIndex)
+                return PortID(nodeIndex, portIndex)
             }
         }
         return nil
