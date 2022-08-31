@@ -5,8 +5,8 @@ extension PatchView {
     func draw(node: Node,
               nodeIndex: NodeIndex,
               cx: GraphicsContext,
-              viewport: CGRect) {
-
+              viewport: CGRect)
+    {
         let offset = self.offset(for: nodeIndex)
         let rect = rect(node: node).offset(by: offset)
 
@@ -22,7 +22,7 @@ extension PatchView {
         cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
 
         cx.draw(Text(node.name),
-                at: pos + CGSize(width: rect.size.width/2, height: 20),
+                at: pos + CGSize(width: rect.size.width / 2, height: 20),
                 anchor: .center)
 
         for (i, input) in node.inputs.enumerated() {
@@ -30,7 +30,7 @@ extension PatchView {
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
             cx.draw(Text(input.name).font(.caption),
-                    at: rect.center + CGSize(width: (portSize.width/2 + portSpacing), height: 0),
+                    at: rect.center + CGSize(width: portSize.width / 2 + portSpacing, height: 0),
                     anchor: .leading)
         }
 
@@ -39,7 +39,7 @@ extension PatchView {
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
             cx.draw(Text(output.name).font(.caption),
-                    at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0),
+                    at: rect.center + CGSize(width: -(portSize.width / 2 + portSpacing), height: 0),
                     anchor: .trailing)
         }
     }
@@ -64,14 +64,14 @@ extension PatchView {
         }
     }
 
-    func drawDraggedWire(cx: GraphicsContext, viewport: CGRect) {
+    func drawDraggedWire(cx: GraphicsContext) {
         if let output = dragInfo.output {
             let outputRect = outputRect(node: patch.nodes[dragInfo.origin], output: output)
             strokeWire(from: outputRect.center, to: outputRect.center + dragInfo.offset, cx: cx)
         }
     }
 
-    func drawSelectionRect(cx: GraphicsContext, viewport: CGRect) {
+    func drawSelectionRect(cx: GraphicsContext) {
         if dragInfo.selectionRect != .zero {
             let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
             cx.stroke(rectPath, with: .color(.cyan))
@@ -79,7 +79,6 @@ extension PatchView {
     }
 
     func strokeWire(from: CGPoint, to: CGPoint, cx: GraphicsContext) {
-
         let d = 0.4 * abs(to.x - from.x)
         var path = Path()
         path.move(to: from)
@@ -90,6 +89,5 @@ extension PatchView {
         cx.stroke(path,
                   with: .linearGradient(gradient, startPoint: from, endPoint: to),
                   style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
-
     }
 }

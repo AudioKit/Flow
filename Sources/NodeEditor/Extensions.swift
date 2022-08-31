@@ -3,8 +3,8 @@ import SwiftUI
 
 extension String {
     func deletingPrefix(_ prefix: String) -> String? {
-        guard self.hasPrefix(prefix) else { return nil }
-        return String(self.dropFirst(prefix.count))
+        guard hasPrefix(prefix) else { return nil }
+        return String(dropFirst(prefix.count))
     }
 }
 
@@ -14,21 +14,21 @@ extension CGSize {
     }
 }
 
-func +(lhs: CGPoint, rhs: CGSize) -> CGPoint {
+func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
     CGPoint(x: lhs.x + rhs.width, y: lhs.y + rhs.height)
 }
 
-func -(lhs: CGPoint, rhs: CGPoint) -> CGSize {
+func - (lhs: CGPoint, rhs: CGPoint) -> CGSize {
     CGSize(width: lhs.x - rhs.x, height: lhs.y - rhs.y)
 }
 
-func +(lhs: CGSize, rhs: CGSize) -> CGSize {
+func + (lhs: CGSize, rhs: CGSize) -> CGSize {
     CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
 }
 
 extension CGRect {
     var center: CGPoint {
-        origin + CGSize(width: size.width/2, height: size.height/2)
+        origin + CGSize(width: size.width / 2, height: size.height / 2)
     }
 
     func offset(by off: CGSize) -> CGRect {
@@ -42,7 +42,7 @@ extension CGPoint {
     }
 }
 
-public func +=(lhs: inout CGPoint, rhs: CGSize) {
+public func += (lhs: inout CGPoint, rhs: CGSize) {
     lhs = lhs + rhs
 }
 

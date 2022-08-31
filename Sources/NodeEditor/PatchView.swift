@@ -5,7 +5,6 @@ import SwiftUI
 /// Draws everything using a single Canvas with manual layout. We found this is faster than
 /// using a View for each Node.
 public struct PatchView: View {
-
     /// Data model.
     @Binding var patch: Patch
 
@@ -39,8 +38,8 @@ public struct PatchView: View {
 
             drawWires(cx: cx, viewport: viewport)
             drawNodes(cx: cx, viewport: viewport)
-            drawDraggedWire(cx: cx, viewport: viewport)
-            drawSelectionRect(cx: cx, viewport: viewport)
+            drawDraggedWire(cx: cx)
+            drawSelectionRect(cx: cx)
 
         }.gesture(dragGesture)
     }

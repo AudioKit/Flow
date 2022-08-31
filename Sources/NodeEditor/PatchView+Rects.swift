@@ -1,10 +1,8 @@
 import SwiftUI
 
 public extension PatchView {
-
     /// Calculates the boudning rectangle for a node.
     func rect(node: Node) -> CGRect {
-
         let maxio = max(node.inputs.count, node.outputs.count)
         let size = CGSize(width: nodeWidth, height: CGFloat(maxio * 30 + 40))
 
@@ -28,13 +26,13 @@ public extension PatchView {
 
     /// Offset to apply to a node based on selection and gesture state.
     func offset(for idx: NodeIndex) -> CGSize {
-        guard dragInfo.output == nil && (idx == dragInfo.origin || selection.contains(idx)) else { return .zero }
+        guard dragInfo.output == nil, idx == dragInfo.origin || selection.contains(idx) else { return .zero }
         return dragInfo.offset
     }
 
     /// Search for inputs.
     func findInput(node: Node, point: CGPoint) -> PortIndex? {
-        node.inputs.enumerated().first { (portIndex, _) in
+        node.inputs.enumerated().first { portIndex, _ in
             inputRect(node: node, input: portIndex).contains(point)
         }?.0
     }
@@ -51,7 +49,7 @@ public extension PatchView {
 
     /// Search for outputs.
     func findOutput(node: Node, point: CGPoint) -> PortIndex? {
-        node.outputs.enumerated().first { (portIndex, _) in
+        node.outputs.enumerated().first { portIndex, _ in
             outputRect(node: node, output: portIndex).contains(point)
         }?.0
     }
@@ -68,7 +66,7 @@ public extension PatchView {
 
     /// Search for a node which intersects a point.
     func findNode(point: CGPoint) -> NodeIndex? {
-        patch.nodes.enumerated().first { (index, node) in
+        patch.nodes.enumerated().first { _, node in
             rect(node: node).contains(point)
         }?.0
     }

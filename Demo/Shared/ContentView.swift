@@ -5,7 +5,6 @@ struct DemoData {
     var patch: Patch
 
     init() {
-
         let generator = Node(name: "generator",
                              position: CGPoint(x: 100, y: 100),
                              inputs: [],
@@ -47,13 +46,10 @@ struct DemoData {
                          Wire(from: 4, output: 0, to: 5, input: 0)])
 
         patch = Patch(nodes: nodes, wires: wires)
-
     }
 }
 
-
 struct ContentView: View {
-
     @State var demoData = DemoData()
     @State var selection = Set<NodeIndex>()
 

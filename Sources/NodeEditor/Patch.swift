@@ -58,9 +58,9 @@ public struct Wire: Equatable, Hashable {
     var input: PortIndex
 
     public init(from: NodeIndex, output: PortIndex, to: NodeIndex, input: PortIndex) {
-        self.origin = from
+        origin = from
         self.output = output
-        self.destination = to
+        destination = to
         self.input = input
     }
 }
