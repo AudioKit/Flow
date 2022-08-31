@@ -3,11 +3,11 @@ import SwiftUI
 extension PatchView {
     /// Draw a node.
     func draw(node: Node,
-              id: NodeIndex,
+              nodeIndex: NodeIndex,
               cx: GraphicsContext,
               viewport: CGRect) {
 
-        let offset = self.offset(for: id)
+        let offset = self.offset(for: nodeIndex)
         let rect = rect(node: node).offset(by: offset)
 
         if !rect.intersects(viewport) {
@@ -18,7 +18,7 @@ extension PatchView {
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
 
-        let selected = dragInfo.selectionRect != .zero ? rect.intersects(dragInfo.selectionRect) : selection.contains(id)
+        let selected = dragInfo.selectionRect != .zero ? rect.intersects(dragInfo.selectionRect) : selection.contains(nodeIndex)
         cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
 
         cx.draw(Text(node.name),
@@ -46,7 +46,7 @@ extension PatchView {
 
     func drawNodes(cx: GraphicsContext, viewport: CGRect) {
         for (idx, node) in patch.nodes.enumerated() {
-            draw(node: node, id: idx, cx: cx, viewport: viewport)
+            draw(node: node, nodeIndex: idx, cx: cx, viewport: viewport)
         }
     }
 
