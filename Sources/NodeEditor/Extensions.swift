@@ -22,6 +22,10 @@ func -(lhs: CGPoint, rhs: CGPoint) -> CGSize {
     CGSize(width: lhs.x - rhs.x, height: lhs.y - rhs.y)
 }
 
+func +(lhs: CGSize, rhs: CGSize) -> CGSize {
+    CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+}
+
 extension CGRect {
     var center: CGPoint {
         origin + CGSize(width: size.width/2, height: size.height/2)
