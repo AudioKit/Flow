@@ -26,8 +26,17 @@ public extension PatchView {
 
     /// Offset to apply to a node based on selection and gesture state.
     func offset(for idx: NodeIndex) -> CGSize {
-        guard dragInfo.output == nil, idx == dragInfo.origin || selection.contains(idx) else { return .zero }
-        return dragInfo.offset
+
+        if dragInfo.output != nil {
+            // We're dragging a wire, so don't offset any nodes.
+            return .zero
+        }
+
+        if selection.contains(idx) || idx == dragInfo.origin {
+            return dragInfo.offset
+        }
+
+        return .zero
     }
 
     /// Search for inputs.
