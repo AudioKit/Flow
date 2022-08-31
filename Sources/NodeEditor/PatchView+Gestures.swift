@@ -3,7 +3,7 @@ import SwiftUI
 extension PatchView {
     /// State for all gestures.
     struct DragInfo {
-        var output: PortIndex? = nil
+        var output: PortID? = nil
         var origin: NodeIndex = 0
         var offset: CGSize = .zero
         var selectionRect: CGRect = .zero
@@ -30,7 +30,7 @@ extension PatchView {
             .updating($dragInfo) { drag, state, _ in
 
                 if let output = findOutput(point: drag.startLocation) {
-                    state = DragInfo(output: output.portIndex,
+                    state = DragInfo(output: output,
                                      origin: output.nodeIndex,
                                      offset: drag.translation)
                 } else if let input = findInput(point: drag.startLocation) {
@@ -41,7 +41,7 @@ extension PatchView {
                         - outputRect(node: patch.nodes[attachedWire.output.nodeIndex],
                                      output: attachedWire.output.portIndex).center
                             + drag.translation
-                        state = DragInfo(output: attachedWire.output.portIndex,
+                        state = DragInfo(output: attachedWire.output,
                                          origin: attachedWire.output.nodeIndex,
                                          offset: offset,
                                          hideWire: attachedWire)

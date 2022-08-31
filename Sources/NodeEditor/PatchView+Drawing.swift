@@ -74,7 +74,7 @@ extension PatchView {
 
     func drawDraggedWire(cx: GraphicsContext) {
         if let output = dragInfo.output {
-            let outputRect = outputRect(node: patch.nodes[dragInfo.origin], output: output)
+            let outputRect = outputRect(node: patch.nodes[dragInfo.origin], output: output.portIndex)
             strokeWire(from: outputRect.center, to: outputRect.center + dragInfo.offset, cx: cx)
         }
     }
