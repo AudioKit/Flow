@@ -39,7 +39,8 @@ public extension PatchView {
 
     /// Search for an input in the whole patch.
     func findInput(point: CGPoint) -> PortID? {
-        for (nodeIndex, node) in patch.nodes.enumerated() {
+        // Search nodes in reverse to find nodes drawn on top first.
+        for (nodeIndex, node) in patch.nodes.enumerated().reversed() {
             if let portIndex = findInput(node: node, point: point) {
                 return PortID(nodeIndex, portIndex)
             }
@@ -56,7 +57,8 @@ public extension PatchView {
 
     /// Search for an output in the whole patch.
     func findOutput(point: CGPoint) -> PortID? {
-        for (nodeIndex, node) in patch.nodes.enumerated() {
+        // Search nodes in reverse to find nodes drawn on top first.
+        for (nodeIndex, node) in patch.nodes.enumerated().reversed() {
             if let portIndex = findOutput(node: node, point: point) {
                 return PortID(nodeIndex, portIndex)
             }
@@ -66,7 +68,8 @@ public extension PatchView {
 
     /// Search for a node which intersects a point.
     func findNode(point: CGPoint) -> NodeIndex? {
-        patch.nodes.enumerated().first { _, node in
+        // Search nodes in reverse to find nodes drawn on top first.
+        patch.nodes.enumerated().reversed().first { _, node in
             rect(node: node).contains(point)
         }?.0
     }
