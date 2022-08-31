@@ -18,7 +18,14 @@ extension PatchView {
 
         let bg = Path(roundedRect: rect, cornerRadius: 5)
 
-        let selected = dragInfo.selectionRect != .zero ? rect.intersects(dragInfo.selectionRect) : selection.contains(nodeIndex)
+        var selected = false
+        switch dragInfo {
+        case .selection(rect: let selectionRect):
+            selected = rect.intersects(selectionRect)
+        default:
+            selected = selection.contains(nodeIndex)
+        }
+
         cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
 
         cx.draw(Text(node.name),
@@ -59,7 +66,14 @@ extension PatchView {
     }
 
     func drawWires(cx: GraphicsContext, viewport: CGRect) {
-        for wire in patch.wires where wire != dragInfo.hideWire {
+        var hideWire: Wire? = nil
+        switch dragInfo {
+        case .wire(output: _, offset: _, hideWire: let hw):
+            hideWire = hw
+        default:
+            hideWire = nil
+        }
+        for wire in patch.wires where wire != hideWire {
             let fromPoint = outputRect(node: patch.nodes[wire.output.nodeIndex],
                                        output: wire.output.portIndex).offset(by: offset(for: wire.output.nodeIndex)).center
             let toPoint = inputRect(node: patch.nodes[wire.input.nodeIndex],
@@ -73,17 +87,26 @@ extension PatchView {
     }
 
     func drawDraggedWire(cx: GraphicsContext) {
-        if let output = dragInfo.output {
-            let outputRect = outputRect(node: patch.nodes[dragInfo.origin], output: output.portIndex)
-            strokeWire(from: outputRect.center, to: outputRect.center + dragInfo.offset, cx: cx)
+        switch dragInfo {
+        case .wire(output: let output, offset: let offset, _):
+            let outputRect = outputRect(node: patch.nodes[output.nodeIndex], output: output.portIndex)
+            strokeWire(from: outputRect.center, to: outputRect.center + offset, cx: cx)
+        default:
+            return
         }
     }
 
     func drawSelectionRect(cx: GraphicsContext) {
-        if dragInfo.selectionRect != .zero {
-            let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
+        switch dragInfo {
+
+        case .selection(rect: let rect):
+            print(rect)
+            let rectPath = Path(roundedRect: rect, cornerRadius: 0)
             cx.stroke(rectPath, with: .color(.cyan))
+        default:
+            return
         }
+
     }
 
     func strokeWire(from: CGPoint, to: CGPoint, cx: GraphicsContext) {

@@ -12,7 +12,7 @@ public struct PatchView: View {
     @Binding var selection: Set<NodeIndex>
 
     /// State for all gestures.
-    @GestureState var dragInfo = DragInfo()
+    @GestureState var dragInfo = DragInfo.selection()
 
     /// Initialize the patch view with a patch and a selection
     /// - Parameters:

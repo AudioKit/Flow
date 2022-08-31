@@ -2,12 +2,10 @@ import SwiftUI
 
 extension PatchView {
     /// State for all gestures.
-    struct DragInfo {
-        var output: OutputID? = nil
-        var origin: NodeIndex = 0
-        var offset: CGSize = .zero
-        var selectionRect: CGRect = .zero
-        var hideWire: Wire?
+    enum DragInfo {
+        case wire(output: OutputID, offset: CGSize = .zero, hideWire: Wire? = nil)
+        case node(index: NodeIndex, offset: CGSize = .zero)
+        case selection(rect: CGRect = .zero)
     }
 
     /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
@@ -34,29 +32,25 @@ extension PatchView {
                     let node = patch.nodes[nodeIndex]
 
                     if let output = findOutput(node: node, point: drag.startLocation) {
-                        dragInfo = DragInfo(output: OutputID(nodeIndex, output),
-                                            origin: nodeIndex,
-                                            offset: drag.translation)
+                        dragInfo = DragInfo.wire(output: OutputID(nodeIndex, output), offset: drag.translation)
                     } else if let input = findInput(node: node, point: drag.startLocation) {
                         // Is a wire attached to the input?
                         if let attachedWire = attachedWire(inputID: InputID(nodeIndex, input)) {
-                            let offset = inputRect(node: node,
-                                                   input: input).center
+                            let offset = inputRect(node: node, input: input).center
                             - outputRect(node: patch.nodes[attachedWire.output.nodeIndex],
                                          output: attachedWire.output.portIndex).center
                             + drag.translation
-                            dragInfo = DragInfo(output: attachedWire.output,
-                                                origin: attachedWire.output.nodeIndex,
-                                                offset: offset,
-                                                hideWire: attachedWire)
+                            dragInfo = DragInfo.wire(output: attachedWire.output,
+                                                     offset: offset,
+                                                     hideWire: attachedWire)
                         }
                     } else {
-                        dragInfo = DragInfo(origin: nodeIndex, offset: drag.translation)
+                        dragInfo = DragInfo.node(index: nodeIndex, offset: drag.translation)
                     }
 
                 } else {
-                    dragInfo = DragInfo(selectionRect: CGRect(origin: drag.startLocation,
-                                                              size: drag.translation))
+                    dragInfo = DragInfo.selection(rect: CGRect(origin: drag.startLocation,
+                                                               size: drag.translation))
                 }
             }
             .onEnded { drag in
