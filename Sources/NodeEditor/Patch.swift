@@ -12,6 +12,7 @@ public struct Patch: Equatable {
 }
 
 public typealias NodeID = Int
+public typealias PortID = Int
 
 public enum PortType: Equatable, Hashable {
     case control
@@ -51,15 +52,15 @@ public struct Node: Equatable {
 }
 
 public struct Wire: Equatable, Hashable {
-    var from: NodeID
-    var output: Int
-    var to: NodeID
-    var input: Int
+    var originNode: NodeID
+    var outputPort: PortID
+    var destinationNode: NodeID
+    var inputPort: PortID
 
-    public init(from: NodeID, output: Int, to: NodeID, input: Int) {
-        self.from = from
-        self.output = output
-        self.to = to
-        self.input = input
+    public init(from: NodeID, output: PortID, to: NodeID, input: PortID) {
+        self.originNode = from
+        self.outputPort = output
+        self.destinationNode = to
+        self.inputPort = input
     }
 }
