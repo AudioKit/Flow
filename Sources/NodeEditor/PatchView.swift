@@ -27,7 +27,7 @@ public struct PatchView: View {
     let portSize = CGSize(width: 20, height: 20)
     let portSpacing: CGFloat = 10
     let nodeWidth: CGFloat = 200
-    let menuBarHeight: CGFloat = 40
+    let nodeTitleHeight: CGFloat = 40
     let gradient = Gradient(colors: [.magenta, .cyan])
 
     public var body: some View {

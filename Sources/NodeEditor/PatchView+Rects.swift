@@ -12,14 +12,14 @@ public extension PatchView {
     /// Calculates the bounding rectangle for an input port (not including the name).
     func inputRect(node: Node, input: PortIndex) -> CGRect {
         let pos = rect(node: node).origin
-        let y = menuBarHeight + CGFloat(input) * (portSize.height + portSpacing)
+        let y = nodeTitleHeight + CGFloat(input) * (portSize.height + portSpacing)
         return CGRect(origin: pos + CGSize(width: portSpacing, height: y), size: portSize)
     }
 
     /// Calculates the bounding rectangle for an output port (not including the name).
     func outputRect(node: Node, output: PortIndex) -> CGRect {
         let pos = rect(node: node).origin
-        let y = menuBarHeight + CGFloat(output) * (portSize.height + portSpacing)
+        let y = nodeTitleHeight + CGFloat(output) * (portSize.height + portSpacing)
         return CGRect(origin: pos + CGSize(width: nodeWidth - portSpacing - portSize.width, height: y),
                       size: portSize)
     }
