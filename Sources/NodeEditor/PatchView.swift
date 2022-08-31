@@ -138,6 +138,15 @@ public struct PatchView: View {
 
     }
 
+    /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
+    func add(wire: Wire) {
+        // Remove any other wires connected to the input.
+        patch.wires = patch.wires.filter { w in
+            (w.to, w.input) != (wire.to, wire.input)
+        }
+        patch.wires.insert(wire)
+    }
+
     /// State for all gestures.
     struct DragInfo {
         var output: Int? = nil
@@ -174,22 +183,14 @@ public struct PatchView: View {
 
                 if let (nodeIndex, outputIndex) = findOutput(point: value.startLocation) {
                     if let (destinationIndex, inputIndex) = findInput(point: value.location) {
-                        // Remove any other wires connected to the input.
-                        patch.wires = patch.wires.filter { wire in
-                            (wire.to, wire.input) != (destinationIndex, inputIndex)
-                        }
-                        patch.wires.insert(Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
+                        add(wire: Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
                     }
                 } else if let (nodeIndex, inputIndex) = findInput(point: value.startLocation) {
                     // Is a wire attached to the input?
                     if let wire = patch.wires.first(where: { ($0.to, $0.input) == (nodeIndex, inputIndex) }) {
                         patch.wires.remove(wire)
-
                         if let (destinationIndex, inputIndex) = findInput(point: value.location) {
-                            patch.wires = patch.wires.filter { wire in
-                                (wire.to, wire.input) != (destinationIndex, inputIndex)
-                            }
-                            patch.wires.insert(Wire(from: wire.from, output: wire.output, to: destinationIndex, input: inputIndex))
+                            add(wire: Wire(from: wire.from, output: wire.output, to: destinationIndex, input: inputIndex))
                         }
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
