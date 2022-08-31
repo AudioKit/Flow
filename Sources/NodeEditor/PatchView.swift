@@ -221,18 +221,23 @@ public struct PatchView: View {
     public var body: some View {
         Canvas { cx, size in
 
+            let viewport = CGRect(origin: .zero, size: size)
             cx.addFilter(.shadow(radius: 5))
 
             // Draw wires.
             for wire in patch.wires where wire != dragInfo.hideWire {
-                let outputRect = outputRect(node: patch.nodes[wire.from], output: wire.output).offset(by: offset(for: wire.from))
-                let inputRect = inputRect(node: patch.nodes[wire.to], input: wire.input).offset(by: offset(for: wire.to))
-                strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
+                let fromPoint = outputRect(node: patch.nodes[wire.from], output: wire.output).offset(by: offset(for: wire.from)).center
+                let toPoint = inputRect(node: patch.nodes[wire.to], input: wire.input).offset(by: offset(for: wire.to)).center
+
+                let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
+                if viewport.intersects(bounds) {
+                    strokeWire(cx: cx, from: fromPoint, to: toPoint)
+                }
             }
 
             // Draw nodes.
             for (idx, node) in patch.nodes.enumerated() {
-                draw(node, idx, cx, CGRect(origin: .zero, size: size))
+                draw(node, idx, cx, viewport)
             }
 
             // Draw a wire we're dragging.
