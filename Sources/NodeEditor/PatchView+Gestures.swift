@@ -21,24 +21,36 @@ extension PatchView {
         patch.wires.insert(wire)
     }
 
+    func attachedWire(portID: PortID) -> Wire? {
+        patch.wires.first(where: { $0.input == portID })
+    }
+
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { drag, state, _ in
 
                 if let output = findOutput(point: drag.startLocation) {
-                    state = DragInfo(output: output.portIndex, origin: output.nodeIndex, offset: drag.translation)
+                    state = DragInfo(output: output.portIndex,
+                                     origin: output.nodeIndex,
+                                     offset: drag.translation)
                 } else if let input = findInput(point: drag.startLocation) {
                     // Is a wire attached to the input?
-                    if let wire = patch.wires.first(where: { $0.input == input }) {
-                        let offset = inputRect(node: patch.nodes[input.nodeIndex], input: input.portIndex).center
-                        - outputRect(node: patch.nodes[wire.output.nodeIndex], output: wire.output.portIndex).center
+                    if let attachedWire = attachedWire(portID: input) {
+                        let offset = inputRect(node: patch.nodes[input.nodeIndex],
+                                               input: input.portIndex).center
+                        - outputRect(node: patch.nodes[attachedWire.output.nodeIndex],
+                                     output: attachedWire.output.portIndex).center
                             + drag.translation
-                        state = DragInfo(output: wire.output.portIndex, origin: wire.output.nodeIndex, offset: offset, hideWire: wire)
+                        state = DragInfo(output: attachedWire.output.portIndex,
+                                         origin: attachedWire.output.nodeIndex,
+                                         offset: offset,
+                                         hideWire: attachedWire)
                     }
                 } else if let nodeIndex = findNode(point: drag.startLocation) {
                     state = DragInfo(origin: nodeIndex, offset: drag.translation)
                 } else {
-                    state = DragInfo(selectionRect: CGRect(origin: drag.startLocation, size: drag.translation))
+                    state = DragInfo(selectionRect: CGRect(origin: drag.startLocation,
+                                                           size: drag.translation))
                 }
             }
             .onEnded { drag in
@@ -49,10 +61,10 @@ extension PatchView {
                     }
                 } else if let input = findInput(point: drag.startLocation) {
                     // Is a wire attached to the input?
-                    if let wire = patch.wires.first(where: { $0.input == input }) {
-                        patch.wires.remove(wire)
+                    if let attachedWire = attachedWire(portID: input) {
+                        patch.wires.remove(attachedWire)
                         if let input = findInput(point: drag.location) {
-                            connect(wire.output, to: input)
+                            connect(attachedWire.output, to: input)
                         }
                     }
                 } else if let nodeIndex = findNode(point: drag.startLocation) {
