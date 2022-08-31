@@ -11,7 +11,9 @@ extension PatchView {
     }
 
     /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
-    func add(wire: Wire) {
+    func connect(_ output: PortID, to input: PortID) {
+        let wire = Wire(from: output, to: input)
+
         // Remove any other wires connected to the input.
         patch.wires = patch.wires.filter { w in
             w.input != wire.input
@@ -21,47 +23,46 @@ extension PatchView {
 
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .updating($dragInfo) { value, state, _ in
+            .updating($dragInfo) { drag, state, _ in
 
-                if let output = findOutput(point: value.startLocation) {
-                    state = DragInfo(output: output.portIndex, origin: output.nodeIndex, offset: value.translation)
-                } else if let input = findInput(point: value.startLocation) {
+                if let output = findOutput(point: drag.startLocation) {
+                    state = DragInfo(output: output.portIndex, origin: output.nodeIndex, offset: drag.translation)
+                } else if let input = findInput(point: drag.startLocation) {
                     // Is a wire attached to the input?
                     if let wire = patch.wires.first(where: { $0.input == input }) {
                         let offset = inputRect(node: patch.nodes[input.nodeIndex], input: input.portIndex).center
                         - outputRect(node: patch.nodes[wire.output.nodeIndex], output: wire.output.portIndex).center
-                            + value.translation
-                        state = DragInfo(output: wire.output.nodeIndex, origin: wire.output.nodeIndex, offset: offset, hideWire: wire)
+                            + drag.translation
+                        state = DragInfo(output: wire.output.portIndex, origin: wire.output.nodeIndex, offset: offset, hideWire: wire)
                     }
-                } else if let nodeIndex = findNode(point: value.startLocation) {
-                    state = DragInfo(origin: nodeIndex, offset: value.translation)
+                } else if let nodeIndex = findNode(point: drag.startLocation) {
+                    state = DragInfo(origin: nodeIndex, offset: drag.translation)
                 } else {
-                    state = DragInfo(selectionRect: CGRect(origin: value.startLocation, size: value.translation))
+                    state = DragInfo(selectionRect: CGRect(origin: drag.startLocation, size: drag.translation))
                 }
             }
-            .onEnded { value in
+            .onEnded { drag in
 
-                if let output = findOutput(point: value.startLocation) {
-                    if let input = findInput(point: value.location) {
-                        print(output, input)
-                        add(wire: Wire(from: output, to: input))
+                if let output = findOutput(point: drag.startLocation) {
+                    if let input = findInput(point: drag.location) {
+                        connect(output, to: input)
                     }
-                } else if let input = findInput(point: value.startLocation) {
+                } else if let input = findInput(point: drag.startLocation) {
                     // Is a wire attached to the input?
                     if let wire = patch.wires.first(where: { $0.input == input }) {
                         patch.wires.remove(wire)
-                        if let input = findInput(point: value.location) {
-                            add(wire: Wire(from: wire.output, to: input))
+                        if let input = findInput(point: drag.location) {
+                            connect(wire.output, to: input)
                         }
                     }
-                } else if let nodeIndex = findNode(point: value.startLocation) {
-                    patch.nodes[nodeIndex].position += value.translation
-                    for id in selection where id != nodeIndex {
-                        patch.nodes[id].position += value.translation
+                } else if let nodeIndex = findNode(point: drag.startLocation) {
+                    patch.nodes[nodeIndex].position += drag.translation
+                    for idx in selection where idx != nodeIndex {
+                        patch.nodes[idx].position += drag.translation
                     }
                 } else {
                     selection = Set<NodeIndex>()
-                    let selectionRect = CGRect(origin: value.startLocation, size: value.translation)
+                    let selectionRect = CGRect(origin: drag.startLocation, size: drag.translation)
                     for (idx, node) in patch.nodes.enumerated() {
                         if selectionRect.intersects(rect(node: node)) {
                             selection.insert(idx)
