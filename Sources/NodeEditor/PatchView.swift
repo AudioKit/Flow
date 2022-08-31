@@ -23,76 +23,6 @@ public struct PatchView: View {
     let nodeWidth: CGFloat = 200
     let menuBarHeight: CGFloat = 40
 
-    /// Calculates the boudning rectangle for a node.
-    func rect(node: Node) -> CGRect {
-
-        let maxio = max(node.inputs.count, node.outputs.count)
-        let size = CGSize(width: nodeWidth, height: CGFloat(maxio * 30 + 40))
-
-        return CGRect(origin: node.position, size: size)
-    }
-
-    /// Calculates the bounding rectangle for an input port (not including the name).
-    func inputRect(node: Node, input: PortID) -> CGRect {
-        let pos = rect(node: node).origin
-        let y = menuBarHeight + CGFloat(input) * (portSize.height + portSpacing)
-        return CGRect(origin: pos + CGSize(width: portSpacing, height: y), size: portSize)
-    }
-
-    /// Calculates the bounding rectangle for an output port (not including the name).
-    func outputRect(node: Node, output: PortID) -> CGRect {
-        let pos = rect(node: node).origin
-        let y = menuBarHeight + CGFloat(output) * (portSize.height + portSpacing)
-        return CGRect(origin: pos + CGSize(width: nodeWidth - portSpacing - portSize.width, height: y), size: portSize)
-    }
-
-    /// Offset to apply to a node based on selection and gesture state.
-    func offset(for id: NodeID) -> CGSize {
-        guard dragInfo.output == nil && (id == dragInfo.node || selection.contains(id)) else { return .zero }
-        return dragInfo.offset
-    }
-
-    /// Search for inputs.
-    func findInput(node: Node, point: CGPoint) -> PortID? {
-        node.inputs.enumerated().first { (portIndex, _) in
-            inputRect(node: node, input: portIndex).contains(point)
-        }?.0
-    }
-
-    /// Search for an input in the whole patch.
-    func findInput(point: CGPoint) -> (NodeID, PortID)? {
-        for (nodeIndex, node) in patch.nodes.enumerated() {
-            if let portIndex = findInput(node: node, point: point) {
-                return (nodeIndex, portIndex)
-            }
-        }
-        return nil
-    }
-
-    /// Search for outputs.
-    func findOutput(node: Node, point: CGPoint) -> PortID? {
-        node.outputs.enumerated().first { (portIndex, _) in
-            outputRect(node: node, output: portIndex).contains(point)
-        }?.0
-    }
-
-    /// Search for an output in the whole patch.
-    func findOutput(point: CGPoint) -> (NodeID, PortID)? {
-        for (nodeIndex, node) in patch.nodes.enumerated() {
-            if let portIndex = findOutput(node: node, point: point) {
-                return (nodeIndex, portIndex)
-            }
-        }
-        return nil
-    }
-
-    /// Search for a node which intersects a point.
-    func findNode(point: CGPoint) -> NodeID? {
-        patch.nodes.enumerated().first { (index, node) in
-            rect(node: node).contains(point)
-        }?.0
-    }
-
     /// Draw a node.
     func draw(_ node: Node,
               _ id: NodeID,
@@ -113,20 +43,26 @@ public struct PatchView: View {
         let selected = dragInfo.selectionRect != .zero ? rect.intersects(dragInfo.selectionRect) : selection.contains(id)
         cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
 
-        cx.draw(Text(node.name), at: pos + CGSize(width: rect.size.width/2, height: 20), anchor: .center)
+        cx.draw(Text(node.name),
+                at: pos + CGSize(width: rect.size.width/2, height: 20),
+                anchor: .center)
 
         for (i, input) in node.inputs.enumerated() {
             let rect = inputRect(node: node, input: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
-            cx.draw(Text(input.name).font(.caption), at: rect.center + CGSize(width: (portSize.width/2 + portSpacing), height: 0), anchor: .leading)
+            cx.draw(Text(input.name).font(.caption),
+                    at: rect.center + CGSize(width: (portSize.width/2 + portSpacing), height: 0),
+                    anchor: .leading)
         }
 
         for (i, output) in node.outputs.enumerated() {
             let rect = outputRect(node: node, output: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
-            cx.draw(Text(output.name).font(.caption), at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0), anchor: .trailing)
+            cx.draw(Text(output.name).font(.caption),
+                    at: rect.center + CGSize(width: -(portSize.width/2 + portSpacing), height: 0),
+                    anchor: .trailing)
         }
     }
 
@@ -192,14 +128,20 @@ public struct PatchView: View {
 
                 if let (nodeIndex, outputIndex) = findOutput(point: value.startLocation) {
                     if let (destinationIndex, inputIndex) = findInput(point: value.location) {
-                        add(wire: Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
+                        add(wire: Wire(from: nodeIndex,
+                                       output: outputIndex,
+                                       to: destinationIndex,
+                                       input: inputIndex))
                     }
                 } else if let (nodeIndex, inputIndex) = findInput(point: value.startLocation) {
                     // Is a wire attached to the input?
                     if let wire = patch.wires.first(where: { ($0.destinationNode, $0.inputPort) == (nodeIndex, inputIndex) }) {
                         patch.wires.remove(wire)
                         if let (destinationIndex, inputIndex) = findInput(point: value.location) {
-                            add(wire: Wire(from: wire.originNode, output: wire.outputPort, to: destinationIndex, input: inputIndex))
+                            add(wire: Wire(from: wire.originNode,
+                                           output: wire.outputPort,
+                                           to: destinationIndex,
+                                           input: inputIndex))
                         }
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
@@ -227,8 +169,10 @@ public struct PatchView: View {
 
             // Draw wires.
             for wire in patch.wires where wire != dragInfo.hideWire {
-                let fromPoint = outputRect(node: patch.nodes[wire.originNode], output: wire.outputPort).offset(by: offset(for: wire.originNode)).center
-                let toPoint = inputRect(node: patch.nodes[wire.destinationNode], input: wire.inputPort).offset(by: offset(for: wire.destinationNode)).center
+                let fromPoint = outputRect(node: patch.nodes[wire.originNode],
+                                           output: wire.outputPort).offset(by: offset(for: wire.originNode)).center
+                let toPoint = inputRect(node: patch.nodes[wire.destinationNode],
+                                        input: wire.inputPort).offset(by: offset(for: wire.destinationNode)).center
 
                 let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
                 if viewport.intersects(bounds) {
