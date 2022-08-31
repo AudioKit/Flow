@@ -1,7 +1,9 @@
 import CoreGraphics
 import Foundation
 
-/// Data model for NodeEditor. Write a function to generate a `Patch` from your own data model
+/// Data model for NodeEditor.
+///
+/// Write a function to generate a `Patch` from your own data model
 /// as well as a function to update your data model when the `Patch` changes.
 /// Use SwiftUI's onChange(of:) to monitor changes.
 public struct Patch: Equatable {
@@ -39,6 +41,8 @@ public struct OutputID: Equatable, Hashable {
     }
 }
 
+/// Support for different types of connections.
+///
 /// Some graphs have different types of ports which can't be
 /// connected to eachother. Here we offer two common types
 /// as well as a custom option for your own types.
