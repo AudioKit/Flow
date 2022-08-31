@@ -3,7 +3,7 @@ import SwiftUI
 extension PatchView {
     /// Draw a node.
     func draw(node: Node,
-              id: NodeID,
+              id: NodeIndex,
               cx: GraphicsContext,
               viewport: CGRect) {
 

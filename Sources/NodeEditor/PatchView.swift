@@ -10,7 +10,7 @@ public struct PatchView: View {
     @Binding var patch: Patch
 
     /// Selected nodes.
-    @Binding var selection: Set<NodeID>
+    @Binding var selection: Set<NodeIndex>
 
     /// State for all gestures.
     @GestureState var dragInfo = DragInfo()
@@ -19,7 +19,7 @@ public struct PatchView: View {
     /// - Parameters:
     ///   - patch: Patch to display
     ///   - selection: set of nodes currently selected
-    public init(patch: Binding<Patch>, selection: Binding<Set<NodeID>>) {
+    public init(patch: Binding<Patch>, selection: Binding<Set<NodeIndex>>) {
         _patch = patch
         _selection = selection
     }

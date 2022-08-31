@@ -3,8 +3,8 @@ import SwiftUI
 extension PatchView {
     /// State for all gestures.
     struct DragInfo {
-        var output: PortID? = nil
-        var node: NodeID = 0
+        var output: PortIndex? = nil
+        var node: NodeIndex = 0
         var offset: CGSize = .zero
         var selectionRect: CGRect = .zero
         var hideWire: Wire?
@@ -66,7 +66,7 @@ extension PatchView {
                         patch.nodes[id].position += value.translation
                     }
                 } else {
-                    selection = Set<NodeID>()
+                    selection = Set<NodeIndex>()
                     let selectionRect = CGRect(origin: value.startLocation, size: value.translation)
                     for (idx, node) in patch.nodes.enumerated() {
                         if selectionRect.intersects(rect(node: node)) {

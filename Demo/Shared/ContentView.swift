@@ -55,7 +55,7 @@ struct DemoData {
 struct ContentView: View {
 
     @State var demoData = DemoData()
-    @State var selection = Set<NodeID>()
+    @State var selection = Set<NodeIndex>()
 
     var body: some View {
         PatchView(patch: $demoData.patch, selection: $selection)
