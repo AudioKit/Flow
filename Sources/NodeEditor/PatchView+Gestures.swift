@@ -14,7 +14,7 @@ extension PatchView {
     func add(wire: Wire) {
         // Remove any other wires connected to the input.
         patch.wires = patch.wires.filter { w in
-            (w.destinationNode, w.inputPort) != (wire.destinationNode, wire.inputPort)
+            (w.destination, w.input) != (wire.destination, wire.input)
         }
         patch.wires.insert(wire)
     }
@@ -27,11 +27,11 @@ extension PatchView {
                     state = DragInfo(output: portIndex, node: nodeIndex, offset: value.translation)
                 } else if let (nodeIndex, inputIndex) = findInput(point: value.startLocation) {
                     // Is a wire attached to the input?
-                    if let wire = patch.wires.first(where: { ($0.destinationNode, $0.inputPort) == (nodeIndex, inputIndex) }) {
+                    if let wire = patch.wires.first(where: { ($0.destination, $0.input) == (nodeIndex, inputIndex) }) {
                         let offset = inputRect(node: patch.nodes[nodeIndex], input: inputIndex).center
-                        - outputRect(node: patch.nodes[wire.originNode], output: wire.outputPort).center
+                        - outputRect(node: patch.nodes[wire.origin], output: wire.output).center
                         + value.translation
-                        state = DragInfo(output: wire.outputPort, node: wire.originNode, offset: offset, hideWire: wire)
+                        state = DragInfo(output: wire.output, node: wire.origin, offset: offset, hideWire: wire)
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
                     state = DragInfo(node: nodeIndex, offset: value.translation)
@@ -51,11 +51,11 @@ extension PatchView {
                     }
                 } else if let (nodeIndex, inputIndex) = findInput(point: value.startLocation) {
                     // Is a wire attached to the input?
-                    if let wire = patch.wires.first(where: { ($0.destinationNode, $0.inputPort) == (nodeIndex, inputIndex) }) {
+                    if let wire = patch.wires.first(where: { ($0.destination, $0.input) == (nodeIndex, inputIndex) }) {
                         patch.wires.remove(wire)
                         if let (destinationIndex, inputIndex) = findInput(point: value.location) {
-                            add(wire: Wire(from: wire.originNode,
-                                           output: wire.outputPort,
+                            add(wire: Wire(from: wire.origin,
+                                           output: wire.output,
                                            to: destinationIndex,
                                            input: inputIndex))
                         }

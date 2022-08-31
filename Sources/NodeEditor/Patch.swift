@@ -52,15 +52,15 @@ public struct Node: Equatable {
 }
 
 public struct Wire: Equatable, Hashable {
-    var originNode: NodeIndex
-    var outputPort: PortIndex
-    var destinationNode: NodeIndex
-    var inputPort: PortIndex
+    var origin: NodeIndex
+    var output: PortIndex
+    var destination: NodeIndex
+    var input: PortIndex
 
     public init(from: NodeIndex, output: PortIndex, to: NodeIndex, input: PortIndex) {
-        self.originNode = from
-        self.outputPort = output
-        self.destinationNode = to
-        self.inputPort = input
+        self.origin = from
+        self.output = output
+        self.destination = to
+        self.input = input
     }
 }
