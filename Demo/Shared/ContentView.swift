@@ -1,8 +1,8 @@
 import NodeEditor
 import SwiftUI
 
-class DemoData: ObservableObject {
-    @Published var patch: Patch
+struct DemoData {
+    var patch: Patch
 
     init() {
 
