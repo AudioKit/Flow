@@ -95,10 +95,15 @@ public struct PatchView: View {
     /// Draw a node.
     func draw(_ node: Node,
               _ id: NodeID,
-              _ cx: GraphicsContext) {
+              _ cx: GraphicsContext,
+              _ viewport: CGRect) {
 
         let offset = self.offset(for: id)
         let rect = rect(node: node).offset(by: offset)
+
+        if !rect.intersects(viewport) {
+            return
+        }
 
         let pos = rect.origin
 
@@ -227,7 +232,7 @@ public struct PatchView: View {
 
             // Draw nodes.
             for (idx, node) in patch.nodes.enumerated() {
-                draw(node, idx, cx)
+                draw(node, idx, cx, CGRect(origin: .zero, size: size))
             }
 
             // Draw a wire we're dragging.
