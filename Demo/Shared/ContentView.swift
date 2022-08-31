@@ -46,6 +46,22 @@ struct DemoData {
                          Wire(from: PortID(4, 0), to: PortID(5, 0))])
 
         patch = Patch(nodes: nodes, wires: wires)
+
+        var randomNodes: [Node] = []
+        for n in 0 ..< 50 {
+            let randomPoint = CGPoint(x: 1000 * Double.random(in: 0...1), y: 1000 * Double.random(in: 0...1))
+            randomNodes.append(Node(name: "node\(n)",
+                                    position: randomPoint,
+                                    inputs: [Port(name: "In", type: .signal)],
+                                    outputs: [Port(name: "Out", type: .signal)]))
+        }
+
+        var randomWires: Set<Wire> = []
+        for n in 0 ..< 50 {
+            randomWires.insert(Wire(from: PortID(n, 0), to: PortID(Int.random(in: 0...49), 0)))
+        }
+        patch = Patch(nodes: randomNodes, wires: randomWires)
+
     }
 }
 
