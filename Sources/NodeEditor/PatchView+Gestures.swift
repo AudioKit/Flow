@@ -27,12 +27,12 @@ extension PatchView {
 
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .updating($dragInfo) { drag, state, _ in
+            .updating($dragInfo) { drag, dragInfo, _ in
 
                 if let output = findOutput(point: drag.startLocation) {
-                    state = DragInfo(output: output,
-                                     origin: output.nodeIndex,
-                                     offset: drag.translation)
+                    dragInfo = DragInfo(output: output,
+                                        origin: output.nodeIndex,
+                                        offset: drag.translation)
                 } else if let input = findInput(point: drag.startLocation) {
                     // Is a wire attached to the input?
                     if let attachedWire = attachedWire(portID: input) {
@@ -40,17 +40,17 @@ extension PatchView {
                                                input: input.portIndex).center
                         - outputRect(node: patch.nodes[attachedWire.output.nodeIndex],
                                      output: attachedWire.output.portIndex).center
-                            + drag.translation
-                        state = DragInfo(output: attachedWire.output,
-                                         origin: attachedWire.output.nodeIndex,
-                                         offset: offset,
-                                         hideWire: attachedWire)
+                        + drag.translation
+                        dragInfo = DragInfo(output: attachedWire.output,
+                                            origin: attachedWire.output.nodeIndex,
+                                            offset: offset,
+                                            hideWire: attachedWire)
                     }
                 } else if let nodeIndex = findNode(point: drag.startLocation) {
-                    state = DragInfo(origin: nodeIndex, offset: drag.translation)
+                    dragInfo = DragInfo(origin: nodeIndex, offset: drag.translation)
                 } else {
-                    state = DragInfo(selectionRect: CGRect(origin: drag.startLocation,
-                                                           size: drag.translation))
+                    dragInfo = DragInfo(selectionRect: CGRect(origin: drag.startLocation,
+                                                              size: drag.translation))
                 }
             }
             .onEnded { drag in
