@@ -69,8 +69,10 @@ extension PatchView {
                     }
                 } else if let nodeIndex = findNode(point: drag.startLocation) {
                     patch.nodes[nodeIndex].position += drag.translation
-                    for idx in selection where idx != nodeIndex {
-                        patch.nodes[idx].position += drag.translation
+                    if selection.contains(nodeIndex) {
+                        for idx in selection where idx != nodeIndex {
+                            patch.nodes[idx].position += drag.translation
+                        }
                     }
                 } else {
                     selection = Set<NodeIndex>()

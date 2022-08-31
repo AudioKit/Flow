@@ -32,7 +32,14 @@ public extension PatchView {
             return .zero
         }
 
-        if selection.contains(idx) || idx == dragInfo.origin {
+        if idx == dragInfo.origin {
+            // Always offset the node we're dragging.
+            return dragInfo.offset
+        }
+
+        if selection.contains(dragInfo.origin) && selection.contains(idx) {
+            // Offset other selected node only if we're dragging the
+            // selection.
             return dragInfo.offset
         }
 
