@@ -10,6 +10,15 @@ extension PatchView {
         var hideWire: Wire?
     }
 
+    /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
+    func add(wire: Wire) {
+        // Remove any other wires connected to the input.
+        patch.wires = patch.wires.filter { w in
+            (w.destinationNode, w.inputPort) != (wire.destinationNode, wire.inputPort)
+        }
+        patch.wires.insert(wire)
+    }
+
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { value, state, _ in
