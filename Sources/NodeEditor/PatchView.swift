@@ -154,8 +154,14 @@ public struct PatchView: View {
 
                 if let (nodeIndex, portIndex) = findOutput(point: value.startLocation) {
                     state = DragInfo(output: portIndex, node: nodeIndex, offset: value.translation)
-                } else if let (_, _) = findInput(point: value.startLocation) {
-                    state = DragInfo() // XXX: for now
+                } else if let (nodeIndex, inputIndex) = findInput(point: value.startLocation) {
+                    // Is a wire attached to the input?
+                    if let wire = patch.wires.first(where: { ($0.to, $0.input) == (nodeIndex, inputIndex) }) {
+                        let offset = inputRect(node: patch.nodes[nodeIndex], input: inputIndex).center
+                                   - outputRect(node: patch.nodes[wire.from], output: wire.output).center
+                                   + value.translation
+                        state = DragInfo(output: wire.output, node: wire.from, offset: offset)
+                    }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
                     state = DragInfo(node: nodeIndex, offset: value.translation)
                 } else {
