@@ -186,24 +186,30 @@ public struct PatchView: View {
 
             cx.addFilter(.shadow(radius: 5))
 
+            // Draw wires.
             for wire in patch.wires {
                 let outputRect = outputRect(node: patch.nodes[wire.from], output: wire.output).offset(by: offset(for: wire.from))
                 let inputRect = inputRect(node: patch.nodes[wire.to], input: wire.input).offset(by: offset(for: wire.to))
                 strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
             }
 
+            // Draw nodes.
             for (idx, node) in patch.nodes.enumerated() {
                 draw(node, idx, cx)
             }
 
+            // Draw a wire we're dragging.
             if let output = dragInfo.output {
                 let outputRect = outputRect(node: patch.nodes[dragInfo.node], output: output)
                 strokeWire(cx: cx, from: outputRect.center, to: outputRect.center + dragInfo.offset)
             }
+
+            // Draw selection rect.
             if dragInfo.selectionRect != .zero {
                 let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
                 cx.stroke(rectPath, with: .color(.cyan))
             }
+            
         }.gesture(dragGesture)
     }
 }
