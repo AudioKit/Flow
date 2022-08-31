@@ -40,6 +40,10 @@ extension CGPoint {
     var size: CGSize {
         CGSize(width: x, height: y)
     }
+
+    var simd: SIMD2<Float> {
+        .init(x: Float(x), y: Float(y))
+    }
 }
 
 public func += (lhs: inout CGPoint, rhs: CGSize) {
