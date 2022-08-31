@@ -183,8 +183,14 @@ public struct PatchView: View {
                 } else if let (nodeIndex, inputIndex) = findInput(point: value.startLocation) {
                     // Is a wire attached to the input?
                     if let wire = patch.wires.first(where: { ($0.to, $0.input) == (nodeIndex, inputIndex) }) {
-                        // Just remove for now.
                         patch.wires.remove(wire)
+
+                        if let (destinationIndex, inputIndex) = findInput(point: value.location) {
+                            patch.wires = patch.wires.filter { wire in
+                                (wire.to, wire.input) != (destinationIndex, inputIndex)
+                            }
+                            patch.wires.insert(Wire(from: wire.from, output: wire.output, to: destinationIndex, input: inputIndex))
+                        }
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
                     patch.nodes[nodeIndex].position += value.translation
