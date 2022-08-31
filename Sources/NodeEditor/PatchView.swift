@@ -162,7 +162,7 @@ public struct PatchView: View {
 
                 if let (nodeIndex, outputIndex) = findOutput(point: value.startLocation) {
                     if let (destinationIndex, inputIndex) = findInput(point: value.location) {
-                        patch.wires.append(Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
+                        patch.wires.insert(Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
                     patch.nodes[nodeIndex].position += value.translation

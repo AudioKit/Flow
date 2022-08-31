@@ -3,9 +3,9 @@ import Foundation
 
 public struct Patch: Equatable {
     var nodes: [Node]
-    var wires: [Wire]
+    var wires: Set<Wire>
 
-    public init(nodes: [Node], wires: [Wire]) {
+    public init(nodes: [Node], wires: Set<Wire>) {
         self.nodes = nodes
         self.wires = wires
     }

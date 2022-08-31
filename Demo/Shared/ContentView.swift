@@ -40,11 +40,11 @@ class DemoData: ObservableObject {
                      mixer,
                      output]
 
-        let wires = [Wire(from: 0, output: 0, to: 1, input: 0),
-                     Wire(from: 1, output: 0, to: 4, input: 0),
-                     Wire(from: 2, output: 0, to: 3, input: 0),
-                     Wire(from: 3, output: 0, to: 4, input: 1),
-                     Wire(from: 4, output: 0, to: 5, input: 0)]
+        let wires = Set([Wire(from: 0, output: 0, to: 1, input: 0),
+                         Wire(from: 1, output: 0, to: 4, input: 0),
+                         Wire(from: 2, output: 0, to: 3, input: 0),
+                         Wire(from: 3, output: 0, to: 4, input: 1),
+                         Wire(from: 4, output: 0, to: 5, input: 0)])
 
         patch = Patch(nodes: nodes, wires: wires)
 
