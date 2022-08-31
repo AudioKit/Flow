@@ -165,6 +165,10 @@ public struct PatchView: View {
 
                 if let (nodeIndex, outputIndex) = findOutput(point: value.startLocation) {
                     if let (destinationIndex, inputIndex) = findInput(point: value.location) {
+                        // Remove any other wires connected to the input.
+                        patch.wires = patch.wires.filter { wire in
+                            (wire.to, wire.input) != (destinationIndex, inputIndex)
+                        }
                         patch.wires.insert(Wire(from: nodeIndex, output: outputIndex, to: destinationIndex, input: inputIndex))
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
