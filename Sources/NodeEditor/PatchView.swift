@@ -88,6 +88,7 @@ public struct PatchView: View {
         }?.0
     }
 
+    /// Draw a node.
     func draw(_ node: Node,
               _ id: NodeID,
               _ cx: GraphicsContext) {
@@ -136,6 +137,7 @@ public struct PatchView: View {
 
     }
 
+    /// State for all gestures.
     struct DragInfo {
         var output: Int? = nil
         var node: NodeID = 0
@@ -209,7 +211,7 @@ public struct PatchView: View {
                 let rectPath = Path(roundedRect: dragInfo.selectionRect, cornerRadius: 0)
                 cx.stroke(rectPath, with: .color(.cyan))
             }
-            
+
         }.gesture(dragGesture)
     }
 }
