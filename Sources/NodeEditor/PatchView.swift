@@ -144,6 +144,7 @@ public struct PatchView: View {
         var node: NodeID = 0
         var offset: CGSize = .zero
         var selectionRect: CGRect = .zero
+        var hideWire: Wire?
     }
 
     @GestureState var dragInfo = DragInfo()
@@ -160,7 +161,7 @@ public struct PatchView: View {
                         let offset = inputRect(node: patch.nodes[nodeIndex], input: inputIndex).center
                                    - outputRect(node: patch.nodes[wire.from], output: wire.output).center
                                    + value.translation
-                        state = DragInfo(output: wire.output, node: wire.from, offset: offset)
+                        state = DragInfo(output: wire.output, node: wire.from, offset: offset, hideWire: wire)
                     }
                 } else if let nodeIndex = findNode(point: value.startLocation) {
                     state = DragInfo(node: nodeIndex, offset: value.translation)
@@ -208,7 +209,7 @@ public struct PatchView: View {
             cx.addFilter(.shadow(radius: 5))
 
             // Draw wires.
-            for wire in patch.wires {
+            for wire in patch.wires where wire != dragInfo.hideWire {
                 let outputRect = outputRect(node: patch.nodes[wire.from], output: wire.output).offset(by: offset(for: wire.from))
                 let inputRect = inputRect(node: patch.nodes[wire.to], input: wire.input).offset(by: offset(for: wire.to))
                 strokeWire(cx: cx, from: outputRect.center, to: inputRect.center)
