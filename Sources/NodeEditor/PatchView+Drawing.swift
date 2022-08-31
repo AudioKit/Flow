@@ -29,7 +29,7 @@ extension PatchView {
             let rect = inputRect(node: node, input: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
-            if !patch.wires.contains(where: { $0.input == PortID(patch.nodes.firstIndex(of: node)!, i) }) {
+            if !patch.wires.contains(where: { $0.input == InputID(patch.nodes.firstIndex(of: node)!, i) }) {
                 let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
                 cx.fill(dot, with: .color(.black))
             }
@@ -42,7 +42,7 @@ extension PatchView {
             let rect = outputRect(node: node, output: i).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
-            if !patch.wires.contains(where: { $0.output == PortID(patch.nodes.firstIndex(of: node)!, i) }) {
+            if !patch.wires.contains(where: { $0.output == OutputID(patch.nodes.firstIndex(of: node)!, i) }) {
                 let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
                 cx.fill(dot, with: .color(.black))
             }

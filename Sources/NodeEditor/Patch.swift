@@ -14,7 +14,7 @@ public struct Patch: Equatable {
 public typealias NodeIndex = Int
 public typealias PortIndex = Int
 
-public struct PortID: Hashable {
+public struct InputID: Equatable, Hashable {
     var nodeIndex: NodeIndex
     var portIndex: PortIndex
 
@@ -24,6 +24,15 @@ public struct PortID: Hashable {
     }
 }
 
+public struct OutputID: Equatable, Hashable {
+    var nodeIndex: NodeIndex
+    var portIndex: PortIndex
+
+    public init(_ nodeIndex: NodeIndex, _ portIndex: PortIndex) {
+        self.nodeIndex = nodeIndex
+        self.portIndex = portIndex
+    }
+}
 
 public enum PortType: Equatable, Hashable {
     case control
@@ -63,10 +72,10 @@ public struct Node: Equatable {
 }
 
 public struct Wire: Equatable, Hashable {
-    var output: PortID
-    var input: PortID
+    var output: OutputID
+    var input: InputID
 
-    public init(from: PortID, to: PortID) {
+    public init(from: OutputID, to: InputID) {
         output = from
         input = to
     }

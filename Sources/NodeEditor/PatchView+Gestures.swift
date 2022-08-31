@@ -3,7 +3,7 @@ import SwiftUI
 extension PatchView {
     /// State for all gestures.
     struct DragInfo {
-        var output: PortID? = nil
+        var output: OutputID? = nil
         var origin: NodeIndex = 0
         var offset: CGSize = .zero
         var selectionRect: CGRect = .zero
@@ -11,7 +11,7 @@ extension PatchView {
     }
 
     /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
-    func connect(_ output: PortID, to input: PortID) {
+    func connect(_ output: OutputID, to input: InputID) {
         let wire = Wire(from: output, to: input)
 
         // Remove any other wires connected to the input.
@@ -21,8 +21,8 @@ extension PatchView {
         patch.wires.insert(wire)
     }
 
-    func attachedWire(portID: PortID) -> Wire? {
-        patch.wires.first(where: { $0.input == portID })
+    func attachedWire(inputID: InputID) -> Wire? {
+        patch.wires.first(where: { $0.input == inputID })
     }
 
     var dragGesture: some Gesture {
@@ -35,7 +35,7 @@ extension PatchView {
                                         offset: drag.translation)
                 } else if let input = findInput(point: drag.startLocation) {
                     // Is a wire attached to the input?
-                    if let attachedWire = attachedWire(portID: input) {
+                    if let attachedWire = attachedWire(inputID: input) {
                         let offset = inputRect(node: patch.nodes[input.nodeIndex],
                                                input: input.portIndex).center
                         - outputRect(node: patch.nodes[attachedWire.output.nodeIndex],
@@ -61,7 +61,7 @@ extension PatchView {
                     }
                 } else if let input = findInput(point: drag.startLocation) {
                     // Is a wire attached to the input?
-                    if let attachedWire = attachedWire(portID: input) {
+                    if let attachedWire = attachedWire(inputID: input) {
                         patch.wires.remove(attachedWire)
                         if let input = findInput(point: drag.location) {
                             connect(attachedWire.output, to: input)
