@@ -50,8 +50,8 @@ extension PatchView {
                     }
 
                 } else {
-                    dragInfo = .selection(rect: CGRect(origin: drag.startLocation,
-                                                       size: drag.translation))
+                    dragInfo = .selection(rect: CGRect(a: drag.startLocation,
+                                                       b: drag.location))
                 }
             }
             .onEnded { drag in
