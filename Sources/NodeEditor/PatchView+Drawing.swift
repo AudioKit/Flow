@@ -100,7 +100,6 @@ extension PatchView {
         switch dragInfo {
 
         case .selection(rect: let rect):
-            print(rect)
             let rectPath = Path(roundedRect: rect, cornerRadius: 0)
             cx.stroke(rectPath, with: .color(.cyan))
         default:
