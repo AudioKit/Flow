@@ -40,17 +40,17 @@ extension PatchView {
                             - outputRect(node: patch.nodes[attachedWire.output.nodeIndex],
                                          output: attachedWire.output.portIndex).center
                             + drag.translation
-                            dragInfo = DragInfo.wire(output: attachedWire.output,
-                                                     offset: offset,
-                                                     hideWire: attachedWire)
+                            dragInfo = .wire(output: attachedWire.output,
+                                             offset: offset,
+                                             hideWire: attachedWire)
                         }
                     } else {
-                        dragInfo = DragInfo.node(index: nodeIndex, offset: drag.translation)
+                        dragInfo = .node(index: nodeIndex, offset: drag.translation)
                     }
 
                 } else {
-                    dragInfo = DragInfo.selection(rect: CGRect(origin: drag.startLocation,
-                                                               size: drag.translation))
+                    dragInfo = .selection(rect: CGRect(origin: drag.startLocation,
+                                                       size: drag.translation))
                 }
             }
             .onEnded { drag in
