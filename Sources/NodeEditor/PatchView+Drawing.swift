@@ -87,12 +87,9 @@ extension PatchView {
     }
 
     func drawDraggedWire(cx: GraphicsContext) {
-        switch dragInfo {
-        case .wire(output: let output, offset: let offset, _):
+        if case .wire(output: let output, offset: let offset, _) = dragInfo {
             let outputRect = outputRect(node: patch.nodes[output.nodeIndex], output: output.portIndex)
             strokeWire(from: outputRect.center, to: outputRect.center + offset, cx: cx)
-        default:
-            return
         }
     }
 
