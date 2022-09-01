@@ -97,15 +97,10 @@ extension PatchView {
     }
 
     func drawSelectionRect(cx: GraphicsContext) {
-        switch dragInfo {
-
-        case .selection(rect: let rect):
+        if case .selection(rect: let rect) = dragInfo {
             let rectPath = Path(roundedRect: rect, cornerRadius: 0)
             cx.stroke(rectPath, with: .color(.cyan))
-        default:
-            return
         }
-
     }
 
     func strokeWire(from: CGPoint, to: CGPoint, cx: GraphicsContext) {
