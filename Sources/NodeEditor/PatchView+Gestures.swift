@@ -6,6 +6,7 @@ extension PatchView {
         case wire(output: OutputID, offset: CGSize = .zero, hideWire: Wire? = nil)
         case node(index: NodeIndex, offset: CGSize = .zero)
         case selection(rect: CGRect = .zero)
+        case none
     }
 
     /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
