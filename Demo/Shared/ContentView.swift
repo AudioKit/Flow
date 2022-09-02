@@ -3,29 +3,12 @@ import SwiftUI
 
 func simplePatch() -> Patch {
 
-    let generator = Node(name: "generator",
-                         position: CGPoint(x: 100, y: 100),
-                         outputs: ["out"])
+    let generator = Node(name: "generator", outputs: ["out"])
+    let processor = Node(name: "processor", inputs: ["in"], outputs: ["out"])
+    let mixer = Node(name: "mixer", inputs: ["in1", "in2"], outputs: ["out"])
+    let output = Node(name: "output", inputs: ["in"])
 
-    let processor = Node(name: "processor",
-                         position: CGPoint(x: 400, y: 100),
-                         inputs: ["in"],
-                         outputs: ["out"])
-
-    let mixer = Node(name: "mixer",
-                     position: CGPoint(x: 700, y: 100),
-                     inputs: ["in1", "in2"],
-                     outputs: ["out"])
-
-    let output = Node(name: "output",
-                      position: CGPoint(x: 1000, y: 100),
-                      inputs: ["in"])
-
-    let nodes = [generator, processor,
-                 generator.translate(by: CGSize(width: 0, height: 100)),
-                 processor.translate(by: CGSize(width: 0, height: 100)),
-                 mixer,
-                 output]
+    let nodes = [generator, processor, generator, processor, mixer, output]
 
     let wires = Set([Wire(from: OutputID(0, 0), to: InputID(1, 0)),
                      Wire(from: OutputID(1, 0), to: InputID(4, 0)),
@@ -33,7 +16,9 @@ func simplePatch() -> Patch {
                      Wire(from: OutputID(3, 0), to: InputID(4, 1)),
                      Wire(from: OutputID(4, 0), to: InputID(5, 0))])
 
-    return Patch(nodes: nodes, wires: wires)
+    var patch = Patch(nodes: nodes, wires: wires)
+    patch.recursiveLayout(nodeIndex: 5, point: CGPoint(x: 1000, y: 100))
+    return patch
 
 }
 

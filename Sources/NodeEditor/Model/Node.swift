@@ -15,14 +15,14 @@ public struct Node: Equatable {
     public var inputs: [Port]
     public var outputs: [Port]
 
-    public init(name: String, position: CGPoint, inputs: [Port] = [], outputs: [Port] = []) {
+    public init(name: String, position: CGPoint = .zero, inputs: [Port] = [], outputs: [Port] = []) {
         self.name = name
         self.position = position
         self.inputs = inputs
         self.outputs = outputs
     }
 
-    public init(name: String, position: CGPoint, inputs: [String] = [], outputs: [String] = []) {
+    public init(name: String, position: CGPoint = .zero, inputs: [String] = [], outputs: [String] = []) {
         self.name = name
         self.position = position
         self.inputs = inputs.map { Port(name: $0) }

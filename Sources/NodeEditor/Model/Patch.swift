@@ -44,5 +44,29 @@ public struct Patch: Equatable {
 
         return .background
     }
+
+    /// Recursive layout.
+    ///
+    /// Returns height of all nodes in subtree.
+    @discardableResult
+    public mutating func recursiveLayout(nodeIndex: NodeIndex, point: CGPoint, layout: LayoutConstants = LayoutConstants()) -> CGFloat {
+
+        nodes[nodeIndex].position = point
+
+        // XXX: super slow
+        let incomingWires = wires.filter {
+            $0.input.nodeIndex == nodeIndex
+        }.sorted(by: { $0.input.portIndex < $1.input.portIndex })
+
+        var height: CGFloat = 0
+        for wire in incomingWires {
+            let h = recursiveLayout(nodeIndex: wire.output.nodeIndex,
+                                    point: CGPoint(x: point.x - layout.nodeWidth - 40, y: point.y + height),
+                                    layout: layout)
+            height += h
+        }
+
+        return height + nodes[nodeIndex].rect(layout: layout).height
+    }
 }
 
