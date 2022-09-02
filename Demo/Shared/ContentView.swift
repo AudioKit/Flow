@@ -6,29 +6,21 @@ func simplePatch() -> Patch {
     let generator = Node(name: "generator",
                          position: CGPoint(x: 100, y: 100),
                          inputs: [],
-                         outputs: [Port(name: "out",
-                                        type: .signal)])
+                         outputs: [Port(name: "out")])
 
     let processor = Node(name: "processor",
                          position: CGPoint(x: 400, y: 100),
-                         inputs: [Port(name: "in",
-                                       type: .signal)],
-                         outputs: [Port(name: "out",
-                                        type: .signal)])
+                         inputs: [Port(name: "in")],
+                         outputs: [Port(name: "out")])
 
     let mixer = Node(name: "mixer",
                      position: CGPoint(x: 700, y: 100),
-                     inputs: [Port(name: "in1",
-                                   type: .signal),
-                              Port(name: "in2",
-                                   type: .signal)],
-                     outputs: [Port(name: "out",
-                                    type: .signal)])
+                     inputs: [Port(name: "in1"), Port(name: "in2")],
+                     outputs: [Port(name: "out")])
 
     let output = Node(name: "output",
                       position: CGPoint(x: 1000, y: 100),
-                      inputs: [Port(name: "in",
-                                    type: .signal)],
+                      inputs: [Port(name: "in")],
                       outputs: [])
 
     let nodes = [generator, processor,
@@ -52,11 +44,12 @@ func randomPatch() -> Patch {
 
     var randomNodes: [Node] = []
     for n in 0 ..< 50 {
-        let randomPoint = CGPoint(x: 1000 * Double.random(in: 0...1), y: 1000 * Double.random(in: 0...1))
+        let randomPoint = CGPoint(x: 1000 * Double.random(in: 0...1),
+                                  y: 1000 * Double.random(in: 0...1))
         randomNodes.append(Node(name: "node\(n)",
                                 position: randomPoint,
-                                inputs: [Port(name: "In", type: .signal)],
-                                outputs: [Port(name: "Out", type: .signal)]))
+                                inputs: [Port(name: "In")],
+                                outputs: [Port(name: "Out")]))
     }
 
     var randomWires: Set<Wire> = []

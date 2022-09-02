@@ -41,7 +41,7 @@ public struct Port: Equatable, Hashable {
     var name: String
     var type: PortType
 
-    public init(name: String, type: PortType) {
+    public init(name: String, type: PortType = .signal) {
         self.name = name
         self.type = type
     }
