@@ -47,6 +47,7 @@ func simplePatch() -> Patch {
 
 }
 
+/// Bit of a stress test to show how NodeEditor performs with more nodes.
 func randomPatch() -> Patch {
 
     var randomNodes: [Node] = []
