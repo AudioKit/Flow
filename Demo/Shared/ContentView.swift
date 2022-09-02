@@ -6,21 +6,21 @@ func simplePatch() -> Patch {
     let generator = Node(name: "generator",
                          position: CGPoint(x: 100, y: 100),
                          inputs: [],
-                         outputs: [Port(name: "out")])
+                         outputs: ["out"])
 
     let processor = Node(name: "processor",
                          position: CGPoint(x: 400, y: 100),
-                         inputs: [Port(name: "in")],
-                         outputs: [Port(name: "out")])
+                         inputs: ["in"],
+                         outputs: ["out"])
 
     let mixer = Node(name: "mixer",
                      position: CGPoint(x: 700, y: 100),
-                     inputs: [Port(name: "in1"), Port(name: "in2")],
-                     outputs: [Port(name: "out")])
+                     inputs: ["in1", "in2"],
+                     outputs: ["out"])
 
     let output = Node(name: "output",
                       position: CGPoint(x: 1000, y: 100),
-                      inputs: [Port(name: "in")],
+                      inputs: ["in"],
                       outputs: [])
 
     let nodes = [generator, processor,
@@ -48,8 +48,8 @@ func randomPatch() -> Patch {
                                   y: 1000 * Double.random(in: 0...1))
         randomNodes.append(Node(name: "node\(n)",
                                 position: randomPoint,
-                                inputs: [Port(name: "In")],
-                                outputs: [Port(name: "Out")]))
+                                inputs: ["In"],
+                                outputs: ["Out"]))
     }
 
     var randomWires: Set<Wire> = []

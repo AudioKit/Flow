@@ -22,6 +22,13 @@ public struct Node: Equatable {
         self.outputs = outputs
     }
 
+    public init(name: String, position: CGPoint, inputs: [String], outputs: [String]) {
+        self.name = name
+        self.position = position
+        self.inputs = inputs.map { Port(name: $0) }
+        self.outputs = outputs.map { Port(name: $0) }
+    }
+
     public func translate(by offset: CGSize) -> Node {
         var result = self
         result.position.x += offset.width
