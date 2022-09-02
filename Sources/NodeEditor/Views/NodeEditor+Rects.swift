@@ -1,16 +1,14 @@
 import SwiftUI
 
 public extension NodeEditor {
-
     /// Offset to apply to a node based on selection and gesture state.
     func offset(for idx: NodeIndex) -> CGSize {
-
         switch dragInfo {
-        case .node(index: let index, offset: let offset):
+        case let .node(index: index, offset: offset):
             if idx == index {
                 return offset
             }
-            if selection.contains(index) && selection.contains(idx) {
+            if selection.contains(index), selection.contains(idx) {
                 // Offset other selected node only if we're dragging the
                 // selection.
                 return offset
