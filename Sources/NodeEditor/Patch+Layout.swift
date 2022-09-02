@@ -44,6 +44,7 @@ public extension Node {
 
 public extension Patch {
 
+    /// Hit test a point against the whole patch.
     func hitTest(point: CGPoint, layout: LayoutConstants) -> HitTestResult {
 
         for (nodeIndex, node) in nodes.enumerated().reversed() {
