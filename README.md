@@ -3,7 +3,7 @@
 Generic node graph editor. Generate a `Patch` from your own data model. Update
 your data model when the `Patch` changes.
 
-<img src="Sources/NodeEditor/NodeEditor.docc/Resources/screenshot.png" alt="node editor demo screenshot"">
+<img src="Sources/NodeEditor/NodeEditor.docc/Resources/screenshot.png" alt="node editor demo screenshot">
 
 ```swift
 func simplePatch() -> Patch {
