@@ -6,9 +6,8 @@ let package = Package(
     name: "NodeEditor",
     platforms: [.macOS(.v12), .iOS(.v15)],
     products: [.library(name: "NodeEditor", targets: ["NodeEditor"])],
-    dependencies: [.package(url: "https://github.com/audulus/vger", branch: "main")],
     targets: [
-        .target(name: "NodeEditor", dependencies: ["vger"]),
+        .target(name: "NodeEditor"),
         .testTarget(name: "NodeEditorTests", dependencies: ["NodeEditor"]),
     ]
 )
