@@ -8,7 +8,7 @@ extension PatchView {
               viewport: CGRect)
     {
         let offset = self.offset(for: nodeIndex)
-        let rect = rect(node: node).offset(by: offset)
+        let rect = node.rect(layout: layout).offset(by: offset)
 
         if !rect.intersects(viewport) {
             return
@@ -33,7 +33,7 @@ extension PatchView {
                 anchor: .center)
 
         for (i, input) in node.inputs.enumerated() {
-            let rect = inputRect(node: node, input: i).offset(by: offset)
+            let rect = node.inputRect(input: i, layout: layout).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.cyan))
             if !patch.wires.contains(where: { $0.input == InputID(patch.nodes.firstIndex(of: node)!, i) }) {
@@ -41,12 +41,12 @@ extension PatchView {
                 cx.fill(dot, with: .color(.black))
             }
             cx.draw(Text(input.name).font(.caption),
-                    at: rect.center + CGSize(width: portSize.width / 2 + portSpacing, height: 0),
+                    at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
                     anchor: .leading)
         }
 
         for (i, output) in node.outputs.enumerated() {
-            let rect = outputRect(node: node, output: i).offset(by: offset)
+            let rect = node.outputRect(output: i, layout: layout).offset(by: offset)
             let circle = Path(ellipseIn: rect)
             cx.fill(circle, with: .color(.magenta))
             if !patch.wires.contains(where: { $0.output == OutputID(patch.nodes.firstIndex(of: node)!, i) }) {
@@ -54,7 +54,7 @@ extension PatchView {
                 cx.fill(dot, with: .color(.black))
             }
             cx.draw(Text(output.name).font(.caption),
-                    at: rect.center + CGSize(width: -(portSize.width / 2 + portSpacing), height: 0),
+                    at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
                     anchor: .trailing)
         }
     }
@@ -74,10 +74,14 @@ extension PatchView {
             hideWire = nil
         }
         for wire in patch.wires where wire != hideWire {
-            let fromPoint = outputRect(node: patch.nodes[wire.output.nodeIndex],
-                                       output: wire.output.portIndex).offset(by: offset(for: wire.output.nodeIndex)).center
-            let toPoint = inputRect(node: patch.nodes[wire.input.nodeIndex],
-                                    input: wire.input.portIndex).offset(by: offset(for: wire.input.nodeIndex)).center
+            let fromPoint = patch.nodes[wire.output.nodeIndex].outputRect(
+                                       output: wire.output.portIndex,
+                                       layout: layout)
+                .offset(by: offset(for: wire.output.nodeIndex)).center
+            let toPoint = patch.nodes[wire.input.nodeIndex].inputRect(
+                                    input: wire.input.portIndex,
+                                    layout: layout)
+                .offset(by: offset(for: wire.input.nodeIndex)).center
 
             let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
             if viewport.intersects(bounds) {
@@ -88,7 +92,7 @@ extension PatchView {
 
     func drawDraggedWire(cx: GraphicsContext) {
         if case .wire(output: let output, offset: let offset, _) = dragInfo {
-            let outputRect = outputRect(node: patch.nodes[output.nodeIndex], output: output.portIndex)
+            let outputRect = patch.nodes[output.nodeIndex].outputRect(output: output.portIndex, layout: layout)
             strokeWire(from: outputRect.center, to: outputRect.center + offset, cx: cx)
         }
     }

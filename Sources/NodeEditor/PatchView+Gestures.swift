@@ -37,9 +37,10 @@ extension PatchView {
                     } else if let input = findInput(node: node, point: drag.startLocation) {
                         // Is a wire attached to the input?
                         if let attachedWire = attachedWire(inputID: InputID(nodeIndex, input)) {
-                            let offset = inputRect(node: node, input: input).center
-                            - outputRect(node: patch.nodes[attachedWire.output.nodeIndex],
-                                         output: attachedWire.output.portIndex).center
+                            let offset = node.inputRect(input: input, layout: layout).center
+                            - patch.nodes[attachedWire.output.nodeIndex].outputRect(
+                                         output: attachedWire.output.portIndex,
+                                         layout: layout).center
                             + drag.translation
                             dragInfo = .wire(output: attachedWire.output,
                                              offset: offset,
@@ -84,7 +85,7 @@ extension PatchView {
                     selection = Set<NodeIndex>()
                     let selectionRect = CGRect(origin: drag.startLocation, size: drag.translation)
                     for (idx, node) in patch.nodes.enumerated() {
-                        if selectionRect.intersects(rect(node: node)) {
+                        if selectionRect.intersects(node.rect(layout: layout)) {
                             selection.insert(idx)
                         }
                     }
