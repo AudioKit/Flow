@@ -1,7 +1,10 @@
 
 import Foundation
 
-/// Nodes are identified by index in the patch.
+/// Nodes are identified by index in `Patch.nodes`
+public typealias NodeIndex = Int
+
+/// Nodes are identified by index in `Patch.nodes`
 ///
 /// Using indices as IDs has proven to be easy and fast for our use cases. The `Patch` should be
 /// generated from your own data model, not used as your data model, so there isn't a requirement that

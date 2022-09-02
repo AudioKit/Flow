@@ -16,8 +16,6 @@ public struct Patch: Equatable {
     }
 }
 
-public typealias NodeIndex = Int
-
 /// An (output, input) pair. Represents a connection between nodes.
 ///
 /// Node graphs are often represented with the connections
