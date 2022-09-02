@@ -20,7 +20,7 @@ extension NodeEditor {
 
         var selected = false
         switch dragInfo {
-        case .selection(rect: let selectionRect):
+        case let .selection(rect: selectionRect):
             selected = rect.intersects(selectionRect)
         default:
             selected = selection.contains(nodeIndex)
@@ -66,7 +66,7 @@ extension NodeEditor {
     }
 
     func drawWires(cx: GraphicsContext, viewport: CGRect) {
-        var hideWire: Wire? = nil
+        var hideWire: Wire?
         switch dragInfo {
         case .wire(output: _, offset: _, hideWire: let hw):
             hideWire = hw
@@ -75,13 +75,15 @@ extension NodeEditor {
         }
         for wire in patch.wires where wire != hideWire {
             let fromPoint = patch.nodes[wire.output.nodeIndex].outputRect(
-                                       output: wire.output.portIndex,
-                                       layout: layout)
-                .offset(by: offset(for: wire.output.nodeIndex)).center
+                output: wire.output.portIndex,
+                layout: layout
+            )
+            .offset(by: offset(for: wire.output.nodeIndex)).center
             let toPoint = patch.nodes[wire.input.nodeIndex].inputRect(
-                                    input: wire.input.portIndex,
-                                    layout: layout)
-                .offset(by: offset(for: wire.input.nodeIndex)).center
+                input: wire.input.portIndex,
+                layout: layout
+            )
+            .offset(by: offset(for: wire.input.nodeIndex)).center
 
             let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
             if viewport.intersects(bounds) {
@@ -91,14 +93,14 @@ extension NodeEditor {
     }
 
     func drawDraggedWire(cx: GraphicsContext) {
-        if case .wire(output: let output, offset: let offset, _) = dragInfo {
+        if case let .wire(output: output, offset: offset, _) = dragInfo {
             let outputRect = patch.nodes[output.nodeIndex].outputRect(output: output.portIndex, layout: layout)
             strokeWire(from: outputRect.center, to: outputRect.center + offset, cx: cx)
         }
     }
 
     func drawSelectionRect(cx: GraphicsContext) {
-        if case .selection(rect: let rect) = dragInfo {
+        if case let .selection(rect: rect) = dragInfo {
             let rectPath = Path(roundedRect: rect, cornerRadius: 0)
             cx.stroke(rectPath, with: .color(.cyan))
         }

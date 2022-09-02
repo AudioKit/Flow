@@ -24,7 +24,6 @@ public struct Patch: Equatable {
 
     /// Hit test a point against the whole patch.
     func hitTest(point: CGPoint, layout: LayoutConstants) -> HitTestResult {
-
         for (nodeIndex, node) in nodes.enumerated().reversed() {
             for (inputIndex, _) in node.inputs.enumerated() {
                 if node.inputRect(input: inputIndex, layout: layout).contains(point) {
@@ -50,7 +49,6 @@ public struct Patch: Equatable {
     /// Returns height of all nodes in subtree.
     @discardableResult
     public mutating func recursiveLayout(nodeIndex: NodeIndex, point: CGPoint, layout: LayoutConstants = LayoutConstants()) -> CGFloat {
-
         nodes[nodeIndex].position = point
 
         // XXX: super slow
@@ -69,4 +67,3 @@ public struct Patch: Equatable {
         return height + nodes[nodeIndex].rect(layout: layout).height
     }
 }
-

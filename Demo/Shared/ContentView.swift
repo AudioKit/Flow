@@ -2,7 +2,6 @@ import NodeEditor
 import SwiftUI
 
 func simplePatch() -> Patch {
-
     let generator = Node(name: "generator", outputs: ["out"])
     let processor = Node(name: "processor", inputs: ["in"], outputs: ["out"])
     let mixer = Node(name: "mixer", inputs: ["in1", "in2"], outputs: ["out"])
@@ -19,16 +18,14 @@ func simplePatch() -> Patch {
     var patch = Patch(nodes: nodes, wires: wires)
     patch.recursiveLayout(nodeIndex: 5, point: CGPoint(x: 800, y: 50))
     return patch
-
 }
 
 /// Bit of a stress test to show how NodeEditor performs with more nodes.
 func randomPatch() -> Patch {
-
     var randomNodes: [Node] = []
     for n in 0 ..< 50 {
-        let randomPoint = CGPoint(x: 1000 * Double.random(in: 0...1),
-                                  y: 1000 * Double.random(in: 0...1))
+        let randomPoint = CGPoint(x: 1000 * Double.random(in: 0 ... 1),
+                                  y: 1000 * Double.random(in: 0 ... 1))
         randomNodes.append(Node(name: "node\(n)",
                                 position: randomPoint,
                                 inputs: ["In"],
@@ -37,7 +34,7 @@ func randomPatch() -> Patch {
 
     var randomWires: Set<Wire> = []
     for n in 0 ..< 50 {
-        randomWires.insert(Wire(from: OutputID(n, 0), to: InputID(Int.random(in: 0...49), 0)))
+        randomWires.insert(Wire(from: OutputID(n, 0), to: InputID(Int.random(in: 0 ... 49), 0)))
     }
     return Patch(nodes: randomNodes, wires: randomWires)
 }

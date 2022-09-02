@@ -1,11 +1,9 @@
 
-import XCTest
 import NodeEditor
+import XCTest
 
 final class LayoutTests: XCTestCase {
-
     func testNodeRects() throws {
-
         let processor = Node(name: "processor",
                              position: CGPoint(x: 400, y: 100),
                              inputs: [Port(name: "in",
@@ -21,7 +19,5 @@ final class LayoutTests: XCTestCase {
 
         XCTAssertEqual(processor.outputRect(output: 0, layout: LayoutConstants()),
                        CGRect(origin: CGPoint(x: 570, y: 140), size: CGSize(width: 20, height: 20)))
-
     }
-
 }

@@ -37,8 +37,8 @@ extension CGRect {
 
     init(a: CGPoint, b: CGPoint) {
         self.init()
-        self.origin = CGPoint(x: min(a.x, b.x), y: min(a.y, b.y))
-        self.size = CGSize(width: abs(a.x-b.x), height: abs(a.y-b.y))
+        origin = CGPoint(x: min(a.x, b.x), y: min(a.y, b.y))
+        size = CGSize(width: abs(a.x - b.x), height: abs(a.y - b.y))
     }
 }
 
