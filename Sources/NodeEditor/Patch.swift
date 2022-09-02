@@ -69,10 +69,10 @@ public struct Port: Equatable, Hashable {
 /// generated from your own data model, not used as your data model, so there isn't a requirement that
 /// the indices be consistent across your editing operations (such as deleting nodes).
 public struct Node: Equatable {
-    var name: String
-    var position: CGPoint
-    var inputs: [Port]
-    var outputs: [Port]
+    public var name: String
+    public var position: CGPoint
+    public var inputs: [Port]
+    public var outputs: [Port]
 
     public init(name: String, position: CGPoint, inputs: [Port], outputs: [Port]) {
         self.name = name
