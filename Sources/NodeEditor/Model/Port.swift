@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// Ports are identified by index within a node
 public typealias PortIndex = Int
 
 /// Uniquely identfies an input by indices.
@@ -9,6 +10,10 @@ public struct InputID: Equatable, Hashable {
     var nodeIndex: NodeIndex
     var portIndex: PortIndex
 
+    /// Initialize an input
+    /// - Parameters:
+    ///   - nodeIndex: Index for the node the input belongs
+    ///   - portIndex: Index to the input within the node
     public init(_ nodeIndex: NodeIndex, _ portIndex: PortIndex) {
         self.nodeIndex = nodeIndex
         self.portIndex = portIndex
@@ -20,6 +25,10 @@ public struct OutputID: Equatable, Hashable {
     var nodeIndex: NodeIndex
     var portIndex: PortIndex
 
+    /// Initialize an output
+    /// - Parameters:
+    ///   - nodeIndex: Index for the node the output belongs
+    ///   - portIndex: Index to the output within the node
     public init(_ nodeIndex: NodeIndex, _ portIndex: PortIndex) {
         self.nodeIndex = nodeIndex
         self.portIndex = portIndex

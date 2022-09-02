@@ -54,7 +54,7 @@ extension CGPoint {
     }
 }
 
-public func += (lhs: inout CGPoint, rhs: CGSize) {
+func += (lhs: inout CGPoint, rhs: CGSize) {
     lhs = lhs + rhs
 }
 
