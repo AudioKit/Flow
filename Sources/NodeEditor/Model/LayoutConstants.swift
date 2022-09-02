@@ -2,6 +2,7 @@
 
 import Foundation
 
+/// Define the layout geometry of the nodes
 public struct LayoutConstants {
     let portSize = CGSize(width: 20, height: 20)
     let portSpacing: CGFloat = 10
