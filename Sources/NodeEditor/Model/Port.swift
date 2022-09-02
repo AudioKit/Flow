@@ -51,6 +51,10 @@ public struct Port: Equatable, Hashable {
     var name: String
     var type: PortType
 
+    /// Initialize the port with a name and type
+    /// - Parameters:
+    ///   - name: Descriptive abel of the port
+    ///   - type: Type of port
     public init(name: String, type: PortType = .signal) {
         self.name = name
         self.type = type
