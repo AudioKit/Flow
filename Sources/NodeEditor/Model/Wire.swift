@@ -12,6 +12,10 @@ public struct Wire: Equatable, Hashable {
     var output: OutputID
     var input: InputID
 
+    /// Initialize the wire with an input and output
+    /// - Parameters:
+    ///   - from: output from a node
+    ///   - to: input into a node
     public init(from: OutputID, to: InputID) {
         output = from
         input = to
