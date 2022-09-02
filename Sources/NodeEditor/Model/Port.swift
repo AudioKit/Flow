@@ -29,7 +29,7 @@ public struct OutputID: Equatable, Hashable {
 ///
 /// Some graphs have different types of ports which can't be
 /// connected to eachother. Here we offer two common types
-/// as well as a custom option for your own types.
+/// as well as a custom option for your own types. XXX: not implemented yet
 public enum PortType: Equatable, Hashable {
     case control
     case signal
