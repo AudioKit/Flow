@@ -57,7 +57,8 @@ extension PatchView {
                 switch patch.hitTest(point: drag.startLocation, layout: layout) {
                 case .background:
                     selection = Set<NodeIndex>()
-                    let selectionRect = CGRect(origin: drag.startLocation, size: drag.translation)
+                    let selectionRect = CGRect(a: drag.startLocation,
+                                               b: drag.location)
                     for (idx, node) in patch.nodes.enumerated() {
                         if selectionRect.intersects(node.rect(layout: layout)) {
                             selection.insert(idx)
