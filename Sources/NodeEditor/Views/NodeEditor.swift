@@ -1,3 +1,5 @@
+// Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/NodeEditor/
+
 import SwiftUI
 
 /// Draws and interacts with the patch.
