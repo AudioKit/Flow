@@ -4,7 +4,7 @@ import NodeEditor
 
 final class LayoutTests: XCTestCase {
 
-    func testNodeRect() throws {
+    func testNodeRects() throws {
 
         let processor = Node(name: "processor",
                              position: CGPoint(x: 400, y: 100),
@@ -15,6 +15,13 @@ final class LayoutTests: XCTestCase {
 
         XCTAssertEqual(processor.rect(layout: LayoutConstants()),
                        CGRect(origin: processor.position, size: CGSize(width: 200, height: 70)))
+
+        XCTAssertEqual(processor.inputRect(input: 0, layout: LayoutConstants()),
+                       CGRect(origin: CGPoint(x: 410, y: 140), size: CGSize(width: 20, height: 20)))
+
+        XCTAssertEqual(processor.outputRect(output: 0, layout: LayoutConstants()),
+                       CGRect(origin: CGPoint(x: 570, y: 140), size: CGSize(width: 20, height: 20)))
+
     }
 
 }
