@@ -18,5 +18,5 @@ Generic node graph editor
                      Wire(from: OutputID(4, 0), to: InputID(5, 0))])
 
     var patch = Patch(nodes: nodes, wires: wires)
-    patch.recursiveLayout(nodeIndex: 5, point: CGPoint(x: 1000, y: 100))
+    patch.recursiveLayout(nodeIndex: 5, point: CGPoint(x: 800, y: 50))
 ```
