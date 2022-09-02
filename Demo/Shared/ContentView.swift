@@ -47,6 +47,6 @@ struct ContentView: View {
     @State var selection = Set<NodeIndex>()
 
     var body: some View {
-        PatchView(patch: $patch, selection: $selection)
+        NodeEditor(patch: $patch, selection: $selection)
     }
 }

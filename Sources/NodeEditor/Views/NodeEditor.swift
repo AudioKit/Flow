@@ -4,7 +4,7 @@ import SwiftUI
 ///
 /// Draws everything using a single Canvas with manual layout. We found this is faster than
 /// using a View for each Node.
-public struct PatchView: View {
+public struct NodeEditor: View {
     /// Data model.
     @Binding var patch: Patch
 

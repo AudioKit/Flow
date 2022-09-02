@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension PatchView {
+extension NodeEditor {
     /// State for all gestures.
     enum DragInfo {
         case wire(output: OutputID, offset: CGSize = .zero, hideWire: Wire? = nil)
