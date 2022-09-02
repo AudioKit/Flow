@@ -5,7 +5,6 @@ func simplePatch() -> Patch {
 
     let generator = Node(name: "generator",
                          position: CGPoint(x: 100, y: 100),
-                         inputs: [],
                          outputs: ["out"])
 
     let processor = Node(name: "processor",
@@ -20,8 +19,7 @@ func simplePatch() -> Patch {
 
     let output = Node(name: "output",
                       position: CGPoint(x: 1000, y: 100),
-                      inputs: ["in"],
-                      outputs: [])
+                      inputs: ["in"])
 
     let nodes = [generator, processor,
                  generator.translate(by: CGSize(width: 0, height: 100)),
