@@ -10,13 +10,6 @@ public struct LayoutConstants {
     public init() {}
 }
 
-public enum HitTestResult {
-    case node(NodeIndex)
-    case input(NodeIndex, PortIndex)
-    case output(NodeIndex, PortIndex)
-    case background
-}
-
 public extension Node {
 
     /// Calculates the boudning rectangle for a node.
@@ -43,6 +36,13 @@ public extension Node {
 }
 
 public extension Patch {
+
+    enum HitTestResult {
+        case node(NodeIndex)
+        case input(NodeIndex, PortIndex)
+        case output(NodeIndex, PortIndex)
+        case background
+    }
 
     /// Hit test a point against the whole patch.
     func hitTest(point: CGPoint, layout: LayoutConstants) -> HitTestResult {
