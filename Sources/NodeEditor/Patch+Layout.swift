@@ -14,8 +14,8 @@ public extension Node {
 
     /// Calculates the boudning rectangle for a node.
     func rect(layout: LayoutConstants) -> CGRect {
-        let maxio = max(inputs.count, outputs.count)
-        let size = CGSize(width: layout.nodeWidth, height: CGFloat(maxio * 30 + 40))
+        let maxio = CGFloat(max(inputs.count, outputs.count))
+        let size = CGSize(width: layout.nodeWidth, height: CGFloat(maxio * 30 + layout.nodeTitleHeight))
 
         return CGRect(origin: position, size: size)
     }
