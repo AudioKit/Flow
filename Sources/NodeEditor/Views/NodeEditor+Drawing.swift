@@ -1,6 +1,6 @@
 import SwiftUI
 
-extension PatchView {
+extension NodeEditor {
     /// Draw a node.
     func draw(node: Node,
               nodeIndex: NodeIndex,

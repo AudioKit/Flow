@@ -1,8 +1,9 @@
 # NodeEditor
+
 Generic node graph editor. Generate a `Patch` from your own data model. Update
 your data model when the `Patch` changes.
 
-<img src="demo.png" alt="Demo" />
+<img src="Sources/NodeEditor/NodeEditor.docc/Resources/screenshot.png" alt="node editor demo screenshot" style="width:75%;">
 
 ```swift
 func simplePatch() -> Patch {
@@ -30,7 +31,7 @@ struct ContentView: View {
     @State var selection = Set<NodeIndex>()
 
     var body: some View {
-        PatchView(patch: $patch, selection: $selection)
+        NodeEditor(patch: $patch, selection: $selection)
     }
 }
 ```

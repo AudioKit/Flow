@@ -1,6 +1,6 @@
 import SwiftUI
 
-public extension PatchView {
+public extension NodeEditor {
 
     /// Offset to apply to a node based on selection and gesture state.
     func offset(for idx: NodeIndex) -> CGSize {

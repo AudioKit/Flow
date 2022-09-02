@@ -4,7 +4,7 @@ import vger
 import vgerSwift
 
 /// WIP vger drawing code for faster rendering.
-extension PatchView {
+extension NodeEditor {
 
     func strokeWire(from: CGPoint, to: CGPoint, vger: vgerContext) {
 
