@@ -1,5 +1,6 @@
 # NodeEditor
-Generic node graph editor
+Generic node graph editor. Generate a `Patch` from your own data model. Update
+your data model when the `Patch` changes.
 
 <img src="demo.png" alt="Demo" />
 
