@@ -28,32 +28,29 @@ extension PatchView {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { drag, dragInfo, _ in
 
-                if let nodeIndex = findNode(point: drag.startLocation) {
-
-                    let node = patch.nodes[nodeIndex]
-
-                    if let output = findOutput(node: node, point: drag.startLocation) {
-                        dragInfo = DragInfo.wire(output: OutputID(nodeIndex, output), offset: drag.translation)
-                    } else if let input = findInput(node: node, point: drag.startLocation) {
-                        // Is a wire attached to the input?
-                        if let attachedWire = attachedWire(inputID: InputID(nodeIndex, input)) {
-                            let offset = node.inputRect(input: input, layout: layout).center
-                            - patch.nodes[attachedWire.output.nodeIndex].outputRect(
-                                         output: attachedWire.output.portIndex,
-                                         layout: layout).center
-                            + drag.translation
-                            dragInfo = .wire(output: attachedWire.output,
-                                             offset: offset,
-                                             hideWire: attachedWire)
-                        }
-                    } else {
-                        dragInfo = .node(index: nodeIndex, offset: drag.translation)
-                    }
-
-                } else {
+                switch patch.hitTest(point: drag.startLocation, layout: layout) {
+                case .background:
                     dragInfo = .selection(rect: CGRect(a: drag.startLocation,
                                                        b: drag.location))
+                case .node(let nodeIndex):
+                    dragInfo = .node(index: nodeIndex, offset: drag.translation)
+                case .output(let nodeIndex, let portIndex):
+                    dragInfo = DragInfo.wire(output: OutputID(nodeIndex, portIndex), offset: drag.translation)
+                case .input(let nodeIndex, let portIndex):
+                    let node = patch.nodes[nodeIndex]
+                    // Is a wire attached to the input?
+                    if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
+                        let offset = node.inputRect(input: portIndex, layout: layout).center
+                        - patch.nodes[attachedWire.output.nodeIndex].outputRect(
+                                     output: attachedWire.output.portIndex,
+                                     layout: layout).center
+                        + drag.translation
+                        dragInfo = .wire(output: attachedWire.output,
+                                         offset: offset,
+                                         hideWire: attachedWire)
+                    }
                 }
+
             }
             .onEnded { drag in
 
