@@ -13,20 +13,26 @@ public typealias NodeIndex = Int
 public struct Node: Equatable {
     public var name: String
     public var position: CGPoint
+
+    /// Is the node position fixed so it can't be edited in the UI?
+    public var locked = false
+
     public var inputs: [Port]
     public var outputs: [Port]
     
     @_disfavoredOverload
-    public init(name: String, position: CGPoint = .zero, inputs: [Port] = [], outputs: [Port] = []) {
+    public init(name: String, position: CGPoint = .zero, locked: Bool = false, inputs: [Port] = [], outputs: [Port] = []) {
         self.name = name
         self.position = position
+        self.locked = locked
         self.inputs = inputs
         self.outputs = outputs
     }
 
-    public init(name: String, position: CGPoint = .zero, inputs: [String] = [], outputs: [String] = []) {
+    public init(name: String, position: CGPoint = .zero, locked: Bool = false, inputs: [String] = [], outputs: [String] = []) {
         self.name = name
         self.position = position
+        self.locked = locked
         self.inputs = inputs.map { Port(name: $0) }
         self.outputs = outputs.map { Port(name: $0) }
     }
