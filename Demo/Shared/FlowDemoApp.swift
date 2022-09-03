@@ -1,7 +1,7 @@
 import SwiftUI
 
 @main
-struct NodeEditorDemoApp: App {
+struct FlowDemoApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()

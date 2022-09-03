@@ -7,24 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		F1DDBABD28BE927D0009F000 /* NodeEditorDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DDBAAD28BE927B0009F000 /* NodeEditorDemoApp.swift */; };
-		F1DDBABE28BE927D0009F000 /* NodeEditorDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DDBAAD28BE927B0009F000 /* NodeEditorDemoApp.swift */; };
+		F1DDBABD28BE927D0009F000 /* FlowDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DDBAAD28BE927B0009F000 /* FlowDemoApp.swift */; };
+		F1DDBABE28BE927D0009F000 /* FlowDemoApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DDBAAD28BE927B0009F000 /* FlowDemoApp.swift */; };
 		F1DDBABF28BE927D0009F000 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DDBAAE28BE927B0009F000 /* ContentView.swift */; };
 		F1DDBAC028BE927D0009F000 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1DDBAAE28BE927B0009F000 /* ContentView.swift */; };
 		F1DDBAC128BE927D0009F000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1DDBAAF28BE927D0009F000 /* Assets.xcassets */; };
 		F1DDBAC228BE927D0009F000 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F1DDBAAF28BE927D0009F000 /* Assets.xcassets */; };
-		F1DDBACF28BE92D00009F000 /* NodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F1DDBACE28BE92D00009F000 /* NodeEditor */; };
-		F1DDBAD128BE93100009F000 /* NodeEditor in Frameworks */ = {isa = PBXBuildFile; productRef = F1DDBAD028BE93100009F000 /* NodeEditor */; };
+		F1DDBACF28BE92D00009F000 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = F1DDBACE28BE92D00009F000 /* Flow */; };
+		F1DDBAD128BE93100009F000 /* Flow in Frameworks */ = {isa = PBXBuildFile; productRef = F1DDBAD028BE93100009F000 /* Flow */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		F1DDBAAD28BE927B0009F000 /* NodeEditorDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NodeEditorDemoApp.swift; sourceTree = "<group>"; };
+		F1DDBAAD28BE927B0009F000 /* FlowDemoApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowDemoApp.swift; sourceTree = "<group>"; };
 		F1DDBAAE28BE927B0009F000 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F1DDBAAF28BE927D0009F000 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		F1DDBAB428BE927D0009F000 /* NodeEditorDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NodeEditorDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		F1DDBABA28BE927D0009F000 /* NodeEditorDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NodeEditorDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1DDBAB428BE927D0009F000 /* FlowDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F1DDBABA28BE927D0009F000 /* FlowDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FlowDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F1DDBABC28BE927D0009F000 /* macOS.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOS.entitlements; sourceTree = "<group>"; };
-		F1DDBACC28BE92A30009F000 /* NodeEditor */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = NodeEditor; path = ..; sourceTree = "<group>"; };
+		F1DDBACC28BE92A30009F000 /* Flow */ = {isa = PBXFileReference; lastKnownFileType = wrapper; name = Flow; path = ..; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -32,7 +32,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1DDBACF28BE92D00009F000 /* NodeEditor in Frameworks */,
+				F1DDBACF28BE92D00009F000 /* Flow in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -40,7 +40,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1DDBAD128BE93100009F000 /* NodeEditor in Frameworks */,
+				F1DDBAD128BE93100009F000 /* Flow in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -61,7 +61,7 @@
 		F1DDBAAC28BE927B0009F000 /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				F1DDBAAD28BE927B0009F000 /* NodeEditorDemoApp.swift */,
+				F1DDBAAD28BE927B0009F000 /* FlowDemoApp.swift */,
 				F1DDBAAE28BE927B0009F000 /* ContentView.swift */,
 				F1DDBAAF28BE927D0009F000 /* Assets.xcassets */,
 			);
@@ -71,8 +71,8 @@
 		F1DDBAB528BE927D0009F000 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F1DDBAB428BE927D0009F000 /* NodeEditorDemo.app */,
-				F1DDBABA28BE927D0009F000 /* NodeEditorDemo.app */,
+				F1DDBAB428BE927D0009F000 /* FlowDemo.app */,
+				F1DDBABA28BE927D0009F000 /* FlowDemo.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -88,7 +88,7 @@
 		F1DDBACB28BE92A30009F000 /* Packages */ = {
 			isa = PBXGroup;
 			children = (
-				F1DDBACC28BE92A30009F000 /* NodeEditor */,
+				F1DDBACC28BE92A30009F000 /* Flow */,
 			);
 			name = Packages;
 			sourceTree = "<group>";
@@ -103,9 +103,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		F1DDBAB328BE927D0009F000 /* NodeEditorDemo (iOS) */ = {
+		F1DDBAB328BE927D0009F000 /* FlowDemo (iOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F1DDBAC528BE927D0009F000 /* Build configuration list for PBXNativeTarget "NodeEditorDemo (iOS)" */;
+			buildConfigurationList = F1DDBAC528BE927D0009F000 /* Build configuration list for PBXNativeTarget "FlowDemo (iOS)" */;
 			buildPhases = (
 				F1DDBAB028BE927D0009F000 /* Sources */,
 				F1DDBAB128BE927D0009F000 /* Frameworks */,
@@ -115,17 +115,17 @@
 			);
 			dependencies = (
 			);
-			name = "NodeEditorDemo (iOS)";
+			name = "FlowDemo (iOS)";
 			packageProductDependencies = (
-				F1DDBACE28BE92D00009F000 /* NodeEditor */,
+				F1DDBACE28BE92D00009F000 /* Flow */,
 			);
-			productName = "NodeEditorDemo (iOS)";
-			productReference = F1DDBAB428BE927D0009F000 /* NodeEditorDemo.app */;
+			productName = "FlowDemo (iOS)";
+			productReference = F1DDBAB428BE927D0009F000 /* FlowDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		F1DDBAB928BE927D0009F000 /* NodeEditorDemo (macOS) */ = {
+		F1DDBAB928BE927D0009F000 /* FlowDemo (macOS) */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = F1DDBAC828BE927D0009F000 /* Build configuration list for PBXNativeTarget "NodeEditorDemo (macOS)" */;
+			buildConfigurationList = F1DDBAC828BE927D0009F000 /* Build configuration list for PBXNativeTarget "FlowDemo (macOS)" */;
 			buildPhases = (
 				F1DDBAB628BE927D0009F000 /* Sources */,
 				F1DDBAB728BE927D0009F000 /* Frameworks */,
@@ -135,12 +135,12 @@
 			);
 			dependencies = (
 			);
-			name = "NodeEditorDemo (macOS)";
+			name = "FlowDemo (macOS)";
 			packageProductDependencies = (
-				F1DDBAD028BE93100009F000 /* NodeEditor */,
+				F1DDBAD028BE93100009F000 /* Flow */,
 			);
-			productName = "NodeEditorDemo (macOS)";
-			productReference = F1DDBABA28BE927D0009F000 /* NodeEditorDemo.app */;
+			productName = "FlowDemo (macOS)";
+			productReference = F1DDBABA28BE927D0009F000 /* FlowDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -161,7 +161,7 @@
 					};
 				};
 			};
-			buildConfigurationList = F1DDBAAB28BE927B0009F000 /* Build configuration list for PBXProject "NodeEditorDemo" */;
+			buildConfigurationList = F1DDBAAB28BE927B0009F000 /* Build configuration list for PBXProject "FlowDemo" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -174,8 +174,8 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				F1DDBAB328BE927D0009F000 /* NodeEditorDemo (iOS) */,
-				F1DDBAB928BE927D0009F000 /* NodeEditorDemo (macOS) */,
+				F1DDBAB328BE927D0009F000 /* FlowDemo (iOS) */,
+				F1DDBAB928BE927D0009F000 /* FlowDemo (macOS) */,
 			);
 		};
 /* End PBXProject section */
@@ -205,7 +205,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1DDBABF28BE927D0009F000 /* ContentView.swift in Sources */,
-				F1DDBABD28BE927D0009F000 /* NodeEditorDemoApp.swift in Sources */,
+				F1DDBABD28BE927D0009F000 /* FlowDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -214,7 +214,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F1DDBAC028BE927D0009F000 /* ContentView.swift in Sources */,
-				F1DDBABE28BE927D0009F000 /* NodeEditorDemoApp.swift in Sources */,
+				F1DDBABE28BE927D0009F000 /* FlowDemoApp.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -350,8 +350,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.NodeEditorDemo;
-				PRODUCT_NAME = NodeEditorDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.FlowDemo;
+				PRODUCT_NAME = FlowDemo;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -379,8 +379,8 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.NodeEditorDemo;
-				PRODUCT_NAME = NodeEditorDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.FlowDemo;
+				PRODUCT_NAME = FlowDemo;
 				SDKROOT = iphoneos;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -407,8 +407,8 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.NodeEditorDemo;
-				PRODUCT_NAME = NodeEditorDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.FlowDemo;
+				PRODUCT_NAME = FlowDemo;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -433,8 +433,8 @@
 				);
 				MACOSX_DEPLOYMENT_TARGET = 12.3;
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.NodeEditorDemo;
-				PRODUCT_NAME = NodeEditorDemo;
+				PRODUCT_BUNDLE_IDENTIFIER = io.audiokit.FlowDemo;
+				PRODUCT_NAME = FlowDemo;
 				SDKROOT = macosx;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -444,7 +444,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		F1DDBAAB28BE927B0009F000 /* Build configuration list for PBXProject "NodeEditorDemo" */ = {
+		F1DDBAAB28BE927B0009F000 /* Build configuration list for PBXProject "FlowDemo" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1DDBAC328BE927D0009F000 /* Debug */,
@@ -453,7 +453,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F1DDBAC528BE927D0009F000 /* Build configuration list for PBXNativeTarget "NodeEditorDemo (iOS)" */ = {
+		F1DDBAC528BE927D0009F000 /* Build configuration list for PBXNativeTarget "FlowDemo (iOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1DDBAC628BE927D0009F000 /* Debug */,
@@ -462,7 +462,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		F1DDBAC828BE927D0009F000 /* Build configuration list for PBXNativeTarget "NodeEditorDemo (macOS)" */ = {
+		F1DDBAC828BE927D0009F000 /* Build configuration list for PBXNativeTarget "FlowDemo (macOS)" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				F1DDBAC928BE927D0009F000 /* Debug */,
@@ -474,13 +474,13 @@
 /* End XCConfigurationList section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		F1DDBACE28BE92D00009F000 /* NodeEditor */ = {
+		F1DDBACE28BE92D00009F000 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = NodeEditor;
+			productName = Flow;
 		};
-		F1DDBAD028BE93100009F000 /* NodeEditor */ = {
+		F1DDBAD028BE93100009F000 /* Flow */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = NodeEditor;
+			productName = Flow;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
