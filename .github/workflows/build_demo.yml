@@ -3,13 +3,18 @@ name: Build Demo
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
+  # Temporarily disabled until the Test workflow is working.
+  # pull_request:
+  #   branches: [main]
 
 jobs:
   demo:
     runs-on: macos-12
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.10.0
+        with:
+          access_token: ${{ github.token }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Xcode
