@@ -8,60 +8,13 @@ on:
     branches: [main]
 
 jobs:
-  prepare:
-    name: Prepare
-    runs-on: ubuntu-latest
-    steps:
-      # If this workflow is triggered by the same event, the previous runs are cancelled for optimization.
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.10.0
-        with:
-          access_token: ${{ github.token }}
-
-  # Run our test script.
-  # NOTE: This job is copied WITHOUT modifications from https://github.com/bdrelling/ci/.github/workflows/swift_test.yml
   swift_test:
-    name: ${{ matrix.inputs.build-method }} test (${{ matrix.inputs.platform }}, swift ${{ matrix.inputs.swift-version }})
-    runs-on: ${{ matrix.inputs.runner }}
-    needs: [prepare]
-    strategy:
-      fail-fast: false
-      matrix:
-        inputs:
-          - {
-              runner: macos-11,
-              platform: macOS,
-              build-method: swift,
-              swift-version: 5.3,
-            }
-          - {
-              runner: macos-11,
-              platform: macOS,
-              build-method: swift,
-              swift-version: 5.4,
-            }
-          - {
-              runner: macos-12,
-              platform: macOS,
-              build-method: swift,
-              swift-version: 5.5,
-            }
-          - {
-              runner: macos-12,
-              platform: macOS,
-              build-method: swift,
-              swift-version: 5.6,
-            }
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Run Tests
-        uses: bdrelling/ci/.github/actions/swift-test@main
-        with:
-          scheme: ${{ env.scheme }}
-          platform: ${{ matrix.inputs.platform }}
-          build-method: ${{ matrix.inputs.build-method }}
-          swift-version: ${{ matrix.inputs.swift-version }}
+    name: Test
+    uses: ./.github/workflows/swift_test.yml@main
+    with:
+      scheme: Flow
+      platforms: iOS macOS
+      swift-versions: 5.5 5.6
 
   build_demo:
     name: Build ${{ matrix.scheme }} (Xcode ${{ matrix.xcode_version }})
