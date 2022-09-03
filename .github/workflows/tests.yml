@@ -23,7 +23,7 @@ jobs:
   swift_test:
     name: ${{ matrix.inputs.build-method }} test (${{ matrix.inputs.platform }}, swift ${{ matrix.inputs.swift-version }})
     runs-on: ${{ matrix.inputs.runner }}
-    needs: [create_swift_test_matrix]
+    needs: [prepare]
     strategy:
       fail-fast: false
       matrix:
@@ -68,7 +68,7 @@ jobs:
     # NOTE: macos-latest is NOT equivalent to macos-12 as of September 2022.
     # Source: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
     runs-on: macos-12
-    needs: [test]
+    needs: [swift_test]
     strategy:
       # Disabling fail-fast ensures that the job will run all configurations of the matrix, even if one fails.
       fail-fast: false
