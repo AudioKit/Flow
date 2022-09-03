@@ -1,6 +1,6 @@
 // Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
-import Foundation
+import CoreGraphics
 
 /// Nodes are identified by index in `Patch.nodes`
 public typealias NodeIndex = Int

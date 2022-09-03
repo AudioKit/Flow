@@ -1,0 +1,67 @@
+name: Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  prepare:
+    name: Prepare
+    runs-on: ubuntu-latest
+    steps:
+      # If this workflow is triggered by the same event, the previous runs are cancelled for optimization.
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.10.0
+        with:
+          access_token: ${{ github.token }}
+
+  test:
+    name: Test (macOS, Xcode ${{ matrix.xcode_version }})
+    runs-on: macos-12
+    needs: [prepare]
+    strategy:
+      # Disabling fail-fast ensures that the job will run all configurations of the matrix, even if one fails.
+      fail-fast: false
+      matrix:
+        xcode_version:
+          - '13.2' # swift 5.5
+          - '13.4' # swift 5.6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Xcode
+        # Documentation: https://github.com/marketplace/actions/setup-xcode-version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ matrix.xcode_version }}
+      - name: Run Tests
+        run: swift test --configuration debug
+
+  build_demo:
+    name: Build ${{ matrix.scheme }} (Xcode ${{ matrix.xcode_version }})
+    # NOTE: macos-latest is NOT equivalent to macos-12 as of September 2022.
+    # Source: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: macos-12
+    needs: [test]
+    strategy:
+      # Disabling fail-fast ensures that the job will run all configurations of the matrix, even if one fails.
+      fail-fast: false
+      matrix:
+        scheme:
+          - FlowDemo (iOS)
+          - FlowDemo (macOS)
+        xcode_version:
+          - '13.2' # swift 5.5
+          - '13.4' # swift 5.6
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Xcode
+        # Documentation: https://github.com/marketplace/actions/setup-xcode-version
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: ${{ matrix.xcode_version }}
+      - name: Build Demo
+        run: xcodebuild clean build -project 'Demo/FlowDemo.xcodeproj' -scheme '${{ matrix.scheme }}' CODE_SIGNING_ALLOWED=NO
