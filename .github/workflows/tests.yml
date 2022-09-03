@@ -10,7 +10,7 @@ on:
 jobs:
   swift_test:
     name: Test
-    uses: ./.github/workflows/swift_test.yml@main
+    uses: ./.github/workflows/swift_test.yml
     with:
       scheme: Flow
       platforms: iOS macOS
