@@ -3,7 +3,7 @@
 Generic node graph editor. Generate a `Patch` from your own data model. Update
 your data model when the `Patch` changes.
 
-<img src="Sources/NodeEditor/NodeEditor.docc/Resources/screenshot.png" alt="node editor demo screenshot" style="width:75%;">
+<img src="Sources/NodeEditor/NodeEditor.docc/Resources/screenshot.png" alt="node editor demo screenshot">
 
 ```swift
 func simplePatch() -> Patch {
@@ -35,3 +35,6 @@ struct ContentView: View {
     }
 }
 ```
+## Documentation
+
+The API Reference can be found on [the AudioKit Website](https://www.audiokit.io/NodeEditor). Package contains a demo project and a playground to help you get started quickly.
