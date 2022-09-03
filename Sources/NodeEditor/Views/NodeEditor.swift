@@ -45,8 +45,8 @@ public struct NodeEditor: View {
     /// Constants used for layout.
     var layout = LayoutConstants()
 
-    /// Gradient used for connections.
-    let connectionGradient = Gradient(colors: [.magenta, .cyan])
+    /// Gradient used for rendering wires.
+    let wireGradient = Gradient(colors: [.magenta, .cyan])
 
     public var body: some View {
         Canvas { cx, size in
