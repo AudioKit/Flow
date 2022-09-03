@@ -1,6 +1,6 @@
 // Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
-import Foundation
+import CoreGraphics
 
 /// Define the layout geometry of the nodes
 public struct LayoutConstants {
