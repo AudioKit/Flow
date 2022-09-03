@@ -37,4 +37,4 @@ struct ContentView: View {
 ```
 ## Documentation
 
-The API Reference can be found on [the AudioKit Website](https://www.audiokit.io/NodeEditor).
+The API Reference can be found on [the AudioKit Website](https://www.audiokit.io/NodeEditor). Package contains a demo project and a playground to help you get started quickly.
