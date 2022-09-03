@@ -3,18 +3,19 @@ name: Build Demo
 on:
   push:
     branches: [main]
-  # Temporarily disabled until the Test workflow is working.
-  # pull_request:
-  #   branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   demo:
     runs-on: macos-12
+    strategy:
+      fail-fast: false
+      matrix:
+        scheme:
+          - FlowDemo (iOS)
+          - FlowDemo (macOS)
     steps:
-      - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.10.0
-        with:
-          access_token: ${{ github.token }}
       - name: Checkout
         uses: actions/checkout@v3
       - name: Setup Xcode
@@ -23,6 +24,4 @@ jobs:
         with:
           xcode-version: latest-stable
       - name: Build Demo
-        run: |
-          set -euo pipefail
-          xcodebuild -project Demo/FlowDemo.xcodeproj -sdk iphonesimulator -scheme FlowDemo -arch x86_64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" clean build | xcpretty -c
+        run: xcodebuild clean build -project 'Demo/FlowDemo.xcodeproj' -scheme '${{ matrix.scheme }}' CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
