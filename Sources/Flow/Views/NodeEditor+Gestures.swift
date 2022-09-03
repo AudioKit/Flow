@@ -17,9 +17,14 @@ extension NodeEditor {
 
         // Remove any other wires connected to the input.
         patch.wires = patch.wires.filter { w in
-            w.input != wire.input
+            let result = w.input != wire.input
+            if !result {
+                wireRemoved(w)
+            }
+            return result
         }
         patch.wires.insert(wire)
+        wireAdded(wire)
     }
 
     func attachedWire(inputID: InputID) -> Wire? {
@@ -68,9 +73,11 @@ extension NodeEditor {
                     }
                 case let .node(nodeIndex):
                     patch.nodes[nodeIndex].position += drag.translation
+                    self.nodeMoved(nodeIndex, patch.nodes[nodeIndex].position)
                     if selection.contains(nodeIndex) {
                         for idx in selection where idx != nodeIndex {
                             patch.nodes[idx].position += drag.translation
+                            self.nodeMoved(idx, patch.nodes[idx].position)
                         }
                     }
                 case let .output(nodeIndex, portIndex):
@@ -81,6 +88,7 @@ extension NodeEditor {
                     // Is a wire attached to the input?
                     if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
                         patch.wires.remove(attachedWire)
+                        wireRemoved(attachedWire)
                         if let input = findInput(point: drag.location) {
                             connect(attachedWire.output, to: input)
                         }
