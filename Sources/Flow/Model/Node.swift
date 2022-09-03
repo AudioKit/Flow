@@ -1,5 +1,6 @@
 // Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
+import CoreGraphics
 import Foundation
 
 /// Nodes are identified by index in `Patch.nodes`
