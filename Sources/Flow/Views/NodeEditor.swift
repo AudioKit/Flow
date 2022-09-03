@@ -42,9 +42,11 @@ public struct NodeEditor: View {
         self.wireRemoved = wireRemoved
     }
 
-    // Constants, for now
-    let layout = LayoutConstants()
-    let gradient = Gradient(colors: [.magenta, .cyan])
+    /// Constants used for layout.
+    var layout = LayoutConstants()
+
+    /// Gradient used for connections.
+    let connectionGradient = Gradient(colors: [.magenta, .cyan])
 
     public var body: some View {
         Canvas { cx, size in
