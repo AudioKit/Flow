@@ -16,18 +16,37 @@ public struct NodeEditor: View {
     /// State for all gestures.
     @GestureState var dragInfo = DragInfo.none
 
+    /// Called when a node is moved.
+    var nodeMoved: (NodeIndex, CGPoint) -> Void
+
+    /// Called when a wire is added.
+    var wireAdded: (Wire) -> Void
+
+    /// Called when a wire is removed.
+    var wireRemoved: (Wire) -> Void
+
     /// Initialize the patch view with a patch and a selection
     /// - Parameters:
     ///   - patch: Patch to display
     ///   - selection: set of nodes currently selected
-    public init(patch: Binding<Patch>, selection: Binding<Set<NodeIndex>>) {
+    ///   - moveNode: called when a node is moved
+    public init(patch: Binding<Patch>,
+                selection: Binding<Set<NodeIndex>>,
+                nodeMoved: @escaping (NodeIndex, CGPoint) -> Void = { (_,_) in },
+                wireAdded: @escaping (Wire) -> Void = { _ in },
+                wireRemoved: @escaping (Wire) -> Void = { _ in }) {
         _patch = patch
         _selection = selection
+        self.nodeMoved = nodeMoved
+        self.wireAdded = wireAdded
+        self.wireRemoved = wireRemoved
     }
 
-    // Constants, for now
-    let layout = LayoutConstants()
-    let gradient = Gradient(colors: [.magenta, .cyan])
+    /// Constants used for layout.
+    var layout = LayoutConstants()
+
+    /// Gradient used for rendering wires.
+    let wireGradient = Gradient(colors: [.magenta, .cyan])
 
     public var body: some View {
         Canvas { cx, size in

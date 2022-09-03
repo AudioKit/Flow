@@ -117,7 +117,7 @@ extension NodeEditor {
                       control2: CGPoint(x: to.x - d, y: to.y))
 
         cx.stroke(path,
-                  with: .linearGradient(gradient, startPoint: from, endPoint: to),
+                  with: .linearGradient(wireGradient, startPoint: from, endPoint: to),
                   style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
     }
 }
