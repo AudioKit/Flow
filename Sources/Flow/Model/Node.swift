@@ -15,7 +15,8 @@ public struct Node: Equatable {
     public var position: CGPoint
     public var inputs: [Port]
     public var outputs: [Port]
-
+    
+    @_disfavoredOverload
     public init(name: String, position: CGPoint = .zero, inputs: [Port] = [], outputs: [Port] = []) {
         self.name = name
         self.position = position
