@@ -24,8 +24,8 @@ jobs:
     runs-on: macos-12
     needs: [swift_test]
     strategy:
-      # Disabling fail-fast ensures that the job will run all configurations of the matrix, even if one fails.
-      fail-fast: false
+      # Setting 'fail-fast' to 'true' implies the build will fail the first time it encounters an error.
+      fail-fast: true
       matrix:
         scheme:
           - FlowDemo (iOS)
@@ -40,3 +40,18 @@ jobs:
           project: Demo/FlowDemo.xcodeproj
           scheme: ${{ matrix.scheme }}
           xcode_version: ${{ matrix.xcode_version }}
+
+  # Send notification to Discord on failure.
+  send_notification:
+    name: Send Notification
+    runs-on: ubuntu-latest
+    needs: [swift_test, build_demo]
+    if: failure()
+    steps:
+      - name: Send Discord Notification
+        uses: sarisia/actions-status-discord@v1
+        with:
+          webhook: ${{ secrets.DISCORD_CI_WEBHOOK }}
+          title: Tests Failed
+          status: Failure
+          color: 0xff0000
