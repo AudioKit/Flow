@@ -11,6 +11,7 @@ jobs:
   swift_test:
     name: Test
     uses: AudioKit/ci/.github/workflows/swift_test.yml@main
+    secrets: inherit
     with:
       scheme: Flow
       platforms: iOS macOS
