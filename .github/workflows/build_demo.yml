@@ -1,0 +1,20 @@
+name: Build Demo
+
+on:
+  push:
+    branches: [main, workflow-testing]
+
+jobs:
+  demo:
+    runs-on: macos-12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Setup Xcode
+        uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '13.4'
+      - name: Build Demo
+        run: |
+          set -euo pipefail
+          xcodebuild -project Demo/FlowDemo.xcodeproj -sdk iphonesimulator -scheme FlowDemo -arch x86_64 ONLY_ACTIVE_ARCH=YES CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY="" clean build | xcpretty -c
