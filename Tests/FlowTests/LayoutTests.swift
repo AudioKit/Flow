@@ -3,8 +3,6 @@
 import Flow
 import XCTest
 
-intentional breaking change
-
 final class LayoutTests: XCTestCase {
     func testNodeRects() throws {
         let processor = Node(name: "processor",
