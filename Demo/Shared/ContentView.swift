@@ -1,4 +1,4 @@
-import NodeEditor
+import Flow
 import SwiftUI
 
 func simplePatch() -> Patch {
@@ -20,7 +20,7 @@ func simplePatch() -> Patch {
     return patch
 }
 
-/// Bit of a stress test to show how NodeEditor performs with more nodes.
+/// Bit of a stress test to show how Flow performs with more nodes.
 func randomPatch() -> Patch {
     var randomNodes: [Node] = []
     for n in 0 ..< 50 {

@@ -1,7 +1,16 @@
-import NodeEditor
-import PlaygroundSupport
-import SwiftUI
+# ``Flow``
 
+Generic node graph editor. 
+
+## Overview
+
+Code is hosted on Github: [](https://github.com/AudioKit/Flow/)
+
+![Screenshot](screenshot)
+
+Generate a `Patch` from your own data model. Update your data model when the `Patch` changes.
+
+```swift
 func simplePatch() -> Patch {
 
     let generator = Node(name: "generator", outputs: ["out"])
@@ -22,14 +31,19 @@ func simplePatch() -> Patch {
     return patch
 }
 
-struct NodeEditorDemoView: View {
+struct ContentView: View {
     @State var patch = simplePatch()
     @State var selection = Set<NodeIndex>()
 
-    public var body: some View {
+    var body: some View {
         NodeEditor(patch: $patch, selection: $selection)
     }
 }
+```
 
-PlaygroundPage.current.setLiveView(NodeEditorDemoView().frame(width: 1000, height: 500))
-PlaygroundPage.current.needsIndefiniteExecution = true
+
+## Topics
+
+### <!--@START_MENU_TOKEN@-->Group<!--@END_MENU_TOKEN@-->
+
+- <!--@START_MENU_TOKEN@-->``Symbol``<!--@END_MENU_TOKEN@-->

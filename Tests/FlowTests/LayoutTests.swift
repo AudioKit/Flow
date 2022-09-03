@@ -1,5 +1,5 @@
 
-import NodeEditor
+import Flow
 import XCTest
 
 final class LayoutTests: XCTestCase {

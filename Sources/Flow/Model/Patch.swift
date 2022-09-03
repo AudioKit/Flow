@@ -1,9 +1,9 @@
-// Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/NodeEditor/
+// Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
 import CoreGraphics
 import Foundation
 
-/// Data model for NodeEditor.
+/// Data model for Flow.
 ///
 /// Write a function to generate a `Patch` from your own data model
 /// as well as a function to update your data model when the `Patch` changes.
