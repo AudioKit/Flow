@@ -25,11 +25,13 @@ public struct NodeEditor: View {
     /// Called when a wire is removed.
     var wireRemoved: (Wire) -> Void
 
-    /// Initialize the patch view with a patch and a selection
+    /// Initialize the patch view with a patch and a selection.
     /// - Parameters:
-    ///   - patch: Patch to display
-    ///   - selection: set of nodes currently selected
-    ///   - moveNode: called when a node is moved
+    ///   - patch: Patch to display.
+    ///   - selection: Set of nodes currently selected.
+    ///   - moveNode: Called when a node is moved.
+    ///   - wireAdded: Called when a wire is added.
+    ///   - wireRemoved: Called when a wire is removed.
     public init(patch: Binding<Patch>,
                 selection: Binding<Set<NodeIndex>>,
                 nodeMoved: @escaping (NodeIndex, CGPoint) -> Void = { (_,_) in },

@@ -2,10 +2,10 @@
 
 import Foundation
 
-/// Ports are identified by index within a node
+/// Ports are identified by index within a node.
 public typealias PortIndex = Int
 
-/// Uniquely identfies an input by indices.
+/// Uniquely identifies an input by indices.
 public struct InputID: Equatable, Hashable {
     public let nodeIndex: NodeIndex
     public let portIndex: PortIndex
@@ -20,7 +20,7 @@ public struct InputID: Equatable, Hashable {
     }
 }
 
-/// Uniquely identfies an output by indices.
+/// Uniquely identifies an output by indices.
 public struct OutputID: Equatable, Hashable {
     public let nodeIndex: NodeIndex
     public let portIndex: PortIndex
@@ -38,7 +38,7 @@ public struct OutputID: Equatable, Hashable {
 /// Support for different types of connections.
 ///
 /// Some graphs have different types of ports which can't be
-/// connected to eachother. Here we offer two common types
+/// connected to each other. Here we offer two common types
 /// as well as a custom option for your own types. XXX: not implemented yet
 public enum PortType: Equatable, Hashable {
     case control
@@ -53,7 +53,7 @@ public struct Port: Equatable, Hashable {
 
     /// Initialize the port with a name and type
     /// - Parameters:
-    ///   - name: Descriptive abel of the port
+    ///   - name: Descriptive label of the port
     ///   - type: Type of port
     public init(name: String, type: PortType = .signal) {
         self.name = name
