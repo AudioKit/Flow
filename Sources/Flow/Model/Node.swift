@@ -2,10 +2,10 @@
 
 import Foundation
 
-/// Nodes are identified by index in `Patch.nodes`
+/// Nodes are identified by index in `Patch.nodes`.
 public typealias NodeIndex = Int
 
-/// Nodes are identified by index in `Patch.nodes`
+/// Nodes are identified by index in `Patch.nodes`.
 ///
 /// Using indices as IDs has proven to be easy and fast for our use cases. The `Patch` should be
 /// generated from your own data model, not used as your data model, so there isn't a requirement that
@@ -37,7 +37,7 @@ public struct Node: Equatable {
         return result
     }
 
-    /// Calculates the boudning rectangle for a node.
+    /// Calculates the bounding rectangle for a node.
     public func rect(layout: LayoutConstants) -> CGRect {
         let maxio = CGFloat(max(inputs.count, outputs.count))
         let size = CGSize(width: layout.nodeWidth, height: CGFloat(maxio * 30 + layout.nodeTitleHeight))
