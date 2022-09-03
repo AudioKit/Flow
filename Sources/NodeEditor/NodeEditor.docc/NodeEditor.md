@@ -4,6 +4,8 @@ Generic node graph editor.
 
 ## Overview
 
+Code is hosted on Github: [](https://github.com/AudioKit/NodeEditor/)
+
 ![Screenshot](screenshot)
 
 Generate a `Patch` from your own data model. Update your data model when the `Patch` changes.
