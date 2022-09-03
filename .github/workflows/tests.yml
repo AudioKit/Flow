@@ -18,27 +18,50 @@ jobs:
         with:
           access_token: ${{ github.token }}
 
-  test:
-    name: Test (macOS, Xcode ${{ matrix.xcode_version }})
-    runs-on: macos-12
-    needs: [prepare]
+  # Run our test script.
+  # NOTE: This job is copied WITHOUT modifications from https://github.com/bdrelling/ci/.github/workflows/swift_test.yml
+  swift_test:
+    name: ${{ matrix.inputs.build-method }} test (${{ matrix.inputs.platform }}, swift ${{ matrix.inputs.swift-version }})
+    runs-on: ${{ matrix.inputs.runner }}
+    needs: [create_swift_test_matrix]
     strategy:
-      # Disabling fail-fast ensures that the job will run all configurations of the matrix, even if one fails.
       fail-fast: false
       matrix:
-        xcode_version:
-          - '13.2' # swift 5.5
-          - '13.4' # swift 5.6
+        inputs:
+          - {
+              runner: macos-11,
+              platform: macOS,
+              build-method: swift,
+              swift-version: 5.3,
+            }
+          - {
+              runner: macos-11,
+              platform: macOS,
+              build-method: swift,
+              swift-version: 5.4,
+            }
+          - {
+              runner: macos-12,
+              platform: macOS,
+              build-method: swift,
+              swift-version: 5.5,
+            }
+          - {
+              runner: macos-12,
+              platform: macOS,
+              build-method: swift,
+              swift-version: 5.6,
+            }
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      - name: Setup Xcode
-        # Documentation: https://github.com/marketplace/actions/setup-xcode-version
-        uses: maxim-lobanov/setup-xcode@v1
-        with:
-          xcode-version: ${{ matrix.xcode_version }}
       - name: Run Tests
-        run: swift test --configuration debug
+        uses: bdrelling/ci/.github/actions/swift-test@main
+        with:
+          scheme: ${{ env.scheme }}
+          platform: ${{ matrix.inputs.platform }}
+          build-method: ${{ matrix.inputs.build-method }}
+          swift-version: ${{ matrix.inputs.swift-version }}
 
   build_demo:
     name: Build ${{ matrix.scheme }} (Xcode ${{ matrix.xcode_version }})
