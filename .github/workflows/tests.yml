@@ -1,0 +1,51 @@
+name: Tests
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  # Run swift test across all applicable platforms and versions.
+  swift_test:
+    name: Test
+    uses: AudioKit/ci/.github/workflows/swift_test.yml@main
+    with:
+      scheme: Flow
+      platforms: iOS macOS
+      swift-versions: 5.5 5.6
+
+  # Build the demo projects.
+  build_demo:
+    name: Build ${{ matrix.scheme }} (Xcode ${{ matrix.xcode_version }})
+    # NOTE: macos-latest is NOT equivalent to macos-12 as of September 2022.
+    # Source: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: macos-12
+    needs: [swift_test]
+    strategy:
+      # Setting 'fail-fast' to 'true' implies the build will fail the first time it encounters an error.
+      fail-fast: true
+      matrix:
+        scheme:
+          - FlowDemo (iOS)
+          - FlowDemo (macOS)
+        xcode_version:
+          - '13.2' # swift 5.5
+          - '13.4' # swift 5.6
+    steps:
+      - name: Build Demo
+        uses: AudioKit/ci/.github/actions/build-demo@main
+        with:
+          project: Demo/FlowDemo.xcodeproj
+          scheme: ${{ matrix.scheme }}
+          xcode_version: ${{ matrix.xcode_version }}
+
+  # Send notification to Discord on failure.
+  send_notification:
+    name: Send Notification
+    uses: AudioKit/ci/.github/workflows/send_notification.yml@main
+    needs: [swift_test, build_demo]
+    if: ${{ failure() && github.ref == 'refs/heads/main' }}
+    secrets: inherit

@@ -9,8 +9,8 @@ import Foundation
 /// a single node. Our data model allows arbitrary connections, though we don't yet support
 /// editing of arbitrary connection graphs (an input can only have one wire).
 public struct Wire: Equatable, Hashable {
-    var output: OutputID
-    var input: InputID
+    public let output: OutputID
+    public let input: InputID
 
     /// Initialize the wire with an input and output
     /// - Parameters:

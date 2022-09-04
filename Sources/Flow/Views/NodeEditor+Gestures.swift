@@ -31,6 +31,13 @@ extension NodeEditor {
         patch.wires.first(where: { $0.input == inputID })
     }
 
+    func moveNode(nodeIndex: NodeIndex, offset: CGSize) {
+        if !patch.nodes[nodeIndex].locked {
+            patch.nodes[nodeIndex].position += offset
+            self.nodeMoved(nodeIndex, patch.nodes[nodeIndex].position)
+        }
+    }
+
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { drag, dragInfo, _ in
@@ -72,12 +79,10 @@ extension NodeEditor {
                         }
                     }
                 case let .node(nodeIndex):
-                    patch.nodes[nodeIndex].position += drag.translation
-                    self.nodeMoved(nodeIndex, patch.nodes[nodeIndex].position)
+                    moveNode(nodeIndex: nodeIndex, offset: drag.translation)
                     if selection.contains(nodeIndex) {
                         for idx in selection where idx != nodeIndex {
-                            patch.nodes[idx].position += drag.translation
-                            self.nodeMoved(idx, patch.nodes[idx].position)
+                            moveNode(nodeIndex: idx, offset: drag.translation)
                         }
                     }
                 case let .output(nodeIndex, portIndex):

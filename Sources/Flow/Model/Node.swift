@@ -1,11 +1,11 @@
 // Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
-import Foundation
+import CoreGraphics
 
-/// Nodes are identified by index in `Patch.nodes`
+/// Nodes are identified by index in `Patch.nodes`.
 public typealias NodeIndex = Int
 
-/// Nodes are identified by index in `Patch.nodes`
+/// Nodes are identified by index in `Patch.nodes`.
 ///
 /// Using indices as IDs has proven to be easy and fast for our use cases. The `Patch` should be
 /// generated from your own data model, not used as your data model, so there isn't a requirement that
@@ -13,19 +13,26 @@ public typealias NodeIndex = Int
 public struct Node: Equatable {
     public var name: String
     public var position: CGPoint
+
+    /// Is the node position fixed so it can't be edited in the UI?
+    public var locked = false
+
     public var inputs: [Port]
     public var outputs: [Port]
-
-    public init(name: String, position: CGPoint = .zero, inputs: [Port] = [], outputs: [Port] = []) {
+    
+    @_disfavoredOverload
+    public init(name: String, position: CGPoint = .zero, locked: Bool = false, inputs: [Port] = [], outputs: [Port] = []) {
         self.name = name
         self.position = position
+        self.locked = locked
         self.inputs = inputs
         self.outputs = outputs
     }
 
-    public init(name: String, position: CGPoint = .zero, inputs: [String] = [], outputs: [String] = []) {
+    public init(name: String, position: CGPoint = .zero, locked: Bool = false, inputs: [String] = [], outputs: [String] = []) {
         self.name = name
         self.position = position
+        self.locked = locked
         self.inputs = inputs.map { Port(name: $0) }
         self.outputs = outputs.map { Port(name: $0) }
     }
@@ -37,7 +44,7 @@ public struct Node: Equatable {
         return result
     }
 
-    /// Calculates the boudning rectangle for a node.
+    /// Calculates the bounding rectangle for a node.
     public func rect(layout: LayoutConstants) -> CGRect {
         let maxio = CGFloat(max(inputs.count, outputs.count))
         let size = CGSize(width: layout.nodeWidth, height: CGFloat(maxio * 30 + layout.nodeTitleHeight))
