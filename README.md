@@ -5,7 +5,7 @@
 Generic node graph editor. Generate a `Patch` from your own data model. Update
 your data model when the `Patch` changes.
 
-![flow-demo](https://user-images.githubusercontent.com/13122/188529508-d0934359-ef47-4223-a09e-fdfb187bf8c5.png)
+![flow-demo](https://user-images.githubusercontent.com/13122/188530194-927674a3-53b0-4235-b86c-82f5d24be1a1.png)
 
 ```swift
 func simplePatch() -> Patch {
