@@ -2,12 +2,12 @@
 
 import CoreGraphics
 
-/// Nodes are identified by index in `Patch.nodes`.
+/// Nodes are identified by index in `Patch/nodes``.
 public typealias NodeIndex = Int
 
-/// Nodes are identified by index in `Patch.nodes`.
+/// Nodes are identified by index in ``Patch/nodes``.
 ///
-/// Using indices as IDs has proven to be easy and fast for our use cases. The `Patch` should be
+/// Using indices as IDs has proven to be easy and fast for our use cases. The ``Patch`` should be
 /// generated from your own data model, not used as your data model, so there isn't a requirement that
 /// the indices be consistent across your editing operations (such as deleting nodes).
 public struct Node: Equatable {
@@ -21,7 +21,11 @@ public struct Node: Equatable {
     public var outputs: [Port]
     
     @_disfavoredOverload
-    public init(name: String, position: CGPoint = .zero, locked: Bool = false, inputs: [Port] = [], outputs: [Port] = []) {
+    public init(name: String,
+                position: CGPoint = .zero,
+                locked: Bool = false,
+                inputs: [Port] = [],
+                outputs: [Port] = []) {
         self.name = name
         self.position = position
         self.locked = locked
@@ -29,7 +33,11 @@ public struct Node: Equatable {
         self.outputs = outputs
     }
 
-    public init(name: String, position: CGPoint = .zero, locked: Bool = false, inputs: [String] = [], outputs: [String] = []) {
+    public init(name: String,
+                position: CGPoint = .zero,
+                locked: Bool = false,
+                inputs: [String] = [],
+                outputs: [String] = []) {
         self.name = name
         self.position = position
         self.locked = locked
@@ -47,7 +55,8 @@ public struct Node: Equatable {
     /// Calculates the bounding rectangle for a node.
     public func rect(layout: LayoutConstants) -> CGRect {
         let maxio = CGFloat(max(inputs.count, outputs.count))
-        let size = CGSize(width: layout.nodeWidth, height: CGFloat(maxio * 30 + layout.nodeTitleHeight))
+        let size = CGSize(width: layout.nodeWidth,
+                          height: CGFloat((maxio * (layout.portSize.height + layout.portSpacing)) + layout.nodeTitleHeight))
 
         return CGRect(origin: position, size: size)
     }

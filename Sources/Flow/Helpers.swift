@@ -4,39 +4,47 @@ import Foundation
 import SwiftUI
 
 extension String {
-    func deletingPrefix(_ prefix: String) -> String? {
+    @_disfavoredOverload
+    func removing(prefix: String) -> String? {
         guard hasPrefix(prefix) else { return nil }
         return String(dropFirst(prefix.count))
     }
 }
 
 extension CGSize {
+    @_disfavoredOverload
     var point: CGPoint {
         CGPoint(x: width, y: height)
     }
 }
 
+@_disfavoredOverload
 func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
     CGPoint(x: lhs.x + rhs.width, y: lhs.y + rhs.height)
 }
 
+@_disfavoredOverload
 func - (lhs: CGPoint, rhs: CGPoint) -> CGSize {
     CGSize(width: lhs.x - rhs.x, height: lhs.y - rhs.y)
 }
 
+@_disfavoredOverload
 func + (lhs: CGSize, rhs: CGSize) -> CGSize {
     CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
 }
 
 extension CGRect {
+    @_disfavoredOverload
     var center: CGPoint {
         origin + CGSize(width: size.width / 2, height: size.height / 2)
     }
-
+    
+    @_disfavoredOverload
     func offset(by off: CGSize) -> CGRect {
         offsetBy(dx: off.width, dy: off.height)
     }
 
+    @_disfavoredOverload
     init(a: CGPoint, b: CGPoint) {
         self.init()
         origin = CGPoint(x: min(a.x, b.x), y: min(a.y, b.y))
@@ -54,6 +62,7 @@ extension CGPoint {
     }
 }
 
+@_disfavoredOverload
 func += (lhs: inout CGPoint, rhs: CGSize) {
     lhs = lhs + rhs
 }
