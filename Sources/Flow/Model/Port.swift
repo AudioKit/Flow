@@ -43,6 +43,7 @@ public struct OutputID: Equatable, Hashable {
 public enum PortType: Equatable, Hashable {
     case control
     case signal
+    case midi
     case custom(String)
 }
 

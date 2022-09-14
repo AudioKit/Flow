@@ -14,6 +14,9 @@ extension NodeEditor {
         /// Color used for rendering signal wires.
         public var signalWire: WireStyle = .init()
         
+        /// Color used for rendering MIDI wires.
+        public var midiWire: WireStyle = .init()
+        
         /// Colors used for rendering custom wires.
         /// Dictionary is keyed by the custom wire name.
         public var customWires: [String: WireStyle] = [:]
@@ -25,6 +28,8 @@ extension NodeEditor {
                 return isOutput ? controlWire.outputColor : controlWire.inputColor
             case .signal:
                 return isOutput ? signalWire.outputColor : signalWire.inputColor
+            case .midi:
+                return isOutput ? midiWire.outputColor : midiWire.inputColor
             case .custom(let id):
                 return isOutput ? customWires[id]?.outputColor : customWires[id]?.inputColor
             }
@@ -37,6 +42,8 @@ extension NodeEditor {
                 return controlWire.gradient
             case .signal:
                 return signalWire.gradient
+            case .midi:
+                return midiWire.gradient
             case .custom(let id):
                 return customWires[id]?.gradient
             }

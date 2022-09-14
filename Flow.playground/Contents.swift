@@ -5,11 +5,14 @@ import SwiftUI
 func simplePatch() -> Patch {
     let midiSource = Node(name: "MIDI source",
                           outputs: [
-                            Port(name: "out ch. 1", type: .custom("MIDI")),
-                            Port(name: "out ch. 2", type: .custom("MIDI"))
+                            Port(name: "out ch. 1", type: .midi),
+                            Port(name: "out ch. 2", type: .midi)
                           ])
     let generator = Node(name: "generator",
-                         inputs: [Port(name: "in", type: .custom("MIDI"))],
+                         inputs: [
+                            Port(name: "midi in", type: .midi),
+                            Port(name: "CV in", type: .control)
+                         ],
                          outputs: [Port(name: "out")])
     let processor = Node(name: "processor", inputs: ["in"], outputs: ["out"])
     let mixer = Node(name: "mixer", inputs: ["in1", "in2"], outputs: ["out"])
@@ -39,8 +42,9 @@ struct FlowDemoView: View {
     public var body: some View {
         NodeEditor(patch: $patch, selection: $selection)
             .nodeColor(.black)
+            .portColor(for: .control, .gray)
             .portColor(for: .signal, Gradient(colors: [.yellow, .blue]))
-            .portColor(for: .custom("MIDI"), .red)
+            .portColor(for: .midi, .red)
         
             .onNodeMoved { index, location in
                 print("Node at index \(index) moved to \(location)")

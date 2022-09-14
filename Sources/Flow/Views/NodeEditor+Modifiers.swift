@@ -48,6 +48,9 @@ extension NodeEditor {
         case .signal:
             viewCopy.style.signalWire.inputColor = color
             viewCopy.style.signalWire.outputColor = color
+        case .midi:
+            viewCopy.style.midiWire.inputColor = color
+            viewCopy.style.midiWire.outputColor = color
         case .custom(let id):
             if viewCopy.style.customWires[id] == nil {
                 viewCopy.style.customWires[id] = .init()
@@ -68,6 +71,8 @@ extension NodeEditor {
             viewCopy.style.controlWire.gradient = gradient
         case .signal:
             viewCopy.style.signalWire.gradient = gradient
+        case .midi:
+            viewCopy.style.midiWire.gradient = gradient
         case .custom(let id):
             if viewCopy.style.customWires[id] == nil {
                 viewCopy.style.customWires[id] = .init()
