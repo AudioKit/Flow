@@ -53,34 +53,41 @@ public struct Patch: Equatable {
     public mutating func recursiveLayout(nodeIndex: NodeIndex,
                                          at point: CGPoint,
                                          layout: LayoutConstants = LayoutConstants(),
-                                         nodePadding: Bool = false) -> CGFloat {
+                                         consumedNodeIndexes: Set<NodeIndex> = [],
+                                         nodePadding: Bool = false) -> (aggregateHeight: CGFloat,
+                                                                        consumedNodeIndexes: Set<NodeIndex>) {
         nodes[nodeIndex].position = point
 
         // XXX: super slow
         let incomingWires = wires.filter {
             $0.input.nodeIndex == nodeIndex
         }.sorted(by: { $0.input.portIndex < $1.input.portIndex })
-
+        
+        var consumedNodeIndexes = consumedNodeIndexes
+        
         var height: CGFloat = 0
         for wire in incomingWires {
             let addPadding = wire == incomingWires.last
-            height = recursiveLayout(nodeIndex: wire.output.nodeIndex,
+            let ni = wire.output.nodeIndex
+            guard !consumedNodeIndexes.contains(ni) else { continue }
+            let rl = recursiveLayout(nodeIndex: ni,
                                      at: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
                                                  y: point.y + height),
                                      layout: layout,
+                                     consumedNodeIndexes: consumedNodeIndexes,
                                      nodePadding: addPadding)
+            height = rl.aggregateHeight
+            consumedNodeIndexes.insert(ni)
+            consumedNodeIndexes.formUnion(rl.consumedNodeIndexes)
         }
 
         let nodeHeight = nodes[nodeIndex].rect(layout: layout).height
-        
-        if nodePadding {
-            return max(height, nodeHeight)
-        } else {
-            return max(height, nodeHeight) + layout.nodeSpacing
-        }
+        let aggregateHeight = max(height, nodeHeight) + (nodePadding ? layout.nodeSpacing : 0)
+        return (aggregateHeight: aggregateHeight,
+                consumedNodeIndexes: consumedNodeIndexes)
     }
     
-    /// Manual grid layout.
+    /// Manual stacked grid layout.
     ///
     /// - Parameters:
     ///   - origin: Top-left origin coordinate.
