@@ -79,4 +79,33 @@ public struct Patch: Equatable {
             return max(height, nodeHeight) + layout.nodeSpacing
         }
     }
+    
+    /// Manual grid layout.
+    ///
+    /// - Parameters:
+    ///   - origin: Top-left origin coordinate.
+    ///   - columns: Array of columns each comprised of an array of node indexes.
+    ///   - layout: Layout constants.
+    public mutating func stackedLayout(at origin: CGPoint = .zero,
+                                       _ columns: [[NodeIndex]],
+                                       layout: LayoutConstants = LayoutConstants()) {
+        for column in columns.indices {
+            let nodeStack = columns[column]
+            var yOffset: CGFloat = 0
+            
+            let xPos = origin.x + (CGFloat(column) * (layout.nodeWidth + layout.nodeSpacing))
+            for nodeIndex in nodeStack {
+                nodes[nodeIndex].position = .init(
+                    x: xPos,
+                    y: origin.y + yOffset
+                )
+                
+                let nodeHeight = nodes[nodeIndex].rect(layout: layout).height
+                yOffset += nodeHeight
+                if column != columns.indices.last {
+                    yOffset += layout.nodeSpacing
+                }
+            }
+        }
+    }
 }
