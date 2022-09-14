@@ -31,7 +31,7 @@ func simplePatch() -> Patch {
     ])
 
     var patch = Patch(nodes: nodes, wires: wires)
-    patch.recursiveLayout(nodeIndex: 6, point: CGPoint(x: 1000, y: 50))
+    patch.recursiveLayout(nodeIndex: 6, at: CGPoint(x: 1000, y: 50))
     return patch
 }
 
@@ -41,7 +41,7 @@ struct FlowDemoView: View {
 
     public var body: some View {
         NodeEditor(patch: $patch, selection: $selection)
-            .nodeColor(.black)
+            .nodeColor(.secondary)
             .portColor(for: .control, .gray)
             .portColor(for: .signal, Gradient(colors: [.yellow, .blue]))
             .portColor(for: .midi, .red)

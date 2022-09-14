@@ -26,7 +26,7 @@ func simplePatch() -> Patch {
                      Wire(from: OutputID(4, 0), to: InputID(5, 0))])
 
     var patch = Patch(nodes: nodes, wires: wires)
-    patch.recursiveLayout(nodeIndex: 5, point: CGPoint(x: 800, y: 50))
+    patch.recursiveLayout(nodeIndex: 5, at: CGPoint(x: 800, y: 50))
     return patch
 }
 

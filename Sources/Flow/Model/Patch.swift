@@ -51,8 +51,9 @@ public struct Patch: Equatable {
     /// - Returns: Height of all nodes in subtree.
     @discardableResult
     public mutating func recursiveLayout(nodeIndex: NodeIndex,
-                                         point: CGPoint,
-                                         layout: LayoutConstants = LayoutConstants()) -> CGFloat {
+                                         at point: CGPoint,
+                                         layout: LayoutConstants = LayoutConstants(),
+                                         nodePadding: Bool = false) -> CGFloat {
         nodes[nodeIndex].position = point
 
         // XXX: super slow
@@ -62,13 +63,20 @@ public struct Patch: Equatable {
 
         var height: CGFloat = 0
         for wire in incomingWires {
-            let h = recursiveLayout(nodeIndex: wire.output.nodeIndex,
-                                    point: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
-                                                   y: point.y + height),
-                                    layout: layout)
-            height += h
+            let addPadding = wire == incomingWires.last
+            height = recursiveLayout(nodeIndex: wire.output.nodeIndex,
+                                     at: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
+                                                 y: point.y + height),
+                                     layout: layout,
+                                     nodePadding: addPadding)
         }
 
-        return height + nodes[nodeIndex].rect(layout: layout).height
+        let nodeHeight = nodes[nodeIndex].rect(layout: layout).height
+        
+        if nodePadding {
+            return max(height, nodeHeight)
+        } else {
+            return max(height, nodeHeight) + layout.nodeSpacing
+        }
     }
 }
