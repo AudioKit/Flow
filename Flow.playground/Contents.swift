@@ -3,22 +3,32 @@ import PlaygroundSupport
 import SwiftUI
 
 func simplePatch() -> Patch {
-
-    let generator = Node(name: "generator", outputs: ["out"])
+    let midiSource = Node(name: "MIDI source",
+                          outputs: [
+                            Port(name: "out ch. 1", type: .custom("MIDI")),
+                            Port(name: "out ch. 2", type: .custom("MIDI"))
+                          ])
+    let generator = Node(name: "generator",
+                         inputs: [Port(name: "in", type: .custom("MIDI"))],
+                         outputs: [Port(name: "out")])
     let processor = Node(name: "processor", inputs: ["in"], outputs: ["out"])
     let mixer = Node(name: "mixer", inputs: ["in1", "in2"], outputs: ["out"])
     let output = Node(name: "output", inputs: ["in"])
 
-    let nodes = [generator, processor, generator, processor, mixer, output]
+    let nodes = [midiSource, generator, processor, generator, processor, mixer, output]
 
-    let wires = Set([Wire(from: OutputID(0, 0), to: InputID(1, 0)),
-                     Wire(from: OutputID(1, 0), to: InputID(4, 0)),
-                     Wire(from: OutputID(2, 0), to: InputID(3, 0)),
-                     Wire(from: OutputID(3, 0), to: InputID(4, 1)),
-                     Wire(from: OutputID(4, 0), to: InputID(5, 0))])
+    let wires = Set([
+        Wire(from: OutputID(0, 0), to: InputID(1, 0)),
+        Wire(from: OutputID(0, 1), to: InputID(3, 0)),
+        Wire(from: OutputID(1, 0), to: InputID(2, 0)),
+        Wire(from: OutputID(2, 0), to: InputID(5, 0)),
+        Wire(from: OutputID(3, 0), to: InputID(4, 0)),
+        Wire(from: OutputID(4, 0), to: InputID(5, 1)),
+        Wire(from: OutputID(5, 0), to: InputID(6, 0))
+    ])
 
     var patch = Patch(nodes: nodes, wires: wires)
-    patch.recursiveLayout(nodeIndex: 5, point: CGPoint(x: 800, y: 50))
+    patch.recursiveLayout(nodeIndex: 6, point: CGPoint(x: 1000, y: 50))
     return patch
 }
 
@@ -28,6 +38,10 @@ struct FlowDemoView: View {
 
     public var body: some View {
         NodeEditor(patch: $patch, selection: $selection)
+            .nodeColor(.black)
+            .portColor(for: .signal, Gradient(colors: [.yellow, .blue]))
+            .portColor(for: .custom("MIDI"), .red)
+        
             .onNodeMoved { index, location in
                 print("Node at index \(index) moved to \(location)")
             }
@@ -40,5 +54,5 @@ struct FlowDemoView: View {
     }
 }
 
-PlaygroundPage.current.setLiveView(FlowDemoView().frame(width: 1000, height: 500))
+PlaygroundPage.current.setLiveView(FlowDemoView().frame(width: 1200, height: 500))
 PlaygroundPage.current.needsIndefiniteExecution = true

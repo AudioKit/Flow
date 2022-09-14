@@ -28,7 +28,7 @@ extension NodeEditor {
             selected = selection.contains(nodeIndex)
         }
 
-        cx.fill(bg, with: .color(Color(white: selected ? 0.4 : 0.2, opacity: 0.6)))
+        cx.fill(bg, with: .color(style.nodeColor.opacity(selected ? 0.8 : 0.4)))
 
         cx.draw(Text(node.name),
                 at: pos + CGSize(width: rect.size.width / 2, height: 20),
@@ -37,7 +37,8 @@ extension NodeEditor {
         for (i, input) in node.inputs.enumerated() {
             let rect = node.inputRect(input: i, layout: layout).offset(by: offset)
             let circle = Path(ellipseIn: rect)
-            cx.fill(circle, with: .color(.cyan))
+            let portColor = style.color(for: input.type, isOutput: false) ?? .gray
+            cx.fill(circle, with: .color(portColor))
             if !patch.wires.contains(where: { $0.input == InputID(patch.nodes.firstIndex(of: node)!, i) }) {
                 let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
                 cx.fill(dot, with: .color(.black))
@@ -50,7 +51,8 @@ extension NodeEditor {
         for (i, output) in node.outputs.enumerated() {
             let rect = node.outputRect(output: i, layout: layout).offset(by: offset)
             let circle = Path(ellipseIn: rect)
-            cx.fill(circle, with: .color(.magenta))
+            let portColor = style.color(for: output.type, isOutput: true) ?? .gray
+            cx.fill(circle, with: .color(portColor))
             if !patch.wires.contains(where: { $0.output == OutputID(patch.nodes.firstIndex(of: node)!, i) }) {
                 let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
                 cx.fill(dot, with: .color(.black))
@@ -89,15 +91,19 @@ extension NodeEditor {
 
             let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
             if viewport.intersects(bounds) {
-                strokeWire(from: fromPoint, to: toPoint, cx: cx)
+                let gradient = gradient(for: wire)
+                strokeWire(from: fromPoint, to: toPoint, cx: cx, gradient: gradient)
             }
         }
     }
 
     func drawDraggedWire(cx: GraphicsContext) {
         if case let .wire(output: output, offset: offset, _) = dragInfo {
-            let outputRect = patch.nodes[output.nodeIndex].outputRect(output: output.portIndex, layout: layout)
-            strokeWire(from: outputRect.center, to: outputRect.center + offset, cx: cx)
+            let outputRect = patch
+                .nodes[output.nodeIndex]
+                .outputRect(output: output.portIndex, layout: layout)
+            let gradient = gradient(for: output)
+            strokeWire(from: outputRect.center, to: outputRect.center + offset, cx: cx, gradient: gradient)
         }
     }
 
@@ -108,7 +114,7 @@ extension NodeEditor {
         }
     }
 
-    func strokeWire(from: CGPoint, to: CGPoint, cx: GraphicsContext) {
+    func strokeWire(from: CGPoint, to: CGPoint, cx: GraphicsContext, gradient: Gradient) {
         let d = 0.4 * abs(to.x - from.x)
         var path = Path()
         path.move(to: from)
@@ -117,7 +123,20 @@ extension NodeEditor {
                       control2: CGPoint(x: to.x - d, y: to.y))
 
         cx.stroke(path,
-                  with: .linearGradient(wireGradient, startPoint: from, endPoint: to),
+                  with: .linearGradient(gradient, startPoint: from, endPoint: to),
                   style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
+    }
+    
+    
+    func gradient(for outputID: OutputID) -> Gradient {
+        let portType = patch
+            .nodes[outputID.nodeIndex]
+            .outputs[outputID.portIndex]
+            .type
+        return style.gradient(for: portType) ?? .init(colors: [.gray])
+    }
+    
+    func gradient(for wire: Wire) -> Gradient {
+        gradient(for: wire.output)
     }
 }

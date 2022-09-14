@@ -50,10 +50,10 @@ public struct NodeEditor: View {
 
     /// Constants used for layout.
     var layout = LayoutConstants()
-
-    /// Gradient used for rendering wires.
-    let wireGradient = Gradient(colors: [.magenta, .cyan])
-
+    
+    /// Configuration used to determine rendering style.
+    public var style = Style()
+    
     public var body: some View {
         Canvas { cx, size in
             
