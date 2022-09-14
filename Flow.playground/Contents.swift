@@ -28,6 +28,15 @@ struct FlowDemoView: View {
 
     public var body: some View {
         NodeEditor(patch: $patch, selection: $selection)
+            .onNodeMoved { index, location in
+                print("Node at index \(index) moved to \(location)")
+            }
+            .onWireAdded { wire in
+                print("Added wire: \(wire)")
+            }
+            .onWireRemoved { wire in
+                print("Removed wire: \(wire)")
+            }
     }
 }
 

@@ -15,33 +15,37 @@ public struct NodeEditor: View {
 
     /// State for all gestures.
     @GestureState var dragInfo = DragInfo.none
-
+    
+    /// Node moved handler closure.
+    public typealias NodeMovedHandler = (_ index: NodeIndex,
+                                         _ location: CGPoint) -> Void
+    
     /// Called when a node is moved.
-    var nodeMoved: (NodeIndex, CGPoint) -> Void
+    var nodeMoved: NodeMovedHandler = { (_,_) in }
 
+    /// Wire added handler closure.
+    public typealias WireAddedHandler = (_ wire: Wire) -> Void
+    
     /// Called when a wire is added.
-    var wireAdded: (Wire) -> Void
-
+    var wireAdded: WireAddedHandler = { _ in }
+    
+    /// Wire removed handler closure.
+    public typealias WireRemovedHandler = (_ wire: Wire) -> Void
+    
     /// Called when a wire is removed.
-    var wireRemoved: (Wire) -> Void
+    var wireRemoved: WireRemovedHandler = { _ in }
 
     /// Initialize the patch view with a patch and a selection.
+    ///
+    /// To define event handlers, chain their view modifiers: ``onNodeMoved(_:)``, ``onWireAdded(_:)``, ``onWireRemoved(_:)``.
+    ///
     /// - Parameters:
     ///   - patch: Patch to display.
     ///   - selection: Set of nodes currently selected.
-    ///   - moveNode: Called when a node is moved.
-    ///   - wireAdded: Called when a wire is added.
-    ///   - wireRemoved: Called when a wire is removed.
     public init(patch: Binding<Patch>,
-                selection: Binding<Set<NodeIndex>>,
-                nodeMoved: @escaping (NodeIndex, CGPoint) -> Void = { (_,_) in },
-                wireAdded: @escaping (Wire) -> Void = { _ in },
-                wireRemoved: @escaping (Wire) -> Void = { _ in }) {
+                selection: Binding<Set<NodeIndex>>) {
         _patch = patch
         _selection = selection
-        self.nodeMoved = nodeMoved
-        self.wireAdded = wireAdded
-        self.wireRemoved = wireRemoved
     }
 
     /// Constants used for layout.
@@ -52,7 +56,7 @@ public struct NodeEditor: View {
 
     public var body: some View {
         Canvas { cx, size in
-
+            
             let viewport = CGRect(origin: .zero, size: size)
             cx.addFilter(.shadow(radius: 5))
 
