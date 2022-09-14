@@ -127,7 +127,6 @@ extension NodeEditor {
                   style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
     }
     
-    
     func gradient(for outputID: OutputID) -> Gradient {
         let portType = patch
             .nodes[outputID.nodeIndex]

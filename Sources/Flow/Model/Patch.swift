@@ -63,7 +63,8 @@ public struct Patch: Equatable {
         var height: CGFloat = 0
         for wire in incomingWires {
             let h = recursiveLayout(nodeIndex: wire.output.nodeIndex,
-                                    point: CGPoint(x: point.x - layout.nodeWidth - 40, y: point.y + height),
+                                    point: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
+                                                   y: point.y + height),
                                     layout: layout)
             height += h
         }

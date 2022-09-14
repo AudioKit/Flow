@@ -55,7 +55,8 @@ public struct Node: Equatable {
     /// Calculates the bounding rectangle for a node.
     public func rect(layout: LayoutConstants) -> CGRect {
         let maxio = CGFloat(max(inputs.count, outputs.count))
-        let size = CGSize(width: layout.nodeWidth, height: CGFloat(maxio * 30 + layout.nodeTitleHeight))
+        let size = CGSize(width: layout.nodeWidth,
+                          height: CGFloat((maxio * (layout.portSize.height + layout.portSpacing)) + layout.nodeTitleHeight))
 
         return CGRect(origin: position, size: size)
     }

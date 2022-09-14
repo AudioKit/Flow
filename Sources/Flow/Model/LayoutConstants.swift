@@ -8,6 +8,7 @@ public struct LayoutConstants {
     let portSpacing: CGFloat = 10
     let nodeWidth: CGFloat = 200
     let nodeTitleHeight: CGFloat = 40
-
+    let nodeSpacing: CGFloat = 40
+    
     public init() {}
 }
