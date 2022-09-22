@@ -61,7 +61,7 @@ public struct NodeEditor: View {
         ZStack {
             Canvas { cx, size in
 
-                let viewport = CGRect(origin: .zero, size: size)
+                let viewport = CGRect(origin: toLocal(.zero), size: toLocal(size))
                 cx.addFilter(.shadow(radius: 5))
 
                 cx.scaleBy(x: CGFloat(zoom), y: CGFloat(zoom))
