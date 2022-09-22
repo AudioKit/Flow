@@ -4,7 +4,6 @@
 import XCTest
 
 final class NodeTests: XCTestCase {
-    
     /// This test ensures disambiguation for identical `Node` init signature overloads
     /// where inputs and outputs are empty.
     /// It will throw a compiler error if it cannot determine which to use.
