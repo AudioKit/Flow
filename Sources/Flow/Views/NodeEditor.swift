@@ -73,8 +73,14 @@ public struct NodeEditor: View {
                 drawSelectionRect(cx: cx)
 
             }
+            #if os(macOS)
+                .gesture(dragGesture)
+            #endif
+            #if os(iOS)
             WorkspaceView(pan: $pan, zoom: $zoom)
                 .gesture(dragGesture)
+            #endif
+
         }
 
     }
