@@ -22,7 +22,6 @@ struct WorkspaceView: UIViewRepresentable {
         }
 
         @objc func panGesture(sender: UIPanGestureRecognizer) {
-            print("pan at location: \(sender.location(in: nil))")
             let t = sender.translation(in: nil)
             pan.width += t.x / zoom
             pan.height += t.y / zoom
@@ -32,8 +31,6 @@ struct WorkspaceView: UIViewRepresentable {
         }
 
         @objc func zoomGesture(sender: UIPinchGestureRecognizer) {
-            print("pinch at location: \(sender.location(in: nil)), scale: \(sender.scale)")
-
             let p = sender.location(in: nil).size
 
             let newZoom = sender.scale * zoom
