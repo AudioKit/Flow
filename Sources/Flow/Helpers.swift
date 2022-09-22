@@ -33,6 +33,26 @@ func + (lhs: CGSize, rhs: CGSize) -> CGSize {
     CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
 }
 
+@_disfavoredOverload
+func - (pt: CGPoint, sz: CGSize) -> CGPoint {
+    CGPoint(x: pt.x - sz.width, y: pt.y - sz.height)
+}
+
+@_disfavoredOverload
+func - (lhs: CGSize, rhs: CGSize) -> CGSize {
+    CGSize(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
+}
+
+@_disfavoredOverload
+func * (s: Double, sz: CGSize) -> CGSize {
+    CGSize(width: s * sz.width, height: s * sz.height)
+}
+
+@_disfavoredOverload
+func * (sz: CGSize, s: Double) -> CGSize {
+    CGSize(width: s * sz.width, height: s * sz.height)
+}
+
 extension CGRect {
     @_disfavoredOverload
     var center: CGPoint {
