@@ -68,37 +68,51 @@ extension NodeEditor {
             }
             .onEnded { drag in
 
-                switch patch.hitTest(point: drag.startLocation, layout: layout) {
-                case .background:
-                    selection = Set<NodeIndex>()
-                    let selectionRect = CGRect(a: drag.startLocation,
-                                               b: drag.location)
-                    for (idx, node) in patch.nodes.enumerated() {
-                        if selectionRect.intersects(node.rect(layout: layout)) {
-                            selection.insert(idx)
+                let hitResult = patch.hitTest(point: drag.startLocation, layout: layout)
+
+                if drag.startLocation.distanceTo(drag.location) > 5 {
+                    switch hitResult {
+                    case .background:
+                        selection = Set<NodeIndex>()
+                        let selectionRect = CGRect(a: drag.startLocation,
+                                                   b: drag.location)
+                        for (idx, node) in patch.nodes.enumerated() {
+                            if selectionRect.intersects(node.rect(layout: layout)) {
+                                selection.insert(idx)
+                            }
                         }
-                    }
-                case let .node(nodeIndex):
-                    moveNode(nodeIndex: nodeIndex, offset: drag.translation)
-                    if selection.contains(nodeIndex) {
-                        for idx in selection where idx != nodeIndex {
-                            moveNode(nodeIndex: idx, offset: drag.translation)
+                    case let .node(nodeIndex):
+                        moveNode(nodeIndex: nodeIndex, offset: drag.translation)
+                        if selection.contains(nodeIndex) {
+                            for idx in selection where idx != nodeIndex {
+                                moveNode(nodeIndex: idx, offset: drag.translation)
+                            }
                         }
-                    }
-                case let .output(nodeIndex, portIndex):
-                    if let input = findInput(point: drag.location) {
-                        connect(OutputID(nodeIndex, portIndex), to: input)
-                    }
-                case let .input(nodeIndex, portIndex):
-                    // Is a wire attached to the input?
-                    if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
-                        patch.wires.remove(attachedWire)
-                        wireRemoved(attachedWire)
+                    case let .output(nodeIndex, portIndex):
                         if let input = findInput(point: drag.location) {
-                            connect(attachedWire.output, to: input)
+                            connect(OutputID(nodeIndex, portIndex), to: input)
                         }
+                    case let .input(nodeIndex, portIndex):
+                        // Is a wire attached to the input?
+                        if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
+                            patch.wires.remove(attachedWire)
+                            wireRemoved(attachedWire)
+                            if let input = findInput(point: drag.location) {
+                                connect(attachedWire.output, to: input)
+                            }
+                        }
+                    }
+                } else {
+                    // If we haven't moved far, then this is effectively a tap.
+                    switch hitResult {
+                    case .background:
+                        selection = Set<NodeIndex>()
+                    case let .node(nodeIndex):
+                        selection = Set<NodeIndex>([nodeIndex])
+                    default: break;
                     }
                 }
+
             }
     }
 }
