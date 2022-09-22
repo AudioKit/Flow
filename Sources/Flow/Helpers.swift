@@ -80,6 +80,12 @@ extension CGPoint {
     var simd: SIMD2<Float> {
         .init(x: Float(x), y: Float(y))
     }
+
+    func distanceTo(_ p: CGPoint) -> CGFloat {
+        let dx = x - p.x
+        let dy = y - p.y
+        return sqrt(dx*dx+dy*dy)
+    }
 }
 
 @_disfavoredOverload
