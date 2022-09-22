@@ -53,18 +53,26 @@ public struct NodeEditor: View {
     
     /// Configuration used to determine rendering style.
     public var style = Style()
+
+    @State var pan: CGSize = .zero
+    @State var zoom: Double = 0
     
     public var body: some View {
-        Canvas { cx, size in
-            
-            let viewport = CGRect(origin: .zero, size: size)
-            cx.addFilter(.shadow(radius: 5))
+        ZStack {
+            Canvas { cx, size in
 
-            drawWires(cx: cx, viewport: viewport)
-            drawNodes(cx: cx, viewport: viewport)
-            drawDraggedWire(cx: cx)
-            drawSelectionRect(cx: cx)
+                let viewport = CGRect(origin: .zero, size: size)
+                cx.addFilter(.shadow(radius: 5))
 
-        }.gesture(dragGesture)
+                drawWires(cx: cx, viewport: viewport)
+                drawNodes(cx: cx, viewport: viewport)
+                drawDraggedWire(cx: cx)
+                drawSelectionRect(cx: cx)
+
+            }
+            WorkspaceView(pan: $pan, zoom: $zoom)
+                .gesture(dragGesture)
+        }
+
     }
 }

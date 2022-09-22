@@ -61,6 +61,7 @@ struct WorkspaceView: UIViewRepresentable {
         let panRecognizer = UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.panGesture(sender:)))
         view.addGestureRecognizer(panRecognizer)
         panRecognizer.delegate = coordinator
+        panRecognizer.minimumNumberOfTouches = 2
 
         let pinchGesture = UIPinchGestureRecognizer(target: coordinator, action:
                                                         #selector(Coordinator.zoomGesture(sender:)))
