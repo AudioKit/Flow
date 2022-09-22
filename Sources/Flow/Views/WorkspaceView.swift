@@ -112,7 +112,7 @@ struct WorkspaceView: NSViewRepresentable {
         @objc func zoomGesture(sender: NSMagnificationGestureRecognizer) {
             print("pinch at location: \(sender.location(in: nil)), scale: \(sender.magnification)")
 
-            let p = sender.location(in: nil).offset
+            let p = sender.location(in: nil).size
 
             let newZoom = sender.magnification * zoom
 
