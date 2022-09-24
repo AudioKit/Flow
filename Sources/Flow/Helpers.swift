@@ -18,40 +18,45 @@ extension CGSize {
     }
 }
 
-@_disfavoredOverload
-func + (lhs: CGPoint, rhs: CGSize) -> CGPoint {
-    CGPoint(x: lhs.x + rhs.width, y: lhs.y + rhs.height)
+extension CGPoint {
+    @_disfavoredOverload
+    static func + (lhs: Self, rhs: CGSize) -> Self {
+        Self(x: lhs.x + rhs.width, y: lhs.y + rhs.height)
+    }
+
+    @_disfavoredOverload
+    static func - (lhs: Self, rhs: Self) -> CGSize {
+        CGSize(width: lhs.x - rhs.x, height: lhs.y - rhs.y)
+    }
 }
 
-@_disfavoredOverload
-func - (lhs: CGPoint, rhs: CGPoint) -> CGSize {
-    CGSize(width: lhs.x - rhs.x, height: lhs.y - rhs.y)
+extension CGSize {
+    @_disfavoredOverload
+    static func + (lhs: Self, rhs: Self) -> Self {
+        Self(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+    }
+
+    @_disfavoredOverload
+    static func - (pt: CGPoint, sz: Self) -> CGPoint {
+        CGPoint(x: pt.x - sz.width, y: pt.y - sz.height)
+    }
+
+    @_disfavoredOverload
+    static func - (lhs: Self, rhs: Self) -> Self {
+        Self(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
+    }
+
+    @_disfavoredOverload
+    static func * (s: Double, sz: Self) -> Self {
+        Self(width: s * sz.width, height: s * sz.height)
+    }
+
+    @_disfavoredOverload
+    static func * (sz: Self, s: Double) -> Self {
+        Self(width: s * sz.width, height: s * sz.height)
+    }
 }
 
-@_disfavoredOverload
-func + (lhs: CGSize, rhs: CGSize) -> CGSize {
-    CGSize(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
-}
-
-@_disfavoredOverload
-func - (pt: CGPoint, sz: CGSize) -> CGPoint {
-    CGPoint(x: pt.x - sz.width, y: pt.y - sz.height)
-}
-
-@_disfavoredOverload
-func - (lhs: CGSize, rhs: CGSize) -> CGSize {
-    CGSize(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
-}
-
-@_disfavoredOverload
-func * (s: Double, sz: CGSize) -> CGSize {
-    CGSize(width: s * sz.width, height: s * sz.height)
-}
-
-@_disfavoredOverload
-func * (sz: CGSize, s: Double) -> CGSize {
-    CGSize(width: s * sz.width, height: s * sz.height)
-}
 
 extension CGRect {
     @_disfavoredOverload
@@ -86,12 +91,14 @@ extension CGPoint {
         let dy = y - p.y
         return sqrt(dx*dx+dy*dy)
     }
+
+    @_disfavoredOverload
+    static func += (lhs: inout CGPoint, rhs: CGSize) {
+        lhs = lhs + rhs
+    }
+
 }
 
-@_disfavoredOverload
-func += (lhs: inout CGPoint, rhs: CGSize) {
-    lhs = lhs + rhs
-}
 
 extension Color {
     static let magenta = Color(.sRGB, red: 1, green: 0, blue: 1, opacity: 1)
