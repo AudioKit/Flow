@@ -63,7 +63,7 @@ extension CGRect {
     var center: CGPoint {
         origin + CGSize(width: size.width / 2, height: size.height / 2)
     }
-    
+
     @_disfavoredOverload
     func offset(by off: CGSize) -> CGRect {
         offsetBy(dx: off.width, dy: off.height)

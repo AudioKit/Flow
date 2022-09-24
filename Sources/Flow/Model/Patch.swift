@@ -21,11 +21,10 @@ public struct Patch: Equatable {
         case node(NodeIndex)
         case input(NodeIndex, PortIndex)
         case output(NodeIndex, PortIndex)
-        case background
     }
 
     /// Hit test a point against the whole patch.
-    func hitTest(point: CGPoint, layout: LayoutConstants) -> HitTestResult {
+    func hitTest(point: CGPoint, layout: LayoutConstants) -> HitTestResult? {
         for (nodeIndex, node) in nodes.enumerated().reversed() {
             for (inputIndex, _) in node.inputs.enumerated() {
                 if node.inputRect(input: inputIndex, layout: layout).contains(point) {
@@ -43,7 +42,7 @@ public struct Patch: Equatable {
             }
         }
 
-        return .background
+        return nil
     }
 
     /// Recursive layout.
