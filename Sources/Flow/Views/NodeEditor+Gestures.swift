@@ -55,7 +55,7 @@ extension NodeEditor {
                 let translation = toLocal(drag.translation)
 
                 switch patch.hitTest(point: startLocation, layout: layout) {
-                case .background:
+                case .none:
                     dragInfo = .selection(rect: CGRect(a: startLocation,
                                                        b: location))
                 case let .node(nodeIndex):
@@ -89,7 +89,7 @@ extension NodeEditor {
                 // Note that this threshold should be in screen coordinates.
                 if drag.startLocation.distanceTo(drag.location) > 5 {
                     switch hitResult {
-                    case .background:
+                    case .none:
                         selection = Set<NodeIndex>()
                         let selectionRect = CGRect(a: startLocation,
                                                    b: location)
@@ -122,7 +122,7 @@ extension NodeEditor {
                 } else {
                     // If we haven't moved far, then this is effectively a tap.
                     switch hitResult {
-                    case .background:
+                    case .none:
                         selection = Set<NodeIndex>()
                     case let .node(nodeIndex):
                         selection = Set<NodeIndex>([nodeIndex])
