@@ -12,9 +12,7 @@ extension NodeEditor {
         let offset = self.offset(for: nodeIndex)
         let rect = node.rect(layout: layout).offset(by: offset)
 
-        if !rect.intersects(viewport) {
-            return
-        }
+        guard rect.intersects(viewport) else { return }
 
         let pos = rect.origin
 

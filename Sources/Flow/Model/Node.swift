@@ -74,4 +74,23 @@ public struct Node: Equatable {
         return CGRect(origin: position + CGSize(width: layout.nodeWidth - layout.portSpacing - layout.portSize.width, height: y),
                       size: layout.portSize)
     }
+
+    func hitTest(nodeIndex: Int, point: CGPoint, layout: LayoutConstants) -> Patch.HitTestResult? {
+        for (inputIndex, _) in self.inputs.enumerated() {
+            if self.inputRect(input: inputIndex, layout: layout).contains(point) {
+                return .input(nodeIndex, inputIndex)
+            }
+        }
+        for (outputIndex, _) in self.outputs.enumerated() {
+            if self.outputRect(output: outputIndex, layout: layout).contains(point) {
+                return .output(nodeIndex, outputIndex)
+            }
+        }
+
+        if self.rect(layout: layout).contains(point) {
+            return .node(nodeIndex)
+        }
+
+        return nil
+    }
 }

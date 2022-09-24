@@ -26,19 +26,8 @@ public struct Patch: Equatable {
     /// Hit test a point against the whole patch.
     func hitTest(point: CGPoint, layout: LayoutConstants) -> HitTestResult? {
         for (nodeIndex, node) in nodes.enumerated().reversed() {
-            for (inputIndex, _) in node.inputs.enumerated() {
-                if node.inputRect(input: inputIndex, layout: layout).contains(point) {
-                    return .input(nodeIndex, inputIndex)
-                }
-            }
-            for (outputIndex, _) in node.outputs.enumerated() {
-                if node.outputRect(output: outputIndex, layout: layout).contains(point) {
-                    return .output(nodeIndex, outputIndex)
-                }
-            }
-
-            if node.rect(layout: layout).contains(point) {
-                return .node(nodeIndex)
+            if let result = node.hitTest(nodeIndex: nodeIndex, point: point, layout: layout) {
+                return result
             }
         }
 
@@ -49,12 +38,15 @@ public struct Patch: Equatable {
     ///
     /// - Returns: Height of all nodes in subtree.
     @discardableResult
-    public mutating func recursiveLayout(nodeIndex: NodeIndex,
-                                         at point: CGPoint,
-                                         layout: LayoutConstants = LayoutConstants(),
-                                         consumedNodeIndexes: Set<NodeIndex> = [],
-                                         nodePadding: Bool = false) -> (aggregateHeight: CGFloat,
-                                                                        consumedNodeIndexes: Set<NodeIndex>) {
+    public mutating func recursiveLayout(
+        nodeIndex: NodeIndex,
+        at point: CGPoint,
+        layout: LayoutConstants = LayoutConstants(),
+        consumedNodeIndexes: Set<NodeIndex> = [],
+        nodePadding: Bool = false
+    ) -> (aggregateHeight: CGFloat,
+          consumedNodeIndexes: Set<NodeIndex>) {
+
         nodes[nodeIndex].position = point
 
         // XXX: super slow
