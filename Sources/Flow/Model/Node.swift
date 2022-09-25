@@ -66,7 +66,10 @@ public struct Node: Equatable {
 
     /// Calculates the bounding rectangle for an input port (not including the name).
     @inlinable @inline(__always)
-    public func inputRect(input: PortIndex, layout: LayoutConstants) -> CGRect {
+    public func inputRect(
+        input: PortIndex,
+        layout: LayoutConstants
+    ) -> CGRect {
         self.position + layout.inputRect(input: input)
     }
 
@@ -114,5 +117,6 @@ public struct Node: Equatable {
             self.outputRect(output: portIndex, layout: layout).contains(point)
         }?.0
     }
+
 }
 
