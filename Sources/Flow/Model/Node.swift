@@ -21,11 +21,13 @@ public struct Node: Equatable {
     public var outputs: [Port]
     
     @_disfavoredOverload
-    public init(name: String,
-                position: CGPoint = .zero,
-                locked: Bool = false,
-                inputs: [Port] = [],
-                outputs: [Port] = []) {
+    public init(
+        name: String,
+        position: CGPoint = .zero,
+        locked: Bool = false,
+        inputs: [Port] = [],
+        outputs: [Port] = []
+    ) {
         self.name = name
         self.position = position
         self.locked = locked
@@ -33,11 +35,13 @@ public struct Node: Equatable {
         self.outputs = outputs
     }
 
-    public init(name: String,
-                position: CGPoint = .zero,
-                locked: Bool = false,
-                inputs: [String] = [],
-                outputs: [String] = []) {
+    public init(
+        name: String,
+        position: CGPoint = .zero,
+        locked: Bool = false,
+        inputs: [String] = [],
+        outputs: [String] = []
+    ) {
         self.name = name
         self.position = position
         self.locked = locked

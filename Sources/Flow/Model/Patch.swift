@@ -66,6 +66,12 @@ public struct Patch: Equatable {
         self.wires.contains(where: { $0.output == OutputID(nodes.firstIndex(of: node)!, index) })
     }
 
+    func incomingWires(for nodeIndex: NodeIndex) -> [Wire] {
+        self.wires.filter {
+            $0.input.nodeIndex == nodeIndex
+        }.sorted(by: { $0.input.portIndex < $1.input.portIndex })
+    }
+
     /// Recursive layout.
     ///
     /// - Returns: Height of all nodes in subtree.
@@ -76,15 +82,15 @@ public struct Patch: Equatable {
         layout: LayoutConstants = LayoutConstants(),
         consumedNodeIndexes: Set<NodeIndex> = [],
         nodePadding: Bool = false
-    ) -> (aggregateHeight: CGFloat,
-          consumedNodeIndexes: Set<NodeIndex>) {
+    ) -> (
+        aggregateHeight: CGFloat,
+        consumedNodeIndexes: Set<NodeIndex>
+    ) {
 
         self.nodes[nodeIndex].position = point
 
         // XXX: super slow
-        let incomingWires = self.wires.filter {
-            $0.input.nodeIndex == nodeIndex
-        }.sorted(by: { $0.input.portIndex < $1.input.portIndex })
+        let incomingWires = self.incomingWires(for: nodeIndex)
         
         var consumedNodeIndexes = consumedNodeIndexes
         
