@@ -4,11 +4,11 @@ import CoreGraphics
 
 /// Define the layout geometry of the nodes.
 public struct LayoutConstants {
-    let portSize = CGSize(width: 20, height: 20)
-    let portSpacing: CGFloat = 10
-    let nodeWidth: CGFloat = 200
-    let nodeTitleHeight: CGFloat = 40
-    let nodeSpacing: CGFloat = 40
+    public let portSize = CGSize(width: 20, height: 20)
+    public let portSpacing: CGFloat = 10
+    public let nodeWidth: CGFloat = 200
+    public let nodeTitleHeight: CGFloat = 40
+    public let nodeSpacing: CGFloat = 40
     
     public init() {}
 
@@ -27,6 +27,14 @@ public struct LayoutConstants {
         return CGRect(
             origin: origin,
             size: self.portSize
+        )
+    }
+
+    @inlinable @inline(__always)
+    func rectSize(for portCount: Int) -> CGSize {
+        CGSize(
+            width: self.nodeWidth,
+            height: CGFloat((CGFloat(portCount) * (self.portSize.height + self.portSpacing)) + self.nodeTitleHeight)
         )
     }
 }
