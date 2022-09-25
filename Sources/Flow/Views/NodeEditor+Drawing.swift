@@ -8,6 +8,56 @@ extension GraphicsContext {
         let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
         self.fill(dot, with: shading)
     }
+
+    func drawInputPort(
+        node: Node,
+        index: Int,
+        layout: LayoutConstants,
+        offset: CGSize,
+        portColor: Color,
+        isConnected: Bool
+    ) {
+        let rect = node.inputRect(input: index, layout: layout).offset(by: offset)
+        let circle = Path(ellipseIn: rect)
+        let port = node.inputs[index]
+
+        self.fill(circle, with: .color(portColor))
+
+        if !isConnected {
+            self.drawDot(in: rect, with: .color(.black))
+        }
+
+        self.draw(
+            Text(port.name).font(.caption),
+            at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
+            anchor: .leading
+        )
+    }
+
+    func drawOutputPort(
+        node: Node,
+        index: Int,
+        layout: LayoutConstants,
+        offset: CGSize,
+        portColor: Color,
+        isConnected: Bool
+    ) {
+        let rect = node.outputRect(output: index, layout: layout).offset(by: offset)
+        let circle = Path(ellipseIn: rect)
+        let port = node.outputs[index]
+
+        self.fill(circle, with: .color(portColor))
+
+        if !isConnected {
+            self.drawDot(in: rect, with: .color(.black))
+        }
+
+        self.draw(
+            Text(port.name).font(.caption),
+            at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
+            anchor: .trailing
+        )
+    }
 }
 
 extension NodeEditor {
@@ -41,32 +91,29 @@ extension NodeEditor {
                 anchor: .center)
 
         for (i, input) in node.inputs.enumerated() {
-            let rect = node.inputRect(input: i, layout: layout).offset(by: offset)
-            let circle = Path(ellipseIn: rect)
             let portColor = style.color(for: input.type, isOutput: false) ?? .gray
-            cx.fill(circle, with: .color(portColor))
 
-            if !patch.isInputWireConnected(node: node, index: i) {
-                cx.drawDot(in: rect, with: .color(.black))
-            }
-
-            cx.draw(Text(input.name).font(.caption),
-                    at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
-                    anchor: .leading)
+            cx.drawInputPort(
+                node: node,
+                index: i,
+                layout: layout,
+                offset: offset,
+                portColor: portColor,
+                isConnected: patch.isInputWireConnected(node: node, index: i)
+            )
         }
 
         for (i, output) in node.outputs.enumerated() {
-            let rect = node.outputRect(output: i, layout: layout).offset(by: offset)
-            let circle = Path(ellipseIn: rect)
             let portColor = style.color(for: output.type, isOutput: true) ?? .gray
-            cx.fill(circle, with: .color(portColor))
 
-            if !patch.isOutputWireConnected(node: node, index: i) {
-                cx.drawDot(in: rect, with: .color(.black))
-            }
-            cx.draw(Text(output.name).font(.caption),
-                    at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
-                    anchor: .trailing)
+            cx.drawOutputPort(
+                node: node,
+                index: i,
+                layout: layout,
+                offset: offset,
+                portColor: portColor,
+                isConnected: patch.isOutputWireConnected(node: node, index: i)
+            )
         }
     }
 
