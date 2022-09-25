@@ -34,6 +34,32 @@ public struct Patch: Equatable {
         return nil
     }
 
+    func attachedWire(inputID: InputID) -> Wire? {
+        self.wires.first(where: { $0.input == inputID })
+    }
+
+    /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
+    mutating func connect(
+        _ output: OutputID,
+        to input: InputID,
+        added: NodeEditor.WireRemovedHandler,
+        removed: NodeEditor.WireRemovedHandler
+
+    ) {
+        let wire = Wire(from: output, to: input)
+
+        // Remove any other wires connected to the input.
+        self.wires = self.wires.filter { w in
+            let result = w.input != wire.input
+            if !result {
+                removed(w)
+            }
+            return result
+        }
+        self.wires.insert(wire)
+        added(wire)
+    }
+
     mutating func moveNode(
         nodeIndex: NodeIndex,
         offset: CGSize,

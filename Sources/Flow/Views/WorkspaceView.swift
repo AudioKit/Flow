@@ -99,7 +99,9 @@ struct WorkspaceView: NSViewRepresentable {
             self._zoom = zoom
         }
 
-        @objc func panGesture(sender: NSPanGestureRecognizer) {
+        @objc func panGesture(
+            sender: NSPanGestureRecognizer
+        ) {
             print("pan at location: \(sender.location(in: nil))")
             let t = sender.translation(in: nil)
             self.pan.width += t.x / self.zoom
@@ -109,7 +111,9 @@ struct WorkspaceView: NSViewRepresentable {
             sender.setTranslation(.zero, in: nil)
         }
 
-        @objc func zoomGesture(sender: NSMagnificationGestureRecognizer) {
+        @objc func zoomGesture(
+            sender: NSMagnificationGestureRecognizer
+        ) {
             print("pinch at location: \(sender.location(in: nil)), scale: \(sender.magnification)")
 
             let p = sender.location(in: nil).size
@@ -164,7 +168,7 @@ extension WorkspaceView.Coordinator: NSGestureRecognizerDelegate {
 #endif
 
 struct WorkspaceTestView: View {
-    @State var pan: CGSize = CGSize.zero
+    @State var pan: CGSize = .zero
     @State var zoom: CGFloat = 0.0
 
     var body: some View {

@@ -11,24 +11,20 @@ extension NodeEditor {
         case none
     }
 
-    /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
-    func connect(_ output: OutputID, to input: InputID) {
-        let wire = Wire(from: output, to: input)
-
-        // Remove any other wires connected to the input.
-        self.patch.wires = self.patch.wires.filter { w in
-            let result = w.input != wire.input
-            if !result {
-                self.wireRemoved(w)
-            }
-            return result
-        }
-        self.patch.wires.insert(wire)
-        self.wireAdded(wire)
+    func connect(
+        _ output: OutputID,
+        to input: InputID
+    ) {
+        self.patch.connect(
+            output,
+            to: input,
+            added: self.wireAdded,
+            removed: self.wireRemoved
+        )
     }
 
     func attachedWire(inputID: InputID) -> Wire? {
-        self.patch.wires.first(where: { $0.input == inputID })
+        self.patch.attachedWire(inputID: inputID)
     }
 
     @inline(__always)
