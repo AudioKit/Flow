@@ -99,12 +99,16 @@ public struct Patch: Equatable {
             let addPadding = wire == incomingWires.last
             let ni = wire.output.nodeIndex
             guard !consumedNodeIndexes.contains(ni) else { continue }
-            let rl = self.recursiveLayout(nodeIndex: ni,
-                                          at: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
-                                                 y: point.y + height),
-                                          layout: layout,
-                                          consumedNodeIndexes: consumedNodeIndexes,
-                                          nodePadding: addPadding)
+
+            let rl = self.recursiveLayout(
+                nodeIndex: ni,
+                at: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
+                            y: point.y + height),
+                layout: layout,
+                consumedNodeIndexes: consumedNodeIndexes,
+                nodePadding: addPadding
+            )
+
             height = rl.aggregateHeight
             consumedNodeIndexes.insert(ni)
             consumedNodeIndexes.formUnion(rl.consumedNodeIndexes)
@@ -112,8 +116,8 @@ public struct Patch: Equatable {
 
         let nodeHeight = self.nodes[nodeIndex].rect(layout: layout).height
         let aggregateHeight = max(height, nodeHeight) + (nodePadding ? layout.nodeSpacing : 0)
-        return (aggregateHeight: aggregateHeight,
-                consumedNodeIndexes: consumedNodeIndexes)
+
+        return (aggregateHeight, consumedNodeIndexes)
     }
     
     /// Manual stacked grid layout.
@@ -122,9 +126,11 @@ public struct Patch: Equatable {
     ///   - origin: Top-left origin coordinate.
     ///   - columns: Array of columns each comprised of an array of node indexes.
     ///   - layout: Layout constants.
-    public mutating func stackedLayout(at origin: CGPoint = .zero,
-                                       _ columns: [[NodeIndex]],
-                                       layout: LayoutConstants = LayoutConstants()) {
+    public mutating func stackedLayout(
+        at origin: CGPoint = .zero,
+        _ columns: [[NodeIndex]],
+        layout: LayoutConstants = LayoutConstants()
+    ) {
         for column in columns.indices {
             let nodeStack = columns[column]
             var yOffset: CGFloat = 0
