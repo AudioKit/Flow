@@ -57,7 +57,7 @@ public struct NodeEditor: View {
     public var style = Style()
 
     @State var pan: CGSize = .zero
-    @State var zoom: Double = 1
+    @State var zoom: CGFloat = 1
     
     public var body: some View {
         ZStack {
@@ -67,7 +67,7 @@ public struct NodeEditor: View {
 
                 cx.addFilter(.shadow(radius: 5))
 
-                cx.scaleBy(x: CGFloat(self.zoom), y: CGFloat(self.zoom))
+                cx.scaleBy(x: self.zoom, y: self.zoom)
                 cx.translateBy(x: self.pan.width, y: self.pan.height)
 
                 self.drawWires(cx: cx, viewport: viewport)

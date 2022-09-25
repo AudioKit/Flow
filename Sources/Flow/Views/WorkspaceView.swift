@@ -9,14 +9,14 @@ import SwiftUI
 struct WorkspaceView: UIViewRepresentable {
 
     @Binding var pan: CGSize
-    @Binding var zoom: Double
+    @Binding var zoom: CGFloat
 
     class Coordinator: NSObject {
 
         @Binding var pan: CGSize
-        @Binding var zoom: Double
+        @Binding var zoom: CGFloat
 
-        init(pan: Binding<CGSize>, zoom: Binding<Double>) {
+        init(pan: Binding<CGSize>, zoom: Binding<CGFloat>) {
             self._pan = pan
             self._zoom = zoom
         }
@@ -165,7 +165,7 @@ extension WorkspaceView.Coordinator: NSGestureRecognizerDelegate {
 
 struct WorkspaceTestView: View {
     @State var pan: CGSize = CGSize.zero
-    @State var zoom: Double = 0.0
+    @State var zoom: CGFloat = 0.0
 
     var body: some View {
         WorkspaceView(pan: self.$pan, zoom: self.$zoom)
