@@ -60,30 +60,34 @@ extension CGSize {
 
 extension CGRect {
     @_disfavoredOverload
+    @inlinable @inline(__always)
     var center: CGPoint {
-        origin + CGSize(width: size.width / 2, height: size.height / 2)
+        CGPoint(x: self.midX, y: self.midY)
     }
 
     @_disfavoredOverload
+    @inlinable @inline(__always)
     func offset(by off: CGSize) -> CGRect {
-        offsetBy(dx: off.width, dy: off.height)
+        self.offsetBy(dx: off.width, dy: off.height)
     }
 
     @_disfavoredOverload
+    @inlinable @inline(__always)
     init(a: CGPoint, b: CGPoint) {
-        self.init()
-        origin = CGPoint(x: min(a.x, b.x), y: min(a.y, b.y))
-        size = CGSize(width: abs(a.x - b.x), height: abs(a.y - b.y))
+        self.init(
+            origin: CGPoint(x: min(a.x, b.x), y: min(a.y, b.y)),
+            size: CGSize(width: abs(a.x - b.x), height: abs(a.y - b.y))
+        )
     }
 }
 
 extension CGPoint {
     var size: CGSize {
-        CGSize(width: x, height: y)
+        CGSize(width: self.x, height: self.y)
     }
 
     var simd: SIMD2<Float> {
-        .init(x: Float(x), y: Float(y))
+        .init(x: Float(self.x), y: Float(self.y))
     }
 
     @inlinable @inline(__always)

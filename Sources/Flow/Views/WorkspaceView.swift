@@ -23,8 +23,8 @@ struct WorkspaceView: UIViewRepresentable {
 
         @objc func panGesture(sender: UIPanGestureRecognizer) {
             let t = sender.translation(in: nil)
-            pan.width += t.x / zoom
-            pan.height += t.y / zoom
+            self.pan.width += t.x / self.zoom
+            self.pan.height += t.y / self.zoom
 
             // Reset translation.
             sender.setTranslation(CGPoint.zero, in: nil)
@@ -33,13 +33,13 @@ struct WorkspaceView: UIViewRepresentable {
         @objc func zoomGesture(sender: UIPinchGestureRecognizer) {
             let p = sender.location(in: nil).size
 
-            let newZoom = sender.scale * zoom
+            let newZoom = sender.scale * self.zoom
 
-            let pLocal = p * (1.0 / zoom) - pan
+            let pLocal = p * (1.0 / self.zoom) - self.pan
             let newPan = p * (1.0 / newZoom) - pLocal
 
-            pan = newPan
-            zoom = newZoom
+            self.pan = newPan
+            self.zoom = newZoom
 
             // Reset scale.
             sender.scale = 1.0
@@ -47,7 +47,7 @@ struct WorkspaceView: UIViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(pan: $pan, zoom: $zoom)
+        Coordinator(pan: self.$pan, zoom: self.$zoom)
     }
 
     func makeUIView(context: Context) -> UIView {
@@ -75,8 +75,11 @@ struct WorkspaceView: UIViewRepresentable {
 }
 
 extension WorkspaceView.Coordinator: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
+    func gestureRecognizer(
+        _ gestureRecognizer: UIGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer
+    ) -> Bool {
+        true
     }
 }
 
@@ -99,11 +102,11 @@ struct WorkspaceView: NSViewRepresentable {
         @objc func panGesture(sender: NSPanGestureRecognizer) {
             print("pan at location: \(sender.location(in: nil))")
             let t = sender.translation(in: nil)
-            pan.width += t.x / zoom
-            pan.height -= t.y / zoom
+            self.pan.width += t.x / self.zoom
+            self.pan.height -= t.y / self.zoom
 
             // Reset translation.
-            sender.setTranslation(CGPoint.zero, in: nil)
+            sender.setTranslation(.zero, in: nil)
         }
 
         @objc func zoomGesture(sender: NSMagnificationGestureRecognizer) {
@@ -111,13 +114,13 @@ struct WorkspaceView: NSViewRepresentable {
 
             let p = sender.location(in: nil).size
 
-            let newZoom = sender.magnification * zoom
+            let newZoom = sender.magnification * self.zoom
 
-            let pLocal = p * (1.0 / zoom) - pan
+            let pLocal = p * (1.0 / self.zoom) - self.pan
             let newPan = p * (1.0 / newZoom) - pLocal
 
-            pan = newPan
-            zoom = newZoom
+            self.pan = newPan
+            self.zoom = newZoom
 
             // Reset scale.
             sender.magnification = 1.0
@@ -125,7 +128,7 @@ struct WorkspaceView: NSViewRepresentable {
     }
 
     func makeCoordinator() -> Coordinator {
-        Coordinator(pan: $pan, zoom: $zoom)
+        Coordinator(pan: self.$pan, zoom: self.$zoom)
     }
 
     func makeNSView(context: Context) -> NSView {
@@ -150,8 +153,11 @@ struct WorkspaceView: NSViewRepresentable {
 }
 
 extension WorkspaceView.Coordinator: NSGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: NSGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: NSGestureRecognizer) -> Bool {
-        return true
+    func gestureRecognizer(
+        _ gestureRecognizer: NSGestureRecognizer,
+        shouldRecognizeSimultaneouslyWith otherGestureRecognizer: NSGestureRecognizer
+    ) -> Bool {
+        true
     }
 }
 
@@ -162,7 +168,7 @@ struct WorkspaceTestView: View {
     @State var zoom: Double = 0.0
 
     var body: some View {
-        WorkspaceView(pan: $pan, zoom: $zoom)
+        WorkspaceView(pan: self.$pan, zoom: self.$zoom)
     }
 }
 
