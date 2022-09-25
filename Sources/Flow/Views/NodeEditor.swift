@@ -67,10 +67,10 @@ public struct NodeEditor: View {
                 cx.scaleBy(x: CGFloat(zoom), y: CGFloat(zoom))
                 cx.translateBy(x: pan.width, y: pan.height)
 
-                drawWires(cx: cx, viewport: viewport)
-                drawNodes(cx: cx, viewport: viewport)
-                drawDraggedWire(cx: cx)
-                drawSelectionRect(cx: cx)
+                self.drawWires(cx: cx, viewport: viewport)
+                self.drawNodes(cx: cx, viewport: viewport)
+                self.drawDraggedWire(cx: cx)
+                self.drawSelectionRect(cx: cx)
 
             }
             #if os(macOS)
