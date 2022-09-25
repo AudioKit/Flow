@@ -16,23 +16,23 @@ extension NodeEditor {
         let wire = Wire(from: output, to: input)
 
         // Remove any other wires connected to the input.
-        patch.wires = patch.wires.filter { w in
+        self.patch.wires = self.patch.wires.filter { w in
             let result = w.input != wire.input
             if !result {
-                wireRemoved(w)
+                self.wireRemoved(w)
             }
             return result
         }
-        patch.wires.insert(wire)
-        wireAdded(wire)
+        self.patch.wires.insert(wire)
+        self.wireAdded(wire)
     }
 
     func attachedWire(inputID: InputID) -> Wire? {
-        patch.wires.first(where: { $0.input == inputID })
+        self.patch.wires.first(where: { $0.input == inputID })
     }
 
     func toLocal(_ p: CGPoint) -> CGPoint {
-        CGPoint(x: p.x / CGFloat(zoom), y: p.y / CGFloat(zoom)) - pan
+        CGPoint(x: p.x / CGFloat(self.zoom), y: p.y / CGFloat(self.zoom)) - self.pan
     }
 
     func toLocal(_ sz: CGSize) -> CGSize {
