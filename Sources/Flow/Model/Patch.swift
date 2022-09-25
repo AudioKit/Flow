@@ -144,12 +144,10 @@ public final class Patch: ObservableObject {
     func moveNode2(
         nodeIndex: NodeIndex,
         translation: CGSize
-//        nodeMoved: NodeEditor.NodeMovedHandler
     ) {
         self.moveNode(
             nodeIndex: nodeIndex,
             offset: translation
-//            nodeMoved: nodeMoved
         )
         if self.selection.contains(nodeIndex) {
             for idx in self.selection where idx != nodeIndex {

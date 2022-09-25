@@ -6,20 +6,20 @@ extension NodeEditor {
     /// Configuration used to determine rendering style of a ``NodeEditor`` instance.
     public struct Style {
         /// Color used for rendering nodes.
-        public var nodeColor: Color = .init(white: 0.3)
+        public internal(set) var nodeColor: Color = .init(white: 0.3)
         
         /// Color used for rendering control wires.
-        public var controlWire: WireStyle = .init()
+        public internal(set) var controlWire: WireStyle = .init()
         
         /// Color used for rendering signal wires.
-        public var signalWire: WireStyle = .init()
+        public internal(set) var signalWire: WireStyle = .init()
         
         /// Color used for rendering MIDI wires.
-        public var midiWire: WireStyle = .init()
+        public internal(set) var midiWire: WireStyle = .init()
         
         /// Colors used for rendering custom wires.
         /// Dictionary is keyed by the custom wire name.
-        public var customWires: [String: WireStyle] = [:]
+        public internal(set) var customWires: [String: WireStyle] = [:]
         
         /// Returns input or output port color for the specified port type.
         public func color(for portType: PortType, isOutput: Bool) -> Color? {

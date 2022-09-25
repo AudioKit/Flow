@@ -6,27 +6,34 @@ import SwiftUI
 
 extension NodeEditor {
     // MARK: - Event Handlers
+
+//    public func withDelegate(
+//        delegate: PatchDelegate?
+//    ) -> Self {
+//        var copy = self
+//        
+//    }
     
     /// Called when a node is moved.
-    public func onNodeMoved(_ handler: @escaping NodeMovedHandler) -> Self {
-        var viewCopy = self
-        viewCopy.nodeMoved = handler
-        return viewCopy
-    }
-    
-    /// Called when a wire is added.
-    public func onWireAdded(_ handler: @escaping WireAddedHandler) -> Self {
-        var viewCopy = self
-        viewCopy.wireAdded = handler
-        return viewCopy
-    }
-    
-    /// Called when a wire is removed.
-    public func onWireRemoved(_ handler: @escaping WireRemovedHandler) -> Self {
-        var viewCopy = self
-        viewCopy.wireRemoved = handler
-        return viewCopy
-    }
+//    public func onNodeMoved(_ handler: @escaping NodeMovedHandler) -> Self {
+//        var viewCopy = self
+//        viewCopy.nodeMoved = handler
+//        return viewCopy
+//    }
+//
+//    /// Called when a wire is added.
+//    public func onWireAdded(_ handler: @escaping WireAddedHandler) -> Self {
+//        var viewCopy = self
+//        viewCopy.wireAdded = handler
+//        return viewCopy
+//    }
+//
+//    /// Called when a wire is removed.
+//    public func onWireRemoved(_ handler: @escaping WireRemovedHandler) -> Self {
+//        var viewCopy = self
+//        viewCopy.wireRemoved = handler
+//        return viewCopy
+//    }
     
     // MARK: - Style Modifiers
     
