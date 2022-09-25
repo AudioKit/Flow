@@ -34,6 +34,27 @@ extension GraphicsContext {
         )
     }
 
+    func strokeWire(
+        from: CGPoint,
+        to: CGPoint,
+        gradient: Gradient
+    ) {
+        let d = 0.4 * abs(to.x - from.x)
+        var path = Path()
+        path.move(to: from)
+        path.addCurve(
+            to: to,
+            control1: CGPoint(x: from.x + d, y: from.y),
+            control2: CGPoint(x: to.x - d, y: to.y)
+        )
+
+        self.stroke(
+            path,
+            with: .linearGradient(gradient, startPoint: from, endPoint: to),
+            style: StrokeStyle(lineWidth: 2.0, lineCap: .round)
+        )
+    }
+
     func drawOutputPort(
         node: Node,
         index: Int,
@@ -61,12 +82,18 @@ extension GraphicsContext {
 }
 
 extension NodeEditor {
+    @inlinable @inline(__always)
+    func color(for type: PortType, isOutput: Bool) -> Color {
+        self.style.color(for: type, isOutput: isOutput) ?? .gray
+    }
+
     /// Draw a node.
-    func draw(node: Node,
-              nodeIndex: NodeIndex,
-              cx: GraphicsContext,
-              viewport: CGRect)
-    {
+    func draw(
+        node: Node,
+        nodeIndex: NodeIndex,
+        cx: GraphicsContext,
+        viewport: CGRect
+    ) {
         let offset = self.offset(for: nodeIndex)
         let rect = node.rect(layout: layout).offset(by: offset)
 
@@ -91,7 +118,7 @@ extension NodeEditor {
                 anchor: .center)
 
         for (i, input) in node.inputs.enumerated() {
-            let portColor = style.color(for: input.type, isOutput: false) ?? .gray
+            let portColor = self.color(for: input.type, isOutput: false)
 
             cx.drawInputPort(
                 node: node,
@@ -104,7 +131,7 @@ extension NodeEditor {
         }
 
         for (i, output) in node.outputs.enumerated() {
-            let portColor = style.color(for: output.type, isOutput: true) ?? .gray
+            let portColor = self.color(for: output.type, isOutput: true)
 
             cx.drawOutputPort(
                 node: node,
@@ -146,7 +173,7 @@ extension NodeEditor {
             let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
             if viewport.intersects(bounds) {
                 let gradient = gradient(for: wire)
-                strokeWire(from: fromPoint, to: toPoint, cx: cx, gradient: gradient)
+                cx.strokeWire(from: fromPoint, to: toPoint, gradient: gradient)
             }
         }
     }
@@ -157,7 +184,7 @@ extension NodeEditor {
                 .nodes[output.nodeIndex]
                 .outputRect(output: output.portIndex, layout: layout)
             let gradient = gradient(for: output)
-            strokeWire(from: outputRect.center, to: outputRect.center + offset, cx: cx, gradient: gradient)
+            cx.strokeWire(from: outputRect.center, to: outputRect.center + offset, gradient: gradient)
         }
     }
 
@@ -166,19 +193,6 @@ extension NodeEditor {
             let rectPath = Path(roundedRect: rect, cornerRadius: 0)
             cx.stroke(rectPath, with: .color(.cyan))
         }
-    }
-
-    func strokeWire(from: CGPoint, to: CGPoint, cx: GraphicsContext, gradient: Gradient) {
-        let d = 0.4 * abs(to.x - from.x)
-        var path = Path()
-        path.move(to: from)
-        path.addCurve(to: to,
-                      control1: CGPoint(x: from.x + d, y: from.y),
-                      control2: CGPoint(x: to.x - d, y: to.y))
-
-        cx.stroke(path,
-                  with: .linearGradient(gradient, startPoint: from, endPoint: to),
-                  style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
     }
     
     func gradient(for outputID: OutputID) -> Gradient {
