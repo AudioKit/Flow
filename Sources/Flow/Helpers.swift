@@ -71,6 +71,11 @@ extension CGSize {
 
 
 extension CGRect {
+    @inlinable @inline(__always)
+    init(size: CGSize) {
+        self.init(origin: .zero, size: size)
+    }
+
     @_disfavoredOverload
     @inlinable @inline(__always)
     var center: CGPoint {

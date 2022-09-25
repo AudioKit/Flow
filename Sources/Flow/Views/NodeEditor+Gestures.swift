@@ -31,12 +31,19 @@ extension NodeEditor {
         self.patch.wires.first(where: { $0.input == inputID })
     }
 
+    @inline(__always)
     func toLocal(_ p: CGPoint) -> CGPoint {
         p / self.zoom - self.pan
     }
 
+    @inline(__always)
     func toLocal(_ sz: CGSize) -> CGSize {
         sz / self.zoom
+    }
+
+    @inline(__always)
+    func toLocal(_ r: CGRect) -> CGRect {
+        CGRect(origin: self.toLocal(r.origin), size: self.toLocal(r.size))
     }
 
     var dragGesture: some Gesture {

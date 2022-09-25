@@ -42,10 +42,12 @@ public struct NodeEditor: View {
     /// - Parameters:
     ///   - patch: Patch to display.
     ///   - selection: Set of nodes currently selected.
-    public init(patch: Binding<Patch>,
-                selection: Binding<Set<NodeIndex>>) {
-        _patch = patch
-        _selection = selection
+    public init(
+        patch: Binding<Patch>,
+        selection: Binding<Set<NodeIndex>>
+    ) {
+        self._patch = patch
+        self._selection = selection
     }
 
     /// Constants used for layout.
@@ -61,11 +63,12 @@ public struct NodeEditor: View {
         ZStack {
             Canvas { cx, size in
 
-                let viewport = CGRect(origin: toLocal(.zero), size: toLocal(size))
+                let viewport = self.toLocal(CGRect(size: size))
+
                 cx.addFilter(.shadow(radius: 5))
 
-                cx.scaleBy(x: CGFloat(zoom), y: CGFloat(zoom))
-                cx.translateBy(x: pan.width, y: pan.height)
+                cx.scaleBy(x: CGFloat(self.zoom), y: CGFloat(self.zoom))
+                cx.translateBy(x: self.pan.width, y: self.pan.height)
 
                 self.drawWires(cx: cx, viewport: viewport)
                 self.drawNodes(cx: cx, viewport: viewport)
@@ -74,11 +77,11 @@ public struct NodeEditor: View {
 
             }
             #if os(macOS)
-                .gesture(dragGesture)
+                .gesture(self.dragGesture)
             #endif
             #if os(iOS)
-            WorkspaceView(pan: $pan, zoom: $zoom)
-                .gesture(dragGesture)
+            WorkspaceView(pan: self.$pan, zoom: self.$zoom)
+                .gesture(self.dragGesture)
             #endif
 
         }
