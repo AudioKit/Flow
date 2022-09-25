@@ -8,10 +8,7 @@ import SwiftUI
 /// using a View for each Node.
 public struct NodeEditor: View {
     /// Data model.
-    @Binding var patch: Patch
-
-    /// Selected nodes.
-    @Binding var selection: Set<NodeIndex>
+    @ObservedObject var patch: Patch
 
     /// State for all gestures.
     @GestureState var dragInfo = DragInfo.none
@@ -43,11 +40,11 @@ public struct NodeEditor: View {
     ///   - patch: Patch to display.
     ///   - selection: Set of nodes currently selected.
     public init(
-        patch: Binding<Patch>,
-        selection: Binding<Set<NodeIndex>>
+        patch: Patch
+//        patch: Binding<Patch>,
+//        selection: Binding<Set<NodeIndex>>
     ) {
-        self._patch = patch
-        self._selection = selection
+        self.patch = patch
     }
 
     /// Constants used for layout.

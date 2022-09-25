@@ -108,7 +108,7 @@ extension NodeEditor {
         case let .selection(rect: selectionRect):
             selected = rect.intersects(selectionRect)
         default:
-            selected = self.selection.contains(nodeIndex)
+            selected = self.patch.selection.contains(nodeIndex)
         }
 
         cx.fill(bg, with: .color(self.style.nodeColor.opacity(selected ? 0.8 : 0.4)))

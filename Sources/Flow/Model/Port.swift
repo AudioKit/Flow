@@ -29,7 +29,10 @@ public struct OutputID: Equatable, Hashable {
     /// - Parameters:
     ///   - nodeIndex: Index for the node the output belongs
     ///   - portIndex: Index to the output within the node
-    public init(_ nodeIndex: NodeIndex, _ portIndex: PortIndex) {
+    public init(
+        _ nodeIndex: NodeIndex,
+        _ portIndex: PortIndex
+    ) {
         self.nodeIndex = nodeIndex
         self.portIndex = portIndex
     }

@@ -19,7 +19,7 @@ extension Patch {
                          Wire(from: OutputID(3, 0), to: InputID(4, 1)),
                          Wire(from: OutputID(4, 0), to: InputID(5, 0))])
 
-        var patch = Patch(nodes: nodes, wires: wires)
+        let patch = Patch(nodes: nodes, wires: wires)
         patch.recursiveLayout(nodeIndex: 5, at: CGPoint(x: 800, y: 50))
         return patch
     }
@@ -45,10 +45,9 @@ extension Patch {
 
 
 struct ContentView: View {
-    @State var patch = Patch.simple()
-    @State var selection = Set<NodeIndex>()
+    var patch = Patch.simple()
 
     var body: some View {
-        NodeEditor(patch: $patch, selection: $selection)
+        NodeEditor(patch: self.patch)
     }
 }

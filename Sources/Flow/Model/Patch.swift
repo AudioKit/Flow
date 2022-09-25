@@ -3,18 +3,34 @@
 import CoreGraphics
 import Foundation
 
+public protocol PatchDelegate {
+    /// Called when a node is moved.
+    func nodeMoved(index: NodeIndex, location: CGPoint)
+
+    /// Called when a wire is added.
+    func wireAdded(wire: Wire)
+
+    /// Wire removed handler closure.
+    func wireRemoved(wire: Wire)
+}
+
 /// Data model for Flow.
 ///
 /// Write a function to generate a `Patch` from your own data model
 /// as well as a function to update your data model when the `Patch` changes.
 /// Use SwiftUI's `onChange(of:)` to monitor changes.
-public struct Patch: Equatable {
-    public var nodes: [Node]
-    public var wires: Set<Wire>
+public final class Patch: ObservableObject {
+    @Published public var nodes: [Node]
+    @Published public var wires: Set<Wire>
+
+    @Published var selection: Set<NodeIndex>
+
+    public var delegate: PatchDelegate?
 
     public init(nodes: [Node], wires: Set<Wire>) {
         self.nodes = nodes
         self.wires = wires
+        self.selection = []
     }
 
     enum HitTestResult {
@@ -23,9 +39,66 @@ public struct Patch: Equatable {
         case output(NodeIndex, PortIndex)
     }
 
+    /// Search for inputs.
+    func findInput(
+        node: Node,
+        point: CGPoint,
+        layout: LayoutConstants
+    ) -> PortIndex? {
+        node.inputs.enumerated().first { portIndex, _ in
+            node.inputRect(input: portIndex, layout: layout).contains(point)
+        }?.0
+    }
+
+    /// Search for an input in the whole patch.
+    func findInput(
+        point: CGPoint,
+        layout: LayoutConstants
+    ) -> InputID? {
+        // Search nodes in reverse to find nodes drawn on top first.
+        for (nodeIndex, node) in self.nodes.enumerated().reversed() {
+            if let portIndex = self.findInput(node: node, point: point, layout: layout) {
+                return InputID(nodeIndex, portIndex)
+            }
+        }
+        return nil
+    }
+
+    /// Search for outputs.
+    func findOutput(
+        node: Node,
+        point: CGPoint,
+        layout: LayoutConstants
+    ) -> PortIndex? {
+        node.outputs.enumerated().first { portIndex, _ in
+            node.outputRect(output: portIndex, layout: layout).contains(point)
+        }?.0
+    }
+
+    /// Search for an output in the whole patch.
+    func findOutput(point: CGPoint, layout: LayoutConstants)  -> OutputID? {
+        // Search nodes in reverse to find nodes drawn on top first.
+        for (nodeIndex, node) in self.nodes.enumerated().reversed() {
+            if let portIndex = self.findOutput(node: node, point: point, layout: layout) {
+                return OutputID(nodeIndex, portIndex)
+            }
+        }
+        return nil
+    }
+
+//    func findNode(point: CGPoint, layout: LayoutConstants) -> NodeIndex? {
+//        // Search nodes in reverse to find nodes drawn on top first.
+//        self.nodes.enumerated().reversed().first { _, node in
+//            node.rect(layout: layout).contains(point)
+//        }?.0
+//    }
+
     /// Hit test a point against the whole patch.
-    func hitTest(point: CGPoint, layout: LayoutConstants) -> HitTestResult? {
-        for (nodeIndex, node) in nodes.enumerated().reversed() {
+    func hitTest(
+        point: CGPoint,
+        layout: LayoutConstants
+    ) -> HitTestResult? {
+        for (nodeIndex, node) in self.nodes.enumerated().reversed() {
             if let result = node.hitTest(nodeIndex: nodeIndex, point: point, layout: layout) {
                 return result
             }
@@ -39,12 +112,9 @@ public struct Patch: Equatable {
     }
 
     /// Adds a new wire to the patch, ensuring that multiple wires aren't connected to an input.
-    mutating func connect(
+    func connect(
         _ output: OutputID,
-        to input: InputID,
-        added: NodeEditor.WireRemovedHandler,
-        removed: NodeEditor.WireRemovedHandler
-
+        to input: InputID
     ) {
         let wire = Wire(from: output, to: input)
 
@@ -52,23 +122,144 @@ public struct Patch: Equatable {
         self.wires = self.wires.filter { w in
             let result = w.input != wire.input
             if !result {
-                removed(w)
+                self.delegate?.wireRemoved(wire: w)
             }
             return result
         }
         self.wires.insert(wire)
-        added(wire)
+        self.delegate?.wireAdded(wire: wire)
     }
 
-    mutating func moveNode(
+    func moveNode(
         nodeIndex: NodeIndex,
-        offset: CGSize,
-        nodeMoved: NodeEditor.NodeMovedHandler
+        offset: CGSize
     ) {
         if !self.nodes[nodeIndex].locked {
             self.nodes[nodeIndex].position += offset
-            nodeMoved(nodeIndex, self.nodes[nodeIndex].position)
+            let pos = self.nodes[nodeIndex].position
+            self.delegate?.nodeMoved(index: nodeIndex, location: pos)
         }
+    }
+
+    func moveNode2(
+        nodeIndex: NodeIndex,
+        translation: CGSize
+//        nodeMoved: NodeEditor.NodeMovedHandler
+    ) {
+        self.moveNode(
+            nodeIndex: nodeIndex,
+            offset: translation
+//            nodeMoved: nodeMoved
+        )
+        if self.selection.contains(nodeIndex) {
+            for idx in self.selection where idx != nodeIndex {
+                self.moveNode(
+                    nodeIndex: idx,
+                    offset: translation
+                )
+            }
+        }
+    }
+
+    func dragUpdated(
+        startLocation: CGPoint,
+        location: CGPoint,
+        translation: CGSize,
+        layout: LayoutConstants
+    ) -> NodeEditor.DragInfo? {
+        if let result = self.hitTest(point: startLocation, layout: layout) {
+            switch result {
+            case let .node(nodeIndex):
+                return .node(index: nodeIndex, offset: translation)
+
+            case let .output(nodeIndex, portIndex):
+                return .wire(output: OutputID(nodeIndex, portIndex), offset: translation)
+
+            case let .input(nodeIndex, portIndex):
+                let node = self.nodes[nodeIndex]
+                // Is a wire attached to the input?
+                if let attachedWire = self.attachedWire(inputID: InputID(nodeIndex, portIndex)) {
+                    let offset = node.inputRect(input: portIndex, layout: layout).center
+                    - self.nodes[attachedWire.output.nodeIndex].outputRect(
+                        output: attachedWire.output.portIndex,
+                        layout: layout
+                    ).center + translation
+                    return .wire(
+                        output: attachedWire.output,
+                        offset: offset,
+                        hideWire: attachedWire
+                    )
+                }
+
+            }
+
+        } else {
+            return .selection(rect: CGRect(a: startLocation, b: location))
+        }
+
+        return nil
+    }
+    
+
+    func dragEnded(
+        startLocation: CGPoint,
+        location: CGPoint,
+        translation: CGSize,
+        layout: LayoutConstants
+    ) {
+        let hitResult = self.hitTest(point: startLocation, layout: layout)
+
+        let distance = startLocation.distance(to: location)
+
+        // Note that this threshold should be in screen coordinates.
+        if distance > 5 {
+            switch hitResult {
+            case .none:
+                let selectionRect = CGRect(a: startLocation, b: location)
+                self.select(in: selectionRect, layout: layout)
+
+            case let .node(nodeIndex):
+                self.moveNode2(
+                    nodeIndex: nodeIndex,
+                    translation: translation
+                )
+
+            case let .output(nodeIndex, portIndex):
+                if let input = self.findInput(point: location, layout: layout) {
+                    self.connect(OutputID(nodeIndex, portIndex), to: input)
+                }
+
+            case let .input(nodeIndex, portIndex):
+                // Is a wire attached to the input?
+                if let attachedWire = self.attachedWire(inputID: InputID(nodeIndex, portIndex)) {
+                    self.wires.remove(attachedWire)
+                    self.delegate?.wireRemoved(wire: attachedWire)
+                    if let input = self.findInput(point: location, layout: layout) {
+                        self.connect(attachedWire.output, to: input)
+                    }
+                }
+            }
+        } else {
+            // If we haven't moved far, then this is effectively a tap.
+            switch hitResult {
+            case .none:
+                self.unselectAll()
+
+            case let .node(nodeIndex):
+                self.select(node: nodeIndex)
+
+            default: break
+            }
+        }
+    }
+
+    func unselectAll() {
+        self.selection.removeAll()
+    }
+
+    func select(node: NodeIndex) {
+        self.selection.removeAll()
+        self.selection.insert(node)
     }
 
     func selected(in rect: CGRect, layout: LayoutConstants) -> Set<NodeIndex> {
@@ -80,6 +271,10 @@ public struct Patch: Equatable {
             }
         }
         return selection
+    }
+
+    func select(in rect: CGRect, layout: LayoutConstants) {
+        self.selection = self.selected(in: rect, layout: layout)
     }
 
     @inlinable @inline(__always)
@@ -102,7 +297,7 @@ public struct Patch: Equatable {
     ///
     /// - Returns: Height of all nodes in subtree.
     @discardableResult
-    public mutating func recursiveLayout(
+    public func recursiveLayout(
         nodeIndex: NodeIndex,
         at point: CGPoint,
         layout: LayoutConstants = LayoutConstants(),
@@ -152,7 +347,7 @@ public struct Patch: Equatable {
     ///   - origin: Top-left origin coordinate.
     ///   - columns: Array of columns each comprised of an array of node indexes.
     ///   - layout: Layout constants.
-    public mutating func stackedLayout(
+    public func stackedLayout(
         at origin: CGPoint = .zero,
         _ columns: [[NodeIndex]],
         layout: LayoutConstants = LayoutConstants()
