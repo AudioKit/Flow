@@ -11,39 +11,43 @@ extension String {
     }
 }
 
-extension CGSize {
-    @_disfavoredOverload
-    @inlinable @inline(__always)
-    var point: CGPoint {
-        CGPoint(x: self.width, y: self.height)
-    }
-}
-
 extension CGPoint {
     @_disfavoredOverload
     @inlinable @inline(__always)
-    static func + (lhs: Self, rhs: CGSize) -> Self {
+    static func +(lhs: Self, rhs: CGSize) -> Self {
         Self(x: lhs.x + rhs.width, y: lhs.y + rhs.height)
     }
 
     @_disfavoredOverload
     @inlinable @inline(__always)
-    static func - (lhs: Self, rhs: Self) -> CGSize {
+    static func -(lhs: Self, rhs: Self) -> CGSize {
         CGSize(width: lhs.x - rhs.x, height: lhs.y - rhs.y)
+    }
+
+    @_disfavoredOverload
+    @inlinable @inline(__always)
+    static func - (pt: Self, sz: CGSize) -> Self {
+        Self(x: pt.x - sz.width, y: pt.y - sz.height)
     }
 }
 
 extension CGSize {
+
     @_disfavoredOverload
     @inlinable @inline(__always)
-    static func + (lhs: Self, rhs: Self) -> Self {
-        Self(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
+    var point: CGPoint {
+        CGPoint(x: self.width, y: self.height)
+    }
+
+    @inlinable @inline(__always)
+    static func /(lhs: Self, rhs: CGFloat) -> Self {
+        Self(width: lhs.width / rhs, height: lhs.height / rhs)
     }
 
     @_disfavoredOverload
     @inlinable @inline(__always)
-    static func - (pt: CGPoint, sz: Self) -> CGPoint {
-        CGPoint(x: pt.x - sz.width, y: pt.y - sz.height)
+    static func + (lhs: Self, rhs: Self) -> Self {
+        Self(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
     }
 
     @_disfavoredOverload
@@ -116,13 +120,18 @@ extension CGPoint {
     }
 
     @_disfavoredOverload
-    static func += (lhs: inout CGPoint, rhs: CGSize) {
+    static func += (lhs: inout Self, rhs: CGSize) {
         lhs = lhs + rhs
     }
 
     @inlinable @inline(__always)
     static func +(lhs: Self, rhs: Self) -> Self {
         Self(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+    }
+
+    @inlinable @inline(__always)
+    static func /(lhs: Self, rhs: CGFloat) -> Self {
+        Self(x: lhs.x / rhs, y: lhs.y / rhs)
     }
 }
 

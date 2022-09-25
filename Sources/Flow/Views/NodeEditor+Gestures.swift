@@ -32,11 +32,11 @@ extension NodeEditor {
     }
 
     func toLocal(_ p: CGPoint) -> CGPoint {
-        CGPoint(x: p.x / CGFloat(self.zoom), y: p.y / CGFloat(self.zoom)) - self.pan
+        p / self.zoom - self.pan
     }
 
     func toLocal(_ sz: CGSize) -> CGSize {
-        CGSize(width: sz.width / CGFloat(self.zoom), height: sz.height / CGFloat(self.zoom))
+        sz / self.zoom
     }
 
     var dragGesture: some Gesture {
