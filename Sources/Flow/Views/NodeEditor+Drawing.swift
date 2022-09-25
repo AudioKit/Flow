@@ -2,6 +2,14 @@
 
 import SwiftUI
 
+extension GraphicsContext {
+    @inlinable @inline(__always)
+    func drawDot(in rect: CGRect, with shading: Shading) {
+        let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
+        self.fill(dot, with: shading)
+    }
+}
+
 extension NodeEditor {
     /// Draw a node.
     func draw(node: Node,
@@ -38,10 +46,10 @@ extension NodeEditor {
             let portColor = style.color(for: input.type, isOutput: false) ?? .gray
             cx.fill(circle, with: .color(portColor))
 
-            if !patch.wires.contains(where: { $0.input == InputID(patch.nodes.firstIndex(of: node)!, i) }) {
-                let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
-                cx.fill(dot, with: .color(.black))
+            if !patch.isInputWireConnected(node: node, index: i) {
+                cx.drawDot(in: rect, with: .color(.black))
             }
+
             cx.draw(Text(input.name).font(.caption),
                     at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
                     anchor: .leading)
@@ -52,9 +60,9 @@ extension NodeEditor {
             let circle = Path(ellipseIn: rect)
             let portColor = style.color(for: output.type, isOutput: true) ?? .gray
             cx.fill(circle, with: .color(portColor))
-            if !patch.wires.contains(where: { $0.output == OutputID(patch.nodes.firstIndex(of: node)!, i) }) {
-                let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
-                cx.fill(dot, with: .color(.black))
+
+            if !patch.isOutputWireConnected(node: node, index: i) {
+                cx.drawDot(in: rect, with: .color(.black))
             }
             cx.draw(Text(output.name).font(.caption),
                     at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),

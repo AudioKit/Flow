@@ -56,6 +56,16 @@ public struct Patch: Equatable {
         return selection
     }
 
+    @inlinable @inline(__always)
+    func isInputWireConnected(node: Node, index: Int) -> Bool {
+        self.wires.contains(where: { $0.input == InputID(nodes.firstIndex(of: node)!, index) })
+    }
+
+    @inlinable @inline(__always)
+    func isOutputWireConnected(node: Node, index: Int) -> Bool {
+        self.wires.contains(where: { $0.output == OutputID(nodes.firstIndex(of: node)!, index) })
+    }
+
     /// Recursive layout.
     ///
     /// - Returns: Height of all nodes in subtree.
