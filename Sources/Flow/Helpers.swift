@@ -6,7 +6,7 @@ import SwiftUI
 extension String {
     @_disfavoredOverload
     func removing(prefix: String) -> String? {
-        guard hasPrefix(prefix) else { return nil }
+        guard self.hasPrefix(prefix) else { return nil }
         return String(dropFirst(prefix.count))
     }
 }
@@ -14,7 +14,7 @@ extension String {
 extension CGSize {
     @_disfavoredOverload
     var point: CGPoint {
-        CGPoint(x: width, y: height)
+        CGPoint(x: self.width, y: self.height)
     }
 }
 
@@ -82,10 +82,12 @@ extension CGRect {
 }
 
 extension CGPoint {
+    @inlinable @inline(__always)
     var size: CGSize {
         CGSize(width: self.x, height: self.y)
     }
 
+    @inlinable @inline(__always)
     var simd: SIMD2<Float> {
         .init(x: Float(self.x), y: Float(self.y))
     }
