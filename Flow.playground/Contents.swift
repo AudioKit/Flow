@@ -2,38 +2,43 @@ import Flow
 import PlaygroundSupport
 import SwiftUI
 
-func simplePatch() -> Patch {
-    let midiSource = Node(name: "MIDI source",
-                          outputs: [
-                            Port(name: "out ch. 1", type: .midi),
-                            Port(name: "out ch. 2", type: .midi)
-                          ])
-    let generator = Node(name: "generator",
-                         inputs: [
-                            Port(name: "midi in", type: .midi),
-                            Port(name: "CV in", type: .control)
-                         ],
-                         outputs: [Port(name: "out")])
-    let processor = Node(name: "processor", inputs: ["in"], outputs: ["out"])
-    let mixer = Node(name: "mixer", inputs: ["in1", "in2"], outputs: ["out"])
-    let output = Node(name: "output", inputs: ["in"])
 
-    let nodes = [midiSource, generator, processor, generator, processor, mixer, output]
+extension Patch {
+    func simple() -> Patch {
+        let midiSource = Node(name: "MIDI source",
+                              outputs: [
+                                Port(name: "out ch. 1", type: .midi),
+                                Port(name: "out ch. 2", type: .midi)
+                              ])
+        let generator = Node(name: "generator",
+                             inputs: [
+                                Port(name: "midi in", type: .midi),
+                                Port(name: "CV in", type: .control)
+                             ],
+                             outputs: [Port(name: "out")])
+        let processor = Node(name: "processor", inputs: ["in"], outputs: ["out"])
+        let mixer = Node(name: "mixer", inputs: ["in1", "in2"], outputs: ["out"])
+        let output = Node(name: "output", inputs: ["in"])
 
-    let wires = Set([
-        Wire(from: OutputID(0, 0), to: InputID(1, 0)),
-        Wire(from: OutputID(0, 1), to: InputID(3, 0)),
-        Wire(from: OutputID(1, 0), to: InputID(2, 0)),
-        Wire(from: OutputID(2, 0), to: InputID(5, 0)),
-        Wire(from: OutputID(3, 0), to: InputID(4, 0)),
-        Wire(from: OutputID(4, 0), to: InputID(5, 1)),
-        Wire(from: OutputID(5, 0), to: InputID(6, 0))
-    ])
+        let nodes = [midiSource, generator, processor, generator, processor, mixer, output]
 
-    var patch = Patch(nodes: nodes, wires: wires)
-    patch.recursiveLayout(nodeIndex: 6, at: CGPoint(x: 1000, y: 50))
-    return patch
+        let wires = Set([
+            Wire(from: OutputID(0, 0), to: InputID(1, 0)),
+            Wire(from: OutputID(0, 1), to: InputID(3, 0)),
+            Wire(from: OutputID(1, 0), to: InputID(2, 0)),
+            Wire(from: OutputID(2, 0), to: InputID(5, 0)),
+            Wire(from: OutputID(3, 0), to: InputID(4, 0)),
+            Wire(from: OutputID(4, 0), to: InputID(5, 1)),
+            Wire(from: OutputID(5, 0), to: InputID(6, 0))
+        ])
+
+        var patch = Patch(nodes: nodes, wires: wires)
+        patch.recursiveLayout(nodeIndex: 6, at: CGPoint(x: 1000, y: 50))
+        return patch
+    }
 }
+
+
 
 struct FlowDemoView: View {
     @State var patch = simplePatch()
