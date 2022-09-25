@@ -11,4 +11,22 @@ public struct LayoutConstants {
     let nodeSpacing: CGFloat = 40
     
     public init() {}
+
+    public func inputRect(input: PortIndex) -> CGRect {
+        let y = self.nodeTitleHeight + CGFloat(input) * (self.portSize.height + self.portSpacing)
+        let origin = CGPoint(x: self.portSpacing, y: y)
+        return CGRect(
+            origin: origin,
+            size: self.portSize
+        )
+    }
+
+    public func outputRect(output: PortIndex) -> CGRect {
+        let y = self.nodeTitleHeight + CGFloat(output) * (self.portSize.height + self.portSpacing)
+        let origin = CGPoint(x: self.nodeWidth - self.portSpacing - self.portSize.width, y: y)
+        return CGRect(
+            origin: origin,
+            size: self.portSize
+        )
+    }
 }

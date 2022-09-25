@@ -13,6 +13,7 @@ extension String {
 
 extension CGSize {
     @_disfavoredOverload
+    @inlinable @inline(__always)
     var point: CGPoint {
         CGPoint(x: self.width, y: self.height)
     }
@@ -20,11 +21,13 @@ extension CGSize {
 
 extension CGPoint {
     @_disfavoredOverload
+    @inlinable @inline(__always)
     static func + (lhs: Self, rhs: CGSize) -> Self {
         Self(x: lhs.x + rhs.width, y: lhs.y + rhs.height)
     }
 
     @_disfavoredOverload
+    @inlinable @inline(__always)
     static func - (lhs: Self, rhs: Self) -> CGSize {
         CGSize(width: lhs.x - rhs.x, height: lhs.y - rhs.y)
     }
@@ -32,26 +35,31 @@ extension CGPoint {
 
 extension CGSize {
     @_disfavoredOverload
+    @inlinable @inline(__always)
     static func + (lhs: Self, rhs: Self) -> Self {
         Self(width: lhs.width + rhs.width, height: lhs.height + rhs.height)
     }
 
     @_disfavoredOverload
+    @inlinable @inline(__always)
     static func - (pt: CGPoint, sz: Self) -> CGPoint {
         CGPoint(x: pt.x - sz.width, y: pt.y - sz.height)
     }
 
     @_disfavoredOverload
+    @inlinable @inline(__always)
     static func - (lhs: Self, rhs: Self) -> Self {
         Self(width: lhs.width - rhs.width, height: lhs.height - rhs.height)
     }
 
     @_disfavoredOverload
+    @inlinable @inline(__always)
     static func * (s: Double, sz: Self) -> Self {
         Self(width: s * sz.width, height: s * sz.height)
     }
 
     @_disfavoredOverload
+    @inlinable @inline(__always)
     static func * (sz: Self, s: Double) -> Self {
         Self(width: s * sz.width, height: s * sz.height)
     }
@@ -79,6 +87,16 @@ extension CGRect {
             size: CGSize(width: abs(a.x - b.x), height: abs(a.y - b.y))
         )
     }
+
+    @inlinable @inline(__always)
+    static func +(lhs: Self, rhs: CGPoint) -> Self {
+        Self(origin: lhs.origin + rhs, size: rhs.size)
+    }
+
+    @inlinable @inline(__always)
+    static func +(lhs: CGPoint, rhs: Self) -> Self {
+        Self(origin: lhs + rhs.origin, size: rhs.size)
+    }
 }
 
 extension CGPoint {
@@ -102,9 +120,14 @@ extension CGPoint {
         lhs = lhs + rhs
     }
 
+    @inlinable @inline(__always)
+    static func +(lhs: Self, rhs: Self) -> Self {
+        Self(x: lhs.x + rhs.x, y: lhs.y + rhs.y)
+    }
 }
 
 
 extension Color {
     static let magenta = Color(.sRGB, red: 1, green: 0, blue: 1, opacity: 1)
 }
+

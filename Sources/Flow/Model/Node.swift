@@ -62,17 +62,15 @@ public struct Node: Equatable {
     }
 
     /// Calculates the bounding rectangle for an input port (not including the name).
+    @inlinable @inline(__always)
     public func inputRect(input: PortIndex, layout: LayoutConstants) -> CGRect {
-        let y = layout.nodeTitleHeight + CGFloat(input) * (layout.portSize.height + layout.portSpacing)
-        return CGRect(origin: self.position + CGSize(width: layout.portSpacing, height: y),
-                      size: layout.portSize)
+        self.position + layout.inputRect(input: input)
     }
 
     /// Calculates the bounding rectangle for an output port (not including the name).
+    @inlinable @inline(__always)
     public func outputRect(output: PortIndex, layout: LayoutConstants) -> CGRect {
-        let y = layout.nodeTitleHeight + CGFloat(output) * (layout.portSize.height + layout.portSpacing)
-        return CGRect(origin: self.position + CGSize(width: layout.nodeWidth - layout.portSpacing - layout.portSize.width, height: y),
-                      size: layout.portSize)
+        self.position + layout.outputRect(output: output)
     }
 
     func hitTest(nodeIndex: Int, point: CGPoint, layout: LayoutConstants) -> Patch.HitTestResult? {
