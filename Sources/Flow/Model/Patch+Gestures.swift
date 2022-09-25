@@ -1,6 +1,7 @@
 // Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
 import Foundation
+import CoreGraphics
 
 extension Patch {
     enum HitTestResult {
