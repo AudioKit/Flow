@@ -82,7 +82,6 @@ extension NodeEditor {
 
                 let startLocation = self.toLocal(drag.startLocation)
                 let location = self.toLocal(drag.location)
-                let translation = self.toLocal(drag.translation)
 
                 let hitResult = self.patch.hitTest(point: startLocation, layout: self.layout)
 
@@ -96,6 +95,8 @@ extension NodeEditor {
                             layout: self.layout
                         )
                     case let .node(nodeIndex):
+                        let translation = self.toLocal(drag.translation)
+
                         self.patch.moveNode(
                             nodeIndex: nodeIndex,
                             offset: translation,
