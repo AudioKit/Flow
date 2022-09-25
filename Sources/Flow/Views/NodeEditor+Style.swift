@@ -25,13 +25,13 @@ extension NodeEditor {
         public func color(for portType: PortType, isOutput: Bool) -> Color? {
             switch portType {
             case .control:
-                return isOutput ? controlWire.outputColor : controlWire.inputColor
+                return self.controlWire.color(output: isOutput)
             case .signal:
-                return isOutput ? signalWire.outputColor : signalWire.inputColor
+                return self.signalWire.color(output: isOutput)
             case .midi:
-                return isOutput ? midiWire.outputColor : midiWire.inputColor
-            case .custom(let id):
-                return isOutput ? customWires[id]?.outputColor : customWires[id]?.inputColor
+                return self.midiWire.color(output: isOutput)
+            case let .custom(id):
+                return self.customWires[id]?.color(output: isOutput)
             }
         }
         
@@ -39,13 +39,13 @@ extension NodeEditor {
         public func gradient(for portType: PortType) -> Gradient? {
             switch portType {
             case .control:
-                return controlWire.gradient
+                return self.controlWire.gradient
             case .signal:
-                return signalWire.gradient
+                return self.signalWire.gradient
             case .midi:
-                return midiWire.gradient
-            case .custom(let id):
-                return customWires[id]?.gradient
+                return self.midiWire.gradient
+            case let .custom(id):
+                return self.customWires[id]?.gradient
             }
         }
     }
@@ -56,12 +56,16 @@ extension NodeEditor.Style {
     public struct WireStyle {
         public var inputColor: Color = .cyan
         public var outputColor: Color = .magenta
+
+        func color(output: Bool) -> Color {
+            output ? self.outputColor : self.inputColor
+        }
         
         /// Get or set the input and output colors as a `Gradient`.
         /// Only the first and last stops will be used.
         public var gradient: Gradient {
             get {
-                Gradient(colors: [outputColor, inputColor])
+                Gradient(colors: [self.outputColor, self.inputColor])
             }
             set {
                 if let inputColor = newValue.stops.last?.color {
