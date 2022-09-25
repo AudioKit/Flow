@@ -79,10 +79,10 @@ public struct Patch: Equatable {
     ) -> (aggregateHeight: CGFloat,
           consumedNodeIndexes: Set<NodeIndex>) {
 
-        nodes[nodeIndex].position = point
+        self.nodes[nodeIndex].position = point
 
         // XXX: super slow
-        let incomingWires = wires.filter {
+        let incomingWires = self.wires.filter {
             $0.input.nodeIndex == nodeIndex
         }.sorted(by: { $0.input.portIndex < $1.input.portIndex })
         
@@ -93,18 +93,18 @@ public struct Patch: Equatable {
             let addPadding = wire == incomingWires.last
             let ni = wire.output.nodeIndex
             guard !consumedNodeIndexes.contains(ni) else { continue }
-            let rl = recursiveLayout(nodeIndex: ni,
-                                     at: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
+            let rl = self.recursiveLayout(nodeIndex: ni,
+                                          at: CGPoint(x: point.x - layout.nodeWidth - layout.nodeSpacing,
                                                  y: point.y + height),
-                                     layout: layout,
-                                     consumedNodeIndexes: consumedNodeIndexes,
-                                     nodePadding: addPadding)
+                                          layout: layout,
+                                          consumedNodeIndexes: consumedNodeIndexes,
+                                          nodePadding: addPadding)
             height = rl.aggregateHeight
             consumedNodeIndexes.insert(ni)
             consumedNodeIndexes.formUnion(rl.consumedNodeIndexes)
         }
 
-        let nodeHeight = nodes[nodeIndex].rect(layout: layout).height
+        let nodeHeight = self.nodes[nodeIndex].rect(layout: layout).height
         let aggregateHeight = max(height, nodeHeight) + (nodePadding ? layout.nodeSpacing : 0)
         return (aggregateHeight: aggregateHeight,
                 consumedNodeIndexes: consumedNodeIndexes)
@@ -125,12 +125,12 @@ public struct Patch: Equatable {
             
             let xPos = origin.x + (CGFloat(column) * (layout.nodeWidth + layout.nodeSpacing))
             for nodeIndex in nodeStack {
-                nodes[nodeIndex].position = .init(
+                self.nodes[nodeIndex].position = .init(
                     x: xPos,
                     y: origin.y + yOffset
                 )
                 
-                let nodeHeight = nodes[nodeIndex].rect(layout: layout).height
+                let nodeHeight = self.nodes[nodeIndex].rect(layout: layout).height
                 yOffset += nodeHeight
                 if column != columns.indices.last {
                     yOffset += layout.nodeSpacing
