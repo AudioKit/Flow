@@ -94,5 +94,25 @@ public struct Node: Equatable {
 
         return nil
     }
+
+    /// Search for inputs.
+    func findInput(
+        point: CGPoint,
+        layout: LayoutConstants
+    ) -> PortIndex? {
+        self.inputs.enumerated().first { portIndex, _ in
+            self.inputRect(input: portIndex, layout: layout).contains(point)
+        }?.0
+    }
+
+    /// Search for outputs.
+    func findOutput(
+        point: CGPoint,
+        layout: LayoutConstants
+    ) -> PortIndex? {
+        self.outputs.enumerated().first { portIndex, _ in
+            self.outputRect(output: portIndex, layout: layout).contains(point)
+        }?.0
+    }
 }
 

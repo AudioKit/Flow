@@ -39,17 +39,6 @@ public final class Patch: ObservableObject {
         case output(NodeIndex, PortIndex)
     }
 
-    /// Search for inputs.
-    func findInput(
-        node: Node,
-        point: CGPoint,
-        layout: LayoutConstants
-    ) -> PortIndex? {
-        node.inputs.enumerated().first { portIndex, _ in
-            node.inputRect(input: portIndex, layout: layout).contains(point)
-        }?.0
-    }
-
     /// Search for an input in the whole patch.
     func findInput(
         point: CGPoint,
@@ -57,29 +46,18 @@ public final class Patch: ObservableObject {
     ) -> InputID? {
         // Search nodes in reverse to find nodes drawn on top first.
         for (nodeIndex, node) in self.nodes.enumerated().reversed() {
-            if let portIndex = self.findInput(node: node, point: point, layout: layout) {
+            if let portIndex = node.findInput(point: point, layout: layout) {
                 return InputID(nodeIndex, portIndex)
             }
         }
         return nil
     }
 
-    /// Search for outputs.
-    func findOutput(
-        node: Node,
-        point: CGPoint,
-        layout: LayoutConstants
-    ) -> PortIndex? {
-        node.outputs.enumerated().first { portIndex, _ in
-            node.outputRect(output: portIndex, layout: layout).contains(point)
-        }?.0
-    }
-
     /// Search for an output in the whole patch.
     func findOutput(point: CGPoint, layout: LayoutConstants)  -> OutputID? {
         // Search nodes in reverse to find nodes drawn on top first.
         for (nodeIndex, node) in self.nodes.enumerated().reversed() {
-            if let portIndex = self.findOutput(node: node, point: point, layout: layout) {
+            if let portIndex = node.findOutput(point: point, layout: layout) {
                 return OutputID(nodeIndex, portIndex)
             }
         }
