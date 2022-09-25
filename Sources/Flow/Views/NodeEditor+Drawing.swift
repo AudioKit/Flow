@@ -2,6 +2,14 @@
 
 import SwiftUI
 
+extension GraphicsContext {
+    @inlinable @inline(__always)
+    func drawDot(in rect: CGRect, with shading: Shading) {
+        let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
+        self.fill(dot, with: shading)
+    }
+}
+
 extension NodeEditor {
     /// Draw a node.
     func draw(node: Node,
@@ -12,9 +20,7 @@ extension NodeEditor {
         let offset = self.offset(for: nodeIndex)
         let rect = node.rect(layout: layout).offset(by: offset)
 
-        if !rect.intersects(viewport) {
-            return
-        }
+        guard rect.intersects(viewport) else { return }
 
         let pos = rect.origin
 
@@ -39,10 +45,11 @@ extension NodeEditor {
             let circle = Path(ellipseIn: rect)
             let portColor = style.color(for: input.type, isOutput: false) ?? .gray
             cx.fill(circle, with: .color(portColor))
-            if !patch.wires.contains(where: { $0.input == InputID(patch.nodes.firstIndex(of: node)!, i) }) {
-                let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
-                cx.fill(dot, with: .color(.black))
+
+            if !patch.isInputWireConnected(node: node, index: i) {
+                cx.drawDot(in: rect, with: .color(.black))
             }
+
             cx.draw(Text(input.name).font(.caption),
                     at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
                     anchor: .leading)
@@ -53,9 +60,9 @@ extension NodeEditor {
             let circle = Path(ellipseIn: rect)
             let portColor = style.color(for: output.type, isOutput: true) ?? .gray
             cx.fill(circle, with: .color(portColor))
-            if !patch.wires.contains(where: { $0.output == OutputID(patch.nodes.firstIndex(of: node)!, i) }) {
-                let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
-                cx.fill(dot, with: .color(.black))
+
+            if !patch.isOutputWireConnected(node: node, index: i) {
+                cx.drawDot(in: rect, with: .color(.black))
             }
             cx.draw(Text(output.name).font(.caption),
                     at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
@@ -71,21 +78,21 @@ extension NodeEditor {
 
     func drawWires(cx: GraphicsContext, viewport: CGRect) {
         var hideWire: Wire?
-        switch dragInfo {
-        case .wire(output: _, offset: _, hideWire: let hw):
+        switch self.dragInfo {
+        case let .wire(_, _, hideWire: hw):
             hideWire = hw
         default:
             hideWire = nil
         }
-        for wire in patch.wires where wire != hideWire {
+        for wire in self.patch.wires where wire != hideWire {
             let fromPoint = patch.nodes[wire.output.nodeIndex].outputRect(
                 output: wire.output.portIndex,
-                layout: layout
+                layout: self.layout
             )
             .offset(by: offset(for: wire.output.nodeIndex)).center
             let toPoint = patch.nodes[wire.input.nodeIndex].inputRect(
                 input: wire.input.portIndex,
-                layout: layout
+                layout: self.layout
             )
             .offset(by: offset(for: wire.input.nodeIndex)).center
 

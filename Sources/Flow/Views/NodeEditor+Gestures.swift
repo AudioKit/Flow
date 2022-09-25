@@ -31,13 +31,6 @@ extension NodeEditor {
         patch.wires.first(where: { $0.input == inputID })
     }
 
-    func moveNode(nodeIndex: NodeIndex, offset: CGSize) {
-        if !patch.nodes[nodeIndex].locked {
-            patch.nodes[nodeIndex].position += offset
-            self.nodeMoved(nodeIndex, patch.nodes[nodeIndex].position)
-        }
-    }
-
     func toLocal(_ p: CGPoint) -> CGPoint {
         CGPoint(x: p.x / CGFloat(zoom), y: p.y / CGFloat(zoom)) - pan
     }
@@ -87,22 +80,27 @@ extension NodeEditor {
                 let hitResult = patch.hitTest(point: startLocation, layout: layout)
 
                 // Note that this threshold should be in screen coordinates.
-                if drag.startLocation.distanceTo(drag.location) > 5 {
+                if drag.distance > 5 {
                     switch hitResult {
                     case .none:
-                        selection = Set<NodeIndex>()
-                        let selectionRect = CGRect(a: startLocation,
-                                                   b: location)
-                        for (idx, node) in patch.nodes.enumerated() {
-                            if selectionRect.intersects(node.rect(layout: layout)) {
-                                selection.insert(idx)
-                            }
-                        }
+                        let selectionRect = CGRect(a: startLocation, b: location)
+                        selection = self.patch.selected(
+                            in: selectionRect,
+                            layout: layout
+                        )
                     case let .node(nodeIndex):
-                        moveNode(nodeIndex: nodeIndex, offset: translation)
+                        patch.moveNode(
+                            nodeIndex: nodeIndex,
+                            offset: translation,
+                            nodeMoved: self.nodeMoved
+                        )
                         if selection.contains(nodeIndex) {
                             for idx in selection where idx != nodeIndex {
-                                moveNode(nodeIndex: idx, offset: translation)
+                                patch.moveNode(
+                                    nodeIndex: idx,
+                                    offset: translation,
+                                    nodeMoved: self.nodeMoved
+                                )
                             }
                         }
                     case let .output(nodeIndex, portIndex):
@@ -131,5 +129,12 @@ extension NodeEditor {
                 }
 
             }
+    }
+}
+
+extension DragGesture.Value {
+    @inlinable @inline(__always)
+    var distance: CGFloat {
+        self.startLocation.distance(to: self.location)
     }
 }
