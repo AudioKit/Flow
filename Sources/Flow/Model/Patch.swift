@@ -34,6 +34,28 @@ public struct Patch: Equatable {
         return nil
     }
 
+    mutating func moveNode(
+        nodeIndex: NodeIndex,
+        offset: CGSize,
+        nodeMoved: NodeEditor.NodeMovedHandler
+    ) {
+        if !self.nodes[nodeIndex].locked {
+            self.nodes[nodeIndex].position += offset
+            nodeMoved(nodeIndex, self.nodes[nodeIndex].position)
+        }
+    }
+
+    func selected(in rect: CGRect, layout: LayoutConstants) -> Set<NodeIndex> {
+        var selection = Set<NodeIndex>()
+
+        for (idx, node) in self.nodes.enumerated() {
+            if rect.intersects(node.rect(layout: layout)) {
+                selection.insert(idx)
+            }
+        }
+        return selection
+    }
+
     /// Recursive layout.
     ///
     /// - Returns: Height of all nodes in subtree.

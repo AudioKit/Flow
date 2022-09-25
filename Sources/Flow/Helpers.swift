@@ -86,10 +86,9 @@ extension CGPoint {
         .init(x: Float(x), y: Float(y))
     }
 
-    func distanceTo(_ p: CGPoint) -> CGFloat {
-        let dx = x - p.x
-        let dy = y - p.y
-        return sqrt(dx*dx+dy*dy)
+    @inlinable @inline(__always)
+    func distance(to p: CGPoint) -> CGFloat {
+        hypot(self.x - p.x, self.y - p.y)
     }
 
     @_disfavoredOverload
