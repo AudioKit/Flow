@@ -87,14 +87,14 @@ extension WorkspaceView.Coordinator: UIGestureRecognizerDelegate {
 struct WorkspaceView: NSViewRepresentable {
 
     @Binding var pan: CGSize
-    @Binding var zoom: Double
+    @Binding var zoom: CGFloat
 
     class Coordinator: NSObject {
 
         @Binding var pan: CGSize
-        @Binding var zoom: Double
+        @Binding var zoom: CGFloat
 
-        init(pan: Binding<CGSize>, zoom: Binding<Double>) {
+        init(pan: Binding<CGSize>, zoom: Binding<CGFloat>) {
             self._pan = pan
             self._zoom = zoom
         }
