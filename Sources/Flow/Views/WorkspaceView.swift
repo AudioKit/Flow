@@ -98,6 +98,13 @@ class PanView: NSView {
 
     override func scrollWheel(with event: NSEvent) {
         print("scrollWheel")
+
+        if event.subtype == .mouseEvent {
+            print("mouse scroll wheel")
+
+        } else {
+            print("two fingers on trackapd")
+        }
     }
 }
 
