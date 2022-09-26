@@ -7,18 +7,16 @@ import SwiftUI
 /// doesn't provide a center point.
 #if os(iOS)
 struct WorkspaceView: UIViewRepresentable {
-
     @Binding var pan: CGSize
     @Binding var zoom: Double
 
     class Coordinator: NSObject {
-
         @Binding var pan: CGSize
         @Binding var zoom: Double
 
         init(pan: Binding<CGSize>, zoom: Binding<Double>) {
-            self._pan = pan
-            self._zoom = zoom
+            _pan = pan
+            _zoom = zoom
         }
 
         @objc func panGesture(sender: UIPanGestureRecognizer) {
@@ -55,45 +53,45 @@ struct WorkspaceView: UIViewRepresentable {
 
         let coordinator = context.coordinator
 
-        let panRecognizer = UIPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.panGesture(sender:)))
+        let panRecognizer = UIPanGestureRecognizer(target: coordinator,
+                                                   action: #selector(Coordinator.panGesture(sender:)))
         view.addGestureRecognizer(panRecognizer)
         panRecognizer.delegate = coordinator
         panRecognizer.minimumNumberOfTouches = 2
 
         let pinchGesture = UIPinchGestureRecognizer(target: coordinator, action:
-                                                        #selector(Coordinator.zoomGesture(sender:)))
+            #selector(Coordinator.zoomGesture(sender:)))
         view.addGestureRecognizer(pinchGesture)
         pinchGesture.delegate = coordinator
 
         return view
     }
 
-    func updateUIView(_ uiView: UIView, context: Context) {
+    func updateUIView(_: UIView, context _: Context) {
         // Do nothing.
     }
-
 }
 
 extension WorkspaceView.Coordinator: UIGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+    func gestureRecognizer(_: UIGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith _: UIGestureRecognizer) -> Bool
+    {
         return true
     }
 }
 
 #else
 struct WorkspaceView: NSViewRepresentable {
-
     @Binding var pan: CGSize
     @Binding var zoom: Double
 
     class Coordinator: NSObject {
-
         @Binding var pan: CGSize
         @Binding var zoom: Double
 
         init(pan: Binding<CGSize>, zoom: Binding<Double>) {
-            self._pan = pan
-            self._zoom = zoom
+            _pan = pan
+            _zoom = zoom
         }
 
         @objc func panGesture(sender: NSPanGestureRecognizer) {
@@ -133,24 +131,28 @@ struct WorkspaceView: NSViewRepresentable {
 
         let coordinator = context.coordinator
 
-        let panRecognizer = NSPanGestureRecognizer(target: coordinator, action: #selector(Coordinator.panGesture(sender:)))
+        let panRecognizer = NSPanGestureRecognizer(target: coordinator,
+                                                   action: #selector(Coordinator.panGesture(sender:)))
         view.addGestureRecognizer(panRecognizer)
         panRecognizer.delegate = coordinator
 
-        let zoomRecognizer = NSMagnificationGestureRecognizer(target: coordinator, action: #selector(Coordinator.zoomGesture(sender:)))
+        let zoomRecognizer = NSMagnificationGestureRecognizer(target: coordinator,
+                                                              action: #selector(Coordinator.zoomGesture(sender:)))
         view.addGestureRecognizer(zoomRecognizer)
         zoomRecognizer.delegate = coordinator
 
         return view
     }
 
-    func updateNSView(_ nsView: NSView, context: Context) {
+    func updateNSView(_: NSView, context _: Context) {
         // Do nothing.
     }
 }
 
 extension WorkspaceView.Coordinator: NSGestureRecognizerDelegate {
-    func gestureRecognizer(_ gestureRecognizer: NSGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: NSGestureRecognizer) -> Bool {
+    func gestureRecognizer(_: NSGestureRecognizer,
+                           shouldRecognizeSimultaneouslyWith _: NSGestureRecognizer) -> Bool
+    {
         return true
     }
 }
@@ -158,7 +160,7 @@ extension WorkspaceView.Coordinator: NSGestureRecognizerDelegate {
 #endif
 
 struct WorkspaceTestView: View {
-    @State var pan: CGSize = CGSize.zero
+    @State var pan: CGSize = .zero
     @State var zoom: Double = 0.0
 
     var body: some View {

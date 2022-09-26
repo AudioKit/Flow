@@ -15,23 +15,23 @@ public struct NodeEditor: View {
 
     /// State for all gestures.
     @GestureState var dragInfo = DragInfo.none
-    
+
     /// Node moved handler closure.
     public typealias NodeMovedHandler = (_ index: NodeIndex,
                                          _ location: CGPoint) -> Void
-    
+
     /// Called when a node is moved.
-    var nodeMoved: NodeMovedHandler = { (_,_) in }
+    var nodeMoved: NodeMovedHandler = { _, _ in }
 
     /// Wire added handler closure.
     public typealias WireAddedHandler = (_ wire: Wire) -> Void
-    
+
     /// Called when a wire is added.
     var wireAdded: WireAddedHandler = { _ in }
-    
+
     /// Wire removed handler closure.
     public typealias WireRemovedHandler = (_ wire: Wire) -> Void
-    
+
     /// Called when a wire is removed.
     var wireRemoved: WireRemovedHandler = { _ in }
 
@@ -43,20 +43,21 @@ public struct NodeEditor: View {
     ///   - patch: Patch to display.
     ///   - selection: Set of nodes currently selected.
     public init(patch: Binding<Patch>,
-                selection: Binding<Set<NodeIndex>>) {
+                selection: Binding<Set<NodeIndex>>)
+    {
         _patch = patch
         _selection = selection
     }
 
     /// Constants used for layout.
     var layout = LayoutConstants()
-    
+
     /// Configuration used to determine rendering style.
     public var style = Style()
 
     @State var pan: CGSize = .zero
     @State var zoom: Double = 1
-    
+
     public var body: some View {
         ZStack {
             Canvas { cx, size in
@@ -71,17 +72,14 @@ public struct NodeEditor: View {
                 self.drawNodes(cx: cx, viewport: viewport)
                 self.drawDraggedWire(cx: cx)
                 self.drawSelectionRect(cx: cx)
-
             }
             #if os(macOS)
-                .gesture(dragGesture)
+            .gesture(dragGesture)
             #endif
             #if os(iOS)
-            WorkspaceView(pan: $pan, zoom: $zoom)
-                .gesture(dragGesture)
+                WorkspaceView(pan: $pan, zoom: $zoom)
+                    .gesture(dragGesture)
             #endif
-
         }
-
     }
 }

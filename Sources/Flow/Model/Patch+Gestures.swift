@@ -1,7 +1,7 @@
 // Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
-import Foundation
 import CoreGraphics
+import Foundation
 
 extension Patch {
     enum HitTestResult {
@@ -26,16 +26,16 @@ extension Patch {
         offset: CGSize,
         nodeMoved: NodeEditor.NodeMovedHandler
     ) {
-        if !self.nodes[nodeIndex].locked {
-            self.nodes[nodeIndex].position += offset
-            nodeMoved(nodeIndex, self.nodes[nodeIndex].position)
+        if !nodes[nodeIndex].locked {
+            nodes[nodeIndex].position += offset
+            nodeMoved(nodeIndex, nodes[nodeIndex].position)
         }
     }
 
     func selected(in rect: CGRect, layout: LayoutConstants) -> Set<NodeIndex> {
         var selection = Set<NodeIndex>()
 
-        for (idx, node) in self.nodes.enumerated() {
+        for (idx, node) in nodes.enumerated() {
             if rect.intersects(node.rect(layout: layout)) {
                 selection.insert(idx)
             }
@@ -45,11 +45,11 @@ extension Patch {
 
     @inlinable @inline(__always)
     func isInputWireConnected(node: Node, index: Int) -> Bool {
-        self.wires.contains(where: { $0.input == InputID(nodes.firstIndex(of: node)!, index) })
+        wires.contains(where: { $0.input == InputID(nodes.firstIndex(of: node)!, index) })
     }
 
     @inlinable @inline(__always)
     func isOutputWireConnected(node: Node, index: Int) -> Bool {
-        self.wires.contains(where: { $0.output == OutputID(nodes.firstIndex(of: node)!, index) })
+        wires.contains(where: { $0.output == OutputID(nodes.firstIndex(of: node)!, index) })
     }
 }

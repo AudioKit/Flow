@@ -57,7 +57,6 @@ extension CGSize {
     }
 }
 
-
 extension CGRect {
     @_disfavoredOverload
     var center: CGPoint {
@@ -88,16 +87,14 @@ extension CGPoint {
 
     @inlinable @inline(__always)
     func distance(to p: CGPoint) -> CGFloat {
-        hypot(self.x - p.x, self.y - p.y)
+        hypot(x - p.x, y - p.y)
     }
 
     @_disfavoredOverload
     static func += (lhs: inout CGPoint, rhs: CGSize) {
         lhs = lhs + rhs
     }
-
 }
-
 
 extension Color {
     static let magenta = Color(.sRGB, red: 1, green: 0, blue: 1, opacity: 1)

@@ -124,10 +124,9 @@ extension NodeEditor {
                         selection = Set<NodeIndex>()
                     case let .node(nodeIndex):
                         selection = Set<NodeIndex>([nodeIndex])
-                    default: break;
+                    default: break
                     }
                 }
-
             }
     }
 }
@@ -135,6 +134,6 @@ extension NodeEditor {
 extension DragGesture.Value {
     @inlinable @inline(__always)
     var distance: CGFloat {
-        self.startLocation.distance(to: self.location)
+        startLocation.distance(to: location)
     }
 }

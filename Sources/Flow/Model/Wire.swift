@@ -17,7 +17,7 @@ public struct Wire: Equatable, Hashable {
     ///   - from: output from a node
     ///   - to: input into a node
     public init(from: OutputID, to: InputID) {
-        self.output = from
-        self.input = to
+        output = from
+        input = to
     }
 }

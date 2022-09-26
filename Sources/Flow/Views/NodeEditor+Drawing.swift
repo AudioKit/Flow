@@ -6,7 +6,7 @@ extension GraphicsContext {
     @inlinable @inline(__always)
     func drawDot(in rect: CGRect, with shading: Shading) {
         let dot = Path(ellipseIn: rect.insetBy(dx: rect.size.width / 3, dy: rect.size.height / 3))
-        self.fill(dot, with: shading)
+        fill(dot, with: shading)
     }
 
     func drawInputPort(
@@ -21,13 +21,13 @@ extension GraphicsContext {
         let circle = Path(ellipseIn: rect)
         let port = node.inputs[index]
 
-        self.fill(circle, with: .color(portColor))
+        fill(circle, with: .color(portColor))
 
         if !isConnected {
-            self.drawDot(in: rect, with: .color(.black))
+            drawDot(in: rect, with: .color(.black))
         }
 
-        self.draw(
+        draw(
             Text(port.name).font(.caption),
             at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
             anchor: .leading
@@ -48,7 +48,7 @@ extension GraphicsContext {
             control2: CGPoint(x: to.x - d, y: to.y)
         )
 
-        self.stroke(
+        stroke(
             path,
             with: .linearGradient(gradient, startPoint: from, endPoint: to),
             style: StrokeStyle(lineWidth: 2.0, lineCap: .round)
@@ -67,13 +67,13 @@ extension GraphicsContext {
         let circle = Path(ellipseIn: rect)
         let port = node.outputs[index]
 
-        self.fill(circle, with: .color(portColor))
+        fill(circle, with: .color(portColor))
 
         if !isConnected {
-            self.drawDot(in: rect, with: .color(.black))
+            drawDot(in: rect, with: .color(.black))
         }
 
-        self.draw(
+        draw(
             Text(port.name).font(.caption),
             at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
             anchor: .trailing
@@ -84,7 +84,7 @@ extension GraphicsContext {
 extension NodeEditor {
     @inlinable @inline(__always)
     func color(for type: PortType, isOutput: Bool) -> Color {
-        self.style.color(for: type, isOutput: isOutput) ?? .gray
+        style.color(for: type, isOutput: isOutput) ?? .gray
     }
 
     /// Draw a node.
@@ -104,21 +104,21 @@ extension NodeEditor {
         let bg = Path(roundedRect: rect, cornerRadius: 5)
 
         var selected = false
-        switch self.dragInfo {
+        switch dragInfo {
         case let .selection(rect: selectionRect):
             selected = rect.intersects(selectionRect)
         default:
-            selected = self.selection.contains(nodeIndex)
+            selected = selection.contains(nodeIndex)
         }
 
-        cx.fill(bg, with: .color(self.style.nodeColor.opacity(selected ? 0.8 : 0.4)))
+        cx.fill(bg, with: .color(style.nodeColor.opacity(selected ? 0.8 : 0.4)))
 
         cx.draw(Text(node.name),
                 at: pos + CGSize(width: rect.size.width / 2, height: 20),
                 anchor: .center)
 
         for (i, input) in node.inputs.enumerated() {
-            let portColor = self.color(for: input.type, isOutput: false)
+            let portColor = color(for: input.type, isOutput: false)
 
             cx.drawInputPort(
                 node: node,
@@ -126,50 +126,50 @@ extension NodeEditor {
                 layout: layout,
                 offset: offset,
                 portColor: portColor,
-                isConnected: self.patch.isInputWireConnected(node: node, index: i)
+                isConnected: patch.isInputWireConnected(node: node, index: i)
             )
         }
 
         for (i, output) in node.outputs.enumerated() {
-            let portColor = self.color(for: output.type, isOutput: true)
+            let portColor = color(for: output.type, isOutput: true)
 
             cx.drawOutputPort(
                 node: node,
                 index: i,
-                layout: self.layout,
+                layout: layout,
                 offset: offset,
                 portColor: portColor,
-                isConnected: self.patch.isOutputWireConnected(node: node, index: i)
+                isConnected: patch.isOutputWireConnected(node: node, index: i)
             )
         }
     }
 
     func drawNodes(cx: GraphicsContext, viewport: CGRect) {
-        for (idx, node) in self.patch.nodes.enumerated() {
-            self.draw(node: node, nodeIndex: idx, cx: cx, viewport: viewport)
+        for (idx, node) in patch.nodes.enumerated() {
+            draw(node: node, nodeIndex: idx, cx: cx, viewport: viewport)
         }
     }
 
     func drawWires(cx: GraphicsContext, viewport: CGRect) {
         var hideWire: Wire?
-        switch self.dragInfo {
+        switch dragInfo {
         case let .wire(_, _, hideWire: hw):
             hideWire = hw
         default:
             hideWire = nil
         }
-        for wire in self.patch.wires where wire != hideWire {
+        for wire in patch.wires where wire != hideWire {
             let fromPoint = self.patch.nodes[wire.output.nodeIndex].outputRect(
                 output: wire.output.portIndex,
                 layout: self.layout
             )
-                .offset(by: self.offset(for: wire.output.nodeIndex)).center
+            .offset(by: self.offset(for: wire.output.nodeIndex)).center
 
             let toPoint = self.patch.nodes[wire.input.nodeIndex].inputRect(
                 input: wire.input.portIndex,
                 layout: self.layout
             )
-                .offset(by: self.offset(for: wire.input.nodeIndex)).center
+            .offset(by: self.offset(for: wire.input.nodeIndex)).center
 
             let bounds = CGRect(origin: fromPoint, size: toPoint - fromPoint)
             if viewport.intersects(bounds) {
@@ -180,7 +180,7 @@ extension NodeEditor {
     }
 
     func drawDraggedWire(cx: GraphicsContext) {
-        if case let .wire(output: output, offset: offset, _) = self.dragInfo {
+        if case let .wire(output: output, offset: offset, _) = dragInfo {
             let outputRect = self.patch
                 .nodes[output.nodeIndex]
                 .outputRect(output: output.portIndex, layout: self.layout)
@@ -190,21 +190,21 @@ extension NodeEditor {
     }
 
     func drawSelectionRect(cx: GraphicsContext) {
-        if case let .selection(rect: rect) = self.dragInfo {
+        if case let .selection(rect: rect) = dragInfo {
             let rectPath = Path(roundedRect: rect, cornerRadius: 0)
             cx.stroke(rectPath, with: .color(.cyan))
         }
     }
-    
+
     func gradient(for outputID: OutputID) -> Gradient {
         let portType = patch
             .nodes[outputID.nodeIndex]
             .outputs[outputID.portIndex]
             .type
-        return self.style.gradient(for: portType) ?? .init(colors: [.gray])
+        return style.gradient(for: portType) ?? .init(colors: [.gray])
     }
-    
+
     func gradient(for wire: Wire) -> Gradient {
-        self.gradient(for: wire.output)
+        gradient(for: wire.output)
     }
 }
