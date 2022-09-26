@@ -83,6 +83,19 @@ extension WorkspaceView.Coordinator: UIGestureRecognizerDelegate {
 #else
 
 class PanView: NSView {
+    @Binding var pan: CGSize
+    @Binding var zoom: Double
+
+    init(pan: Binding<CGSize>, zoom: Binding<Double>) {
+        _pan = pan
+        _zoom = zoom
+        super.init(frame: .zero)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
     override func scrollWheel(with event: NSEvent) {
         print("scrollWheel")
     }
@@ -136,7 +149,7 @@ struct WorkspaceView: NSViewRepresentable {
     }
 
     func makeNSView(context: Context) -> NSView {
-        let view = PanView()
+        let view = PanView(pan: $pan, zoom: $zoom)
 
         let coordinator = context.coordinator
 
