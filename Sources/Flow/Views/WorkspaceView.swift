@@ -137,6 +137,11 @@ struct WorkspaceView: NSViewRepresentable {
         panRecognizer.buttonMask = 2
         panRecognizer.delegate = coordinator
 
+        let optionPanRecognizer = NSPanGestureRecognizer(target: coordinator,
+                                                   action: #selector(Coordinator.panGesture(sender:)))
+        view.addGestureRecognizer(optionPanRecognizer)
+        optionPanRecognizer.delegate = coordinator
+
         let zoomRecognizer = NSMagnificationGestureRecognizer(target: coordinator,
                                                               action: #selector(Coordinator.zoomGesture(sender:)))
         view.addGestureRecognizer(zoomRecognizer)
@@ -151,6 +156,16 @@ struct WorkspaceView: NSViewRepresentable {
 }
 
 extension WorkspaceView.Coordinator: NSGestureRecognizerDelegate {
+
+    func gestureRecognizerShouldBegin(_ gestureRecognizer: NSGestureRecognizer) -> Bool {
+        if let panRecognizer = gestureRecognizer as? NSPanGestureRecognizer {
+            if panRecognizer.buttonMask != 2 {
+                return NSEvent.modifierFlags == .option
+            }
+        }
+        return true
+    }
+
     func gestureRecognizer(_: NSGestureRecognizer,
                            shouldRecognizeSimultaneouslyWith _: NSGestureRecognizer) -> Bool
     {
