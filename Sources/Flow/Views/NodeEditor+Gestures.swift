@@ -39,6 +39,63 @@ extension NodeEditor {
         CGSize(width: sz.width / CGFloat(zoom), height: sz.height / CGFloat(zoom))
     }
 
+    func end(drag: GestureStateGesture<DragGesture, NodeEditor.DragInfo>.Value) {
+        let startLocation = toLocal(drag.startLocation)
+        let location = toLocal(drag.location)
+        let translation = toLocal(drag.translation)
+
+        let hitResult = patch.hitTest(point: startLocation, layout: layout)
+
+        // Note that this threshold should be in screen coordinates.
+        if drag.distance > 5 {
+            switch hitResult {
+            case .none:
+                let selectionRect = CGRect(a: startLocation, b: location)
+                selection = self.patch.selected(
+                    in: selectionRect,
+                    layout: layout
+                )
+            case let .node(nodeIndex):
+                patch.moveNode(
+                    nodeIndex: nodeIndex,
+                    offset: translation,
+                    nodeMoved: self.nodeMoved
+                )
+                if selection.contains(nodeIndex) {
+                    for idx in selection where idx != nodeIndex {
+                        patch.moveNode(
+                            nodeIndex: idx,
+                            offset: translation,
+                            nodeMoved: self.nodeMoved
+                        )
+                    }
+                }
+            case let .output(nodeIndex, portIndex):
+                if let input = findInput(point: location) {
+                    connect(OutputID(nodeIndex, portIndex), to: input)
+                }
+            case let .input(nodeIndex, portIndex):
+                // Is a wire attached to the input?
+                if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
+                    patch.wires.remove(attachedWire)
+                    wireRemoved(attachedWire)
+                    if let input = findInput(point: location) {
+                        connect(attachedWire.output, to: input)
+                    }
+                }
+            }
+        } else {
+            // If we haven't moved far, then this is effectively a tap.
+            switch hitResult {
+            case .none:
+                selection = Set<NodeIndex>()
+            case let .node(nodeIndex):
+                selection = Set<NodeIndex>([nodeIndex])
+            default: break
+            }
+        }
+    }
+
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
             .updating($dragInfo) { drag, dragInfo, _ in
@@ -71,63 +128,7 @@ extension NodeEditor {
                     }
                 }
             }
-            .onEnded { drag in
-
-                let startLocation = toLocal(drag.startLocation)
-                let location = toLocal(drag.location)
-                let translation = toLocal(drag.translation)
-
-                let hitResult = patch.hitTest(point: startLocation, layout: layout)
-
-                // Note that this threshold should be in screen coordinates.
-                if drag.distance > 5 {
-                    switch hitResult {
-                    case .none:
-                        let selectionRect = CGRect(a: startLocation, b: location)
-                        selection = self.patch.selected(
-                            in: selectionRect,
-                            layout: layout
-                        )
-                    case let .node(nodeIndex):
-                        patch.moveNode(
-                            nodeIndex: nodeIndex,
-                            offset: translation,
-                            nodeMoved: self.nodeMoved
-                        )
-                        if selection.contains(nodeIndex) {
-                            for idx in selection where idx != nodeIndex {
-                                patch.moveNode(
-                                    nodeIndex: idx,
-                                    offset: translation,
-                                    nodeMoved: self.nodeMoved
-                                )
-                            }
-                        }
-                    case let .output(nodeIndex, portIndex):
-                        if let input = findInput(point: location) {
-                            connect(OutputID(nodeIndex, portIndex), to: input)
-                        }
-                    case let .input(nodeIndex, portIndex):
-                        // Is a wire attached to the input?
-                        if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
-                            patch.wires.remove(attachedWire)
-                            wireRemoved(attachedWire)
-                            if let input = findInput(point: location) {
-                                connect(attachedWire.output, to: input)
-                            }
-                        }
-                    }
-                } else {
-                    // If we haven't moved far, then this is effectively a tap.
-                    switch hitResult {
-                    case .none:
-                        selection = Set<NodeIndex>()
-                    case let .node(nodeIndex):
-                        selection = Set<NodeIndex>([nodeIndex])
-                    default: break
-                    }
-                }
-            }
+            .onEnded(end)
     }
 }
 
