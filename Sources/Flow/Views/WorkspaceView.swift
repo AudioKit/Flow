@@ -81,6 +81,13 @@ extension WorkspaceView.Coordinator: UIGestureRecognizerDelegate {
 }
 
 #else
+
+class PanView: NSView {
+    override func scrollWheel(with event: NSEvent) {
+        print("scrollWheel")
+    }
+}
+
 struct WorkspaceView: NSViewRepresentable {
     @Binding var pan: CGSize
     @Binding var zoom: Double
@@ -129,7 +136,7 @@ struct WorkspaceView: NSViewRepresentable {
     }
 
     func makeNSView(context: Context) -> NSView {
-        let view = NSView()
+        let view = PanView()
 
         let coordinator = context.coordinator
 
