@@ -134,6 +134,7 @@ struct WorkspaceView: NSViewRepresentable {
         let panRecognizer = NSPanGestureRecognizer(target: coordinator,
                                                    action: #selector(Coordinator.panGesture(sender:)))
         view.addGestureRecognizer(panRecognizer)
+        panRecognizer.buttonMask = 2
         panRecognizer.delegate = coordinator
 
         let zoomRecognizer = NSMagnificationGestureRecognizer(target: coordinator,
