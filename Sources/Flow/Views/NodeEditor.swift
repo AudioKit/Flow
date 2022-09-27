@@ -16,6 +16,9 @@ public struct NodeEditor: View {
     /// State for all gestures.
     @GestureState var dragInfo = DragInfo.none
 
+    /// Cache resolved text
+    @StateObject var textCache = TextCache()
+
     /// Node moved handler closure.
     public typealias NodeMovedHandler = (_ index: NodeIndex,
                                          _ location: CGPoint) -> Void

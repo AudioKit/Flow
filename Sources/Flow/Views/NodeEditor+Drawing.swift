@@ -15,7 +15,8 @@ extension GraphicsContext {
         layout: LayoutConstants,
         offset: CGSize,
         portColor: Color,
-        isConnected: Bool
+        isConnected: Bool,
+        textCache: TextCache
     ) {
         let rect = node.inputRect(input: index, layout: layout).offset(by: offset)
         let circle = Path(ellipseIn: rect)
@@ -28,7 +29,7 @@ extension GraphicsContext {
         }
 
         draw(
-            Text(port.name).font(.caption),
+            textCache.text(string: port.name, caption: true, self),
             at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
             anchor: .leading
         )
@@ -61,7 +62,8 @@ extension GraphicsContext {
         layout: LayoutConstants,
         offset: CGSize,
         portColor: Color,
-        isConnected: Bool
+        isConnected: Bool,
+        textCache: TextCache
     ) {
         let rect = node.outputRect(output: index, layout: layout).offset(by: offset)
         let circle = Path(ellipseIn: rect)
@@ -73,11 +75,9 @@ extension GraphicsContext {
             drawDot(in: rect, with: .color(.black))
         }
 
-        draw(
-            Text(port.name).font(.caption),
-            at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
-            anchor: .trailing
-        )
+        draw(textCache.text(string: port.name, caption: true, self),
+             at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
+             anchor: .trailing)
     }
 }
 
@@ -113,7 +113,7 @@ extension NodeEditor {
 
         cx.fill(bg, with: .color(style.nodeColor.opacity(selected ? 0.8 : 0.4)))
 
-        cx.draw(Text(node.name),
+        cx.draw(textCache.text(string: node.name, caption: false, cx),
                 at: pos + CGSize(width: rect.size.width / 2, height: 20),
                 anchor: .center)
 
@@ -126,7 +126,8 @@ extension NodeEditor {
                 layout: layout,
                 offset: offset,
                 portColor: portColor,
-                isConnected: patch.isInputWireConnected(node: node, index: i)
+                isConnected: patch.isInputWireConnected(node: node, index: i),
+                textCache: textCache
             )
         }
 
@@ -139,7 +140,8 @@ extension NodeEditor {
                 layout: layout,
                 offset: offset,
                 portColor: portColor,
-                isConnected: patch.isOutputWireConnected(node: node, index: i)
+                isConnected: patch.isOutputWireConnected(node: node, index: i),
+                textCache: textCache
             )
         }
     }
