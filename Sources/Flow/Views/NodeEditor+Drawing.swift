@@ -87,69 +87,6 @@ extension NodeEditor {
         style.color(for: type, isOutput: isOutput) ?? .gray
     }
 
-    /// Draw a node.
-    func draw(
-        node: Node,
-        nodeIndex: NodeIndex,
-        cx: GraphicsContext,
-        viewport: CGRect,
-        connectedInputs: Set<InputID>,
-        connectedOutputs: Set<OutputID>,
-        selectedShading: GraphicsContext.Shading,
-        unselectedShading: GraphicsContext.Shading
-    ) {
-        let offset = self.offset(for: nodeIndex)
-        let rect = node.rect(layout: layout).offset(by: offset)
-
-        guard rect.intersects(viewport) else { return }
-
-        let pos = rect.origin
-
-        let bg = Path(roundedRect: rect, cornerRadius: 5)
-
-        var selected = false
-        switch dragInfo {
-        case let .selection(rect: selectionRect):
-            selected = rect.intersects(selectionRect)
-        default:
-            selected = selection.contains(nodeIndex)
-        }
-
-        cx.fill(bg, with: selected ? selectedShading : unselectedShading)
-
-        cx.draw(textCache.text(string: node.name, caption: false, cx),
-                at: pos + CGSize(width: rect.size.width / 2, height: 20),
-                anchor: .center)
-
-        for (i, input) in node.inputs.enumerated() {
-            let portColor = color(for: input.type, isOutput: false)
-
-            cx.drawInputPort(
-                node: node,
-                index: i,
-                layout: layout,
-                offset: offset,
-                portColor: portColor,
-                isConnected: connectedInputs.contains(InputID(nodeIndex, i)),
-                textCache: textCache
-            )
-        }
-
-        for (i, output) in node.outputs.enumerated() {
-            let portColor = color(for: output.type, isOutput: true)
-
-            cx.drawOutputPort(
-                node: node,
-                index: i,
-                layout: layout,
-                offset: offset,
-                portColor: portColor,
-                isConnected: connectedOutputs.contains(OutputID(nodeIndex, i)),
-                textCache: textCache
-            )
-        }
-    }
-
     func drawNodes(cx: GraphicsContext, viewport: CGRect) {
 
         let connectedInputs = Set( patch.wires.map { wire in wire.input } )
@@ -158,15 +95,57 @@ extension NodeEditor {
         let selectedShading = cx.resolve(.color(style.nodeColor.opacity(0.8)))
         let unselectedShading = cx.resolve(.color(style.nodeColor.opacity(0.4)))
 
-        for (idx, node) in patch.nodes.enumerated() {
-            draw(node: node,
-                 nodeIndex: idx,
-                 cx: cx,
-                 viewport: viewport,
-                 connectedInputs: connectedInputs,
-                 connectedOutputs: connectedOutputs,
-                 selectedShading: selectedShading,
-                 unselectedShading: unselectedShading)
+        for (nodeIndex, node) in patch.nodes.enumerated() {
+            let offset = self.offset(for: nodeIndex)
+            let rect = node.rect(layout: layout).offset(by: offset)
+
+            guard rect.intersects(viewport) else { continue }
+
+            let pos = rect.origin
+
+            let bg = Path(roundedRect: rect, cornerRadius: 5)
+
+            var selected = false
+            switch dragInfo {
+            case let .selection(rect: selectionRect):
+                selected = rect.intersects(selectionRect)
+            default:
+                selected = selection.contains(nodeIndex)
+            }
+
+            cx.fill(bg, with: selected ? selectedShading : unselectedShading)
+
+            cx.draw(textCache.text(string: node.name, caption: false, cx),
+                    at: pos + CGSize(width: rect.size.width / 2, height: 20),
+                    anchor: .center)
+
+            for (i, input) in node.inputs.enumerated() {
+                let portColor = color(for: input.type, isOutput: false)
+
+                cx.drawInputPort(
+                    node: node,
+                    index: i,
+                    layout: layout,
+                    offset: offset,
+                    portColor: portColor,
+                    isConnected: connectedInputs.contains(InputID(nodeIndex, i)),
+                    textCache: textCache
+                )
+            }
+
+            for (i, output) in node.outputs.enumerated() {
+                let portColor = color(for: output.type, isOutput: true)
+
+                cx.drawOutputPort(
+                    node: node,
+                    index: i,
+                    layout: layout,
+                    offset: offset,
+                    portColor: portColor,
+                    isConnected: connectedOutputs.contains(OutputID(nodeIndex, i)),
+                    textCache: textCache
+                )
+            }
         }
     }
 
