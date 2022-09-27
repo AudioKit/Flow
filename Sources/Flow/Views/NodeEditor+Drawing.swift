@@ -94,7 +94,9 @@ extension NodeEditor {
         cx: GraphicsContext,
         viewport: CGRect,
         connectedInputs: Set<InputID>,
-        connectedOutputs: Set<OutputID>
+        connectedOutputs: Set<OutputID>,
+        selectedShading: GraphicsContext.Shading,
+        unselectedShading: GraphicsContext.Shading
     ) {
         let offset = self.offset(for: nodeIndex)
         let rect = node.rect(layout: layout).offset(by: offset)
@@ -113,7 +115,7 @@ extension NodeEditor {
             selected = selection.contains(nodeIndex)
         }
 
-        cx.fill(bg, with: .color(style.nodeColor.opacity(selected ? 0.8 : 0.4)))
+        cx.fill(bg, with: selected ? selectedShading : unselectedShading)
 
         cx.draw(textCache.text(string: node.name, caption: false, cx),
                 at: pos + CGSize(width: rect.size.width / 2, height: 20),
@@ -153,13 +155,18 @@ extension NodeEditor {
         let connectedInputs = Set( patch.wires.map { wire in wire.input } )
         let connectedOutputs = Set( patch.wires.map { wire in wire.output } )
 
+        let selectedShading = cx.resolve(.color(style.nodeColor.opacity(0.8)))
+        let unselectedShading = cx.resolve(.color(style.nodeColor.opacity(0.4)))
+
         for (idx, node) in patch.nodes.enumerated() {
             draw(node: node,
                  nodeIndex: idx,
                  cx: cx,
                  viewport: viewport,
                  connectedInputs: connectedInputs,
-                 connectedOutputs: connectedOutputs)
+                 connectedOutputs: connectedOutputs,
+                 selectedShading: selectedShading,
+                 unselectedShading: unselectedShading)
         }
     }
 
