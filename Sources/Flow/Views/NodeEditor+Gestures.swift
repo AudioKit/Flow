@@ -39,27 +39,28 @@ extension NodeEditor {
         CGSize(width: sz.width / CGFloat(zoom), height: sz.height / CGFloat(zoom))
     }
 
+#if os(macOS)
     var commandGesture: some Gesture {
-        DragGesture(minimumDistance: 0).modifiers(.command)
-            .onEnded { drag in
-                guard drag.distance < 5 else { return }
+        DragGesture(minimumDistance: 0).modifiers(.command).onEnded { drag in
+            guard drag.distance < 5 else { return }
 
-                let startLocation = toLocal(drag.startLocation)
+            let startLocation = toLocal(drag.startLocation)
 
-                let hitResult = patch.hitTest(point: startLocation, layout: layout)
-                switch hitResult {
-                case .none:
-                    return
-                case let .node(nodeIndex):
-                    if selection.contains(nodeIndex) {
-                        selection.remove(nodeIndex)
-                    } else {
-                        selection.insert(nodeIndex)
-                    }
-                default: break
+            let hitResult = patch.hitTest(point: startLocation, layout: layout)
+            switch hitResult {
+            case .none:
+                return
+            case let .node(nodeIndex):
+                if selection.contains(nodeIndex) {
+                    selection.remove(nodeIndex)
+                } else {
+                    selection.insert(nodeIndex)
                 }
+            default: break
             }
+        }
     }
+#endif
 
     var dragGesture: some Gesture {
         DragGesture(minimumDistance: 0)
