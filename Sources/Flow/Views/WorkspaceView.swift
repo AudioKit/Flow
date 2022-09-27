@@ -119,8 +119,15 @@ class PanView: NSView {
     override func scrollWheel(with event: NSEvent) {
         print("scrollWheel")
 
+        var p = convert(event.locationInWindow, from: nil).size
+        p.height = frame.size.height - p.height
+
         if event.subtype == .mouseEvent {
             print("mouse scroll wheel")
+
+            let rot = event.deltaY
+            let scale = rot > 0 ? (1 + rot / 10) : 1.0/(1 - rot/10)
+            zoom(at: p, scale: scale)
 
         } else {
             print("two fingers on trackapd")
