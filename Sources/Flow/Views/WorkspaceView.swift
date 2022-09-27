@@ -143,17 +143,21 @@ class PanView: NSView {
             var p = sender.location(in: self).size
             p.height = frame.size.height - p.height
 
-            let newZoom = sender.magnification * zoom
-
-            let pLocal = p * (1.0 / zoom) - pan
-            let newPan = p * (1.0 / newZoom) - pLocal
-
-            pan = newPan
-            zoom = newZoom
+            zoom(at: p, scale: sender.magnification)
         }
 
         // Reset scale.
         sender.magnification = 1.0
+    }
+
+    func zoom(at p: CGSize, scale: CGFloat) {
+        let newZoom = scale * zoom
+
+        let pLocal = p * (1.0 / zoom) - pan
+        let newPan = p * (1.0 / newZoom) - pLocal
+
+        pan = newPan
+        zoom = newZoom
     }
 
     weak var optionPanRecognizer: NSGestureRecognizer?
