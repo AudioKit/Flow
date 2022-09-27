@@ -131,6 +131,9 @@ class PanView: NSView {
 
         } else {
             print("two fingers on trackapd")
+            let panSpeed = 5.0
+            pan.width += panSpeed * event.deltaX / zoom
+            pan.height += panSpeed * event.deltaY / zoom
         }
     }
 
