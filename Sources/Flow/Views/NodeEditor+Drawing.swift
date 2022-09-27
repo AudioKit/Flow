@@ -14,7 +14,7 @@ extension GraphicsContext {
         index: Int,
         layout: LayoutConstants,
         offset: CGSize,
-        portColor: Color,
+        portShading: GraphicsContext.Shading,
         isConnected: Bool,
         textCache: TextCache
     ) {
@@ -22,7 +22,7 @@ extension GraphicsContext {
         let circle = Path(ellipseIn: rect)
         let port = node.inputs[index]
 
-        fill(circle, with: .color(portColor))
+        fill(circle, with: portShading)
 
         if !isConnected {
             drawDot(in: rect, with: .color(.black))
@@ -61,7 +61,7 @@ extension GraphicsContext {
         index: Int,
         layout: LayoutConstants,
         offset: CGSize,
-        portColor: Color,
+        portShading: GraphicsContext.Shading,
         isConnected: Bool,
         textCache: TextCache
     ) {
@@ -69,7 +69,7 @@ extension GraphicsContext {
         let circle = Path(ellipseIn: rect)
         let port = node.outputs[index]
 
-        fill(circle, with: .color(portColor))
+        fill(circle, with: portShading)
 
         if !isConnected {
             drawDot(in: rect, with: .color(.black))
@@ -87,6 +87,24 @@ extension NodeEditor {
         style.color(for: type, isOutput: isOutput) ?? .gray
     }
 
+    func inputShading(_ type: PortType,  _ colors: inout [PortType: GraphicsContext.Shading], _ cx: GraphicsContext) -> GraphicsContext.Shading {
+        if let shading = colors[type] {
+            return shading
+        }
+        let shading = cx.resolve(.color(color(for: type, isOutput: false)))
+        colors[type] = shading
+        return shading
+    }
+
+    func outputShading(_ type: PortType,  _ colors: inout [PortType: GraphicsContext.Shading], _ cx: GraphicsContext) -> GraphicsContext.Shading {
+        if let shading = colors[type] {
+            return shading
+        }
+        let shading = cx.resolve(.color(color(for: type, isOutput: true)))
+        colors[type] = shading
+        return shading
+    }
+
     func drawNodes(cx: GraphicsContext, viewport: CGRect) {
 
         let connectedInputs = Set( patch.wires.map { wire in wire.input } )
@@ -94,6 +112,9 @@ extension NodeEditor {
 
         let selectedShading = cx.resolve(.color(style.nodeColor.opacity(0.8)))
         let unselectedShading = cx.resolve(.color(style.nodeColor.opacity(0.4)))
+
+        var resolvedInputColors = [PortType: GraphicsContext.Shading]()
+        var resolvedOutputColors = [PortType: GraphicsContext.Shading]()
 
         for (nodeIndex, node) in patch.nodes.enumerated() {
             let offset = self.offset(for: nodeIndex)
@@ -120,28 +141,24 @@ extension NodeEditor {
                     anchor: .center)
 
             for (i, input) in node.inputs.enumerated() {
-                let portColor = color(for: input.type, isOutput: false)
-
                 cx.drawInputPort(
                     node: node,
                     index: i,
                     layout: layout,
                     offset: offset,
-                    portColor: portColor,
+                    portShading: inputShading(input.type, &resolvedInputColors, cx),
                     isConnected: connectedInputs.contains(InputID(nodeIndex, i)),
                     textCache: textCache
                 )
             }
 
             for (i, output) in node.outputs.enumerated() {
-                let portColor = color(for: output.type, isOutput: true)
-
                 cx.drawOutputPort(
                     node: node,
                     index: i,
                     layout: layout,
                     offset: offset,
-                    portColor: portColor,
+                    portShading: outputShading(output.type, &resolvedOutputColors, cx),
                     isConnected: connectedOutputs.contains(OutputID(nodeIndex, i)),
                     textCache: textCache
                 )
