@@ -92,7 +92,9 @@ extension NodeEditor {
         node: Node,
         nodeIndex: NodeIndex,
         cx: GraphicsContext,
-        viewport: CGRect
+        viewport: CGRect,
+        connectedInputs: Set<InputID>,
+        connectedOutputs: Set<OutputID>
     ) {
         let offset = self.offset(for: nodeIndex)
         let rect = node.rect(layout: layout).offset(by: offset)
@@ -126,7 +128,7 @@ extension NodeEditor {
                 layout: layout,
                 offset: offset,
                 portColor: portColor,
-                isConnected: patch.isInputWireConnected(node: node, index: i),
+                isConnected: connectedInputs.contains(InputID(nodeIndex, i)),
                 textCache: textCache
             )
         }
@@ -140,15 +142,24 @@ extension NodeEditor {
                 layout: layout,
                 offset: offset,
                 portColor: portColor,
-                isConnected: patch.isOutputWireConnected(node: node, index: i),
+                isConnected: connectedOutputs.contains(OutputID(nodeIndex, i)),
                 textCache: textCache
             )
         }
     }
 
     func drawNodes(cx: GraphicsContext, viewport: CGRect) {
+
+        let connectedInputs = Set( patch.wires.map { wire in wire.input } )
+        let connectedOutputs = Set( patch.wires.map { wire in wire.output } )
+
         for (idx, node) in patch.nodes.enumerated() {
-            draw(node: node, nodeIndex: idx, cx: cx, viewport: viewport)
+            draw(node: node,
+                 nodeIndex: idx,
+                 cx: cx,
+                 viewport: viewport,
+                 connectedInputs: connectedInputs,
+                 connectedOutputs: connectedOutputs)
         }
     }
 
