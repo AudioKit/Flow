@@ -138,7 +138,6 @@ class PanView: NSView {
     }
 
     @objc func zoomGesture(sender: NSMagnificationGestureRecognizer) {
-        print("pinch at location: \(sender.location(in: self)), scale: \(sender.magnification)")
 
         if sender.state == .changed {
             var p = sender.location(in: self).size
@@ -151,8 +150,6 @@ class PanView: NSView {
 
             pan = newPan
             zoom = newZoom
-            print("newZoom: \(newZoom)")
-
         }
 
         // Reset scale.
