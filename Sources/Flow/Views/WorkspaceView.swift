@@ -89,7 +89,27 @@ class PanView: NSView {
     init(pan: Binding<CGSize>, zoom: Binding<Double>) {
         _pan = pan
         _zoom = zoom
+
         super.init(frame: .zero)
+
+        let panRecognizer = NSPanGestureRecognizer(target: self,
+                                                   action: #selector(PanView.panGesture(sender:)))
+        addGestureRecognizer(panRecognizer)
+        panRecognizer.buttonMask = 2
+        panRecognizer.delegate = self
+
+        let optionPanRecognizer = NSPanGestureRecognizer(target: self,
+                                                   action: #selector(PanView.panGesture(sender:)))
+        addGestureRecognizer(optionPanRecognizer)
+        optionPanRecognizer.delegate = self
+        self.optionPanRecognizer = optionPanRecognizer
+
+        let zoomRecognizer = NSMagnificationGestureRecognizer(target: self,
+                                                              action: #selector(PanView.zoomGesture(sender:)))
+        addGestureRecognizer(zoomRecognizer)
+        zoomRecognizer.delegate = self
+
+
     }
 
     required init?(coder: NSCoder) {
@@ -158,26 +178,7 @@ struct WorkspaceView: NSViewRepresentable {
     @Binding var zoom: Double
 
     func makeNSView(context: Context) -> NSView {
-        let view = PanView(pan: $pan, zoom: $zoom)
-
-        let panRecognizer = NSPanGestureRecognizer(target: view,
-                                                   action: #selector(PanView.panGesture(sender:)))
-        view.addGestureRecognizer(panRecognizer)
-        panRecognizer.buttonMask = 2
-        panRecognizer.delegate = view
-
-        let optionPanRecognizer = NSPanGestureRecognizer(target: view,
-                                                   action: #selector(PanView.panGesture(sender:)))
-        view.addGestureRecognizer(optionPanRecognizer)
-        optionPanRecognizer.delegate = view
-        view.optionPanRecognizer = optionPanRecognizer
-
-        let zoomRecognizer = NSMagnificationGestureRecognizer(target: view,
-                                                              action: #selector(PanView.zoomGesture(sender:)))
-        view.addGestureRecognizer(zoomRecognizer)
-        zoomRecognizer.delegate = view
-
-        return view
+        return PanView(pan: $pan, zoom: $zoom)
     }
 
     func updateNSView(_: NSView, context _: Context) {
