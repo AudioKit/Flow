@@ -37,6 +37,12 @@ public struct NodeEditor: View {
 
     /// Called when a wire is removed.
     var wireRemoved: WireRemovedHandler = { _ in }
+    
+    /// Handler for pan or zoom.
+    public typealias TransformChangedHandler = (_ pan: CGSize, _ zoom: CGFloat) -> Void
+    
+    /// Called when the patch is panned or zoomed.
+    var transformChanged: TransformChangedHandler = { _, _ in }
 
     /// Initialize the patch view with a patch and a selection.
     ///
@@ -67,20 +73,26 @@ public struct NodeEditor: View {
 
                 let viewport = CGRect(origin: toLocal(.zero), size: toLocal(size))
                 cx.addFilter(.shadow(radius: 5))
-
+                
                 cx.scaleBy(x: CGFloat(zoom), y: CGFloat(zoom))
                 cx.translateBy(x: pan.width, y: pan.height)
-
+                
                 self.drawWires(cx: cx, viewport: viewport)
                 self.drawNodes(cx: cx, viewport: viewport)
                 self.drawDraggedWire(cx: cx)
                 self.drawSelectionRect(cx: cx)
             }
-                WorkspaceView(pan: $pan, zoom: $zoom)
-                    #if os(macOS)
-                    .gesture(commandGesture)
-                    #endif
-                    .gesture(dragGesture)
-            }
+            WorkspaceView(pan: $pan, zoom: $zoom)
+                #if os(macOS)
+                .gesture(commandGesture)
+                #endif
+                .gesture(dragGesture)
         }
+        .onChange(of: pan) { newValue in
+            transformChanged(newValue, zoom)
+        }
+        .onChange(of: zoom) { newValue in
+            transformChanged(pan, newValue)
+        }
+    }
 }
