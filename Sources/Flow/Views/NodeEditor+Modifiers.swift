@@ -27,6 +27,13 @@ public extension NodeEditor {
         viewCopy.wireRemoved = handler
         return viewCopy
     }
+    
+    /// Called when the viewing transform has changed.
+    func onTransformChanged(_ handler: @escaping TransformChangedHandler) -> Self {
+        var viewCopy = self
+        viewCopy.transformChanged = handler
+        return viewCopy
+    }
 
     // MARK: - Style Modifiers
 
