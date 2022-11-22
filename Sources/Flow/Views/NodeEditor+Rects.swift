@@ -25,17 +25,17 @@ public extension NodeEditor {
     }
 
     /// Search for inputs.
-    func findInput(node: Node, point: CGPoint) -> PortIndex? {
-        node.inputs.enumerated().first { portIndex, _ in
-            node.inputRect(input: portIndex, layout: layout).contains(point)
+    func findInput(node: Node, point: CGPoint, type: PortType) -> PortIndex? {
+        node.inputs.enumerated().first { portIndex, input in
+            input.type == type && node.inputRect(input: portIndex, layout: layout).contains(point)
         }?.0
     }
 
     /// Search for an input in the whole patch.
-    func findInput(point: CGPoint) -> InputID? {
+    func findInput(point: CGPoint, type: PortType) -> InputID? {
         // Search nodes in reverse to find nodes drawn on top first.
         for (nodeIndex, node) in patch.nodes.enumerated().reversed() {
-            if let portIndex = findInput(node: node, point: point) {
+            if let portIndex = findInput(node: node, point: point, type: type) {
                 return InputID(nodeIndex, portIndex)
             }
         }

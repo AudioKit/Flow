@@ -127,15 +127,17 @@ extension NodeEditor {
                             }
                         }
                     case let .output(nodeIndex, portIndex):
-                        if let input = findInput(point: location) {
+                        let type = patch.nodes[nodeIndex].outputs[portIndex].type
+                        if let input = findInput(point: location, type: type) {
                             connect(OutputID(nodeIndex, portIndex), to: input)
                         }
                     case let .input(nodeIndex, portIndex):
+                        let type = patch.nodes[nodeIndex].outputs[portIndex].type
                         // Is a wire attached to the input?
                         if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
                             patch.wires.remove(attachedWire)
                             wireRemoved(attachedWire)
-                            if let input = findInput(point: location) {
+                            if let input = findInput(point: location, type: type) {
                                 connect(attachedWire.output, to: input)
                             }
                         }
