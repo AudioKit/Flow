@@ -7,17 +7,26 @@ import SwiftUI
 ///
 /// XXX: we will need to know when to clear the cache.
 class TextCache: ObservableObject {
-    var cache: [String: GraphicsContext.ResolvedText] = [:]
+    
+    struct Key: Equatable, Hashable {
+        var string: String
+        var font: Font
+    }
+    
+    var cache: [Key: GraphicsContext.ResolvedText] = [:]
 
     func text(string: String,
-              caption: Bool,
+              font: Font,
               _ cx: GraphicsContext) -> GraphicsContext.ResolvedText {
-        if let resolved = cache[string] {
+        
+        let key = Key(string: string, font: font)
+        
+        if let resolved = cache[key] {
             return resolved
         }
 
-        let resolved = caption ? cx.resolve(Text(string).font(.caption)) : cx.resolve(Text(string))
-        cache[string] = resolved
+        let resolved = cx.resolve(Text(string).font(font))
+        cache[key] = resolved
         return resolved
     }
 }

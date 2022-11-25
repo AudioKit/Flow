@@ -29,7 +29,7 @@ extension GraphicsContext {
         }
 
         draw(
-            textCache.text(string: port.name, caption: true, self),
+            textCache.text(string: port.name, font: layout.portNameFont, self),
             at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
             anchor: .leading
         )
@@ -75,7 +75,7 @@ extension GraphicsContext {
             drawDot(in: rect, with: .color(.black))
         }
 
-        draw(textCache.text(string: port.name, caption: true, self),
+        draw(textCache.text(string: port.name, font: layout.portNameFont, self),
              at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
              anchor: .trailing)
     }
@@ -136,7 +136,7 @@ extension NodeEditor {
 
             cx.fill(bg, with: selected ? selectedShading : unselectedShading)
 
-            cx.draw(textCache.text(string: node.name, caption: false, cx),
+            cx.draw(textCache.text(string: node.name, font: layout.nodeTitleFont, cx),
                     at: pos + CGSize(width: rect.size.width / 2, height: 20),
                     anchor: .center)
 
