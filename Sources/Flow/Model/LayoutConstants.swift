@@ -5,13 +5,13 @@ import SwiftUI
 
 /// Define the layout geometry of the nodes.
 public struct LayoutConstants {
-    let portSize = CGSize(width: 20, height: 20)
-    let portSpacing: CGFloat = 10
-    let nodeWidth: CGFloat = 200
-    let nodeTitleHeight: CGFloat = 40
-    let nodeSpacing: CGFloat = 40
-    let nodeTitleFont = Font.title
-    let portNameFont = Font.caption
+    public var portSize = CGSize(width: 20, height: 20)
+    public var portSpacing: CGFloat = 10
+    public var nodeWidth: CGFloat = 200
+    public var nodeTitleHeight: CGFloat = 40
+    public var nodeSpacing: CGFloat = 40
+    public var nodeTitleFont = Font.title
+    public var portNameFont = Font.caption
 
     public init() {}
 }

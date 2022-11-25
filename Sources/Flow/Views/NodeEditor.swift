@@ -52,14 +52,16 @@ public struct NodeEditor: View {
     ///   - patch: Patch to display.
     ///   - selection: Set of nodes currently selected.
     public init(patch: Binding<Patch>,
-                selection: Binding<Set<NodeIndex>>)
+                selection: Binding<Set<NodeIndex>>,
+                layout: LayoutConstants = LayoutConstants())
     {
         _patch = patch
         _selection = selection
+        self.layout = layout
     }
 
     /// Constants used for layout.
-    var layout = LayoutConstants()
+    var layout: LayoutConstants
 
     /// Configuration used to determine rendering style.
     public var style = Style()
