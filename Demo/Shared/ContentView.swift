@@ -2,10 +2,10 @@ import Flow
 import SwiftUI
 
 func simplePatch() -> Patch {
-    let generator = Node(name: "generator", outputs: ["out"])
-    let processor = Node(name: "processor", inputs: ["in"], outputs: ["out"])
-    let mixer = Node(name: "mixer", inputs: ["in1", "in2"], outputs: ["out"])
-    let output = Node(name: "output", inputs: ["in"])
+    let generator = Node(name: "generator", titleBarColor: Color.cyan, outputs: ["out"])
+    let processor = Node(name: "processor", titleBarColor: Color.red, inputs: ["in"], outputs: ["out"])
+    let mixer = Node(name: "mixer", titleBarColor: Color.gray, inputs: ["in1", "in2"], outputs: ["out"])
+    let output = Node(name: "output", titleBarColor: Color.purple, inputs: ["in"])
 
     let nodes = [generator, processor, generator, processor, mixer, output]
 
