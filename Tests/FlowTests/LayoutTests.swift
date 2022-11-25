@@ -11,12 +11,12 @@ final class LayoutTests: XCTestCase {
                              outputs: [Port(name: "out", type: .signal)])
 
         XCTAssertEqual(processor.rect(layout: LayoutConstants()),
-                       CGRect(origin: processor.position, size: CGSize(width: 200, height: 70)))
+                       CGRect(origin: processor.position, size: CGSize(width: 200, height: 80)))
 
         XCTAssertEqual(processor.inputRect(input: 0, layout: LayoutConstants()),
-                       CGRect(origin: CGPoint(x: 410, y: 140), size: CGSize(width: 20, height: 20)))
+                       CGRect(origin: CGPoint(x: 410, y: 150), size: CGSize(width: 20, height: 20)))
 
         XCTAssertEqual(processor.outputRect(output: 0, layout: LayoutConstants()),
-                       CGRect(origin: CGPoint(x: 570, y: 140), size: CGSize(width: 20, height: 20)))
+                       CGRect(origin: CGPoint(x: 570, y: 150), size: CGSize(width: 20, height: 20)))
     }
 }
