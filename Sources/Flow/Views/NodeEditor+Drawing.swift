@@ -137,7 +137,7 @@ extension NodeEditor {
             cx.fill(bg, with: selected ? selectedShading : unselectedShading)
 
             cx.draw(textCache.text(string: node.name, font: layout.nodeTitleFont, cx),
-                    at: pos + CGSize(width: rect.size.width / 2, height: 20),
+                    at: pos + CGSize(width: rect.size.width / 2, height: layout.nodeTitleHeight / 2),
                     anchor: .center)
 
             for (i, input) in node.inputs.enumerated() {
