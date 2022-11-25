@@ -12,6 +12,7 @@ public struct LayoutConstants {
     public var nodeSpacing: CGFloat = 40
     public var nodeTitleFont = Font.title
     public var portNameFont = Font.caption
+    public var nodeCornerRadius: CGFloat = 5
 
     public init() {}
 }

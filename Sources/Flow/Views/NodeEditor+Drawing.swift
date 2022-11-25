@@ -124,7 +124,8 @@ extension NodeEditor {
 
             let pos = rect.origin
 
-            let bg = Path(roundedRect: rect, cornerRadius: 5)
+            let cornerRadius = layout.nodeCornerRadius
+            let bg = Path(roundedRect: rect, cornerRadius: cornerRadius)
 
             var selected = false
             switch dragInfo {
@@ -135,6 +136,26 @@ extension NodeEditor {
             }
 
             cx.fill(bg, with: selected ? selectedShading : unselectedShading)
+            
+            // Draw the title bar for the node. There seems to be
+            // no better cross-platform way to render a rectangle with the top
+            // two cornders rounded.
+            var titleBar = Path()
+            titleBar.move(to: CGPoint(x: 0, y: layout.nodeTitleHeight) + rect.origin.size)
+            titleBar.addLine(to: CGPoint(x: 0, y: cornerRadius) + rect.origin.size)
+            titleBar.addRelativeArc(center: CGPoint(x: cornerRadius, y: cornerRadius) + rect.origin.size,
+                                    radius: cornerRadius,
+                                    startAngle: .degrees(180),
+                                    delta: .degrees(90))
+            titleBar.addLine(to: CGPoint(x: layout.nodeWidth - cornerRadius, y: 0) + rect.origin.size)
+            titleBar.addRelativeArc(center: CGPoint(x: layout.nodeWidth - cornerRadius, y: cornerRadius) + rect.origin.size,
+                                    radius: cornerRadius,
+                                    startAngle: .degrees(270),
+                                    delta: .degrees(90))
+            titleBar.addLine(to: CGPoint(x: layout.nodeWidth, y: layout.nodeTitleHeight) + rect.origin.size)
+            titleBar.closeSubpath()
+            
+            cx.fill(titleBar, with: .color(node.titleBarColor))
 
             cx.draw(textCache.text(string: node.name, font: layout.nodeTitleFont, cx),
                     at: pos + CGSize(width: rect.size.width / 2, height: layout.nodeTitleHeight / 2),

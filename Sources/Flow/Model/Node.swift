@@ -1,6 +1,7 @@
 // Copyright AudioKit. All Rights Reserved. Revision History at http://github.com/AudioKit/Flow/
 
 import CoreGraphics
+import SwiftUI
 
 /// Nodes are identified by index in `Patch/nodes``.
 public typealias NodeIndex = Int
@@ -13,6 +14,7 @@ public typealias NodeIndex = Int
 public struct Node: Equatable {
     public var name: String
     public var position: CGPoint
+    public var titleBarColor: Color
 
     /// Is the node position fixed so it can't be edited in the UI?
     public var locked = false
@@ -23,12 +25,14 @@ public struct Node: Equatable {
     @_disfavoredOverload
     public init(name: String,
                 position: CGPoint = .zero,
+                titleBarColor: Color = Color.clear,
                 locked: Bool = false,
                 inputs: [Port] = [],
                 outputs: [Port] = [])
     {
         self.name = name
         self.position = position
+        self.titleBarColor = titleBarColor
         self.locked = locked
         self.inputs = inputs
         self.outputs = outputs
@@ -36,12 +40,14 @@ public struct Node: Equatable {
 
     public init(name: String,
                 position: CGPoint = .zero,
+                titleBarColor: Color = Color.clear,
                 locked: Bool = false,
                 inputs: [String] = [],
                 outputs: [String] = [])
     {
         self.name = name
         self.position = position
+        self.titleBarColor = titleBarColor
         self.locked = locked
         self.inputs = inputs.map { Port(name: $0) }
         self.outputs = outputs.map { Port(name: $0) }
