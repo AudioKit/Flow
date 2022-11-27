@@ -9,6 +9,7 @@ import SwiftUI
 struct WorkspaceView: UIViewRepresentable {
     @Binding var pan: CGSize
     @Binding var zoom: Double
+    @Binding var mousePosition: CGPoint
 
     class Coordinator: NSObject {
         @Binding var pan: CGSize
@@ -85,10 +86,14 @@ extension WorkspaceView.Coordinator: UIGestureRecognizerDelegate {
 class PanView: NSView {
     @Binding var pan: CGSize
     @Binding var zoom: Double
+    @Binding var mousePosition: CGPoint
+    
+    var trackingArea: NSTrackingArea!
 
-    init(pan: Binding<CGSize>, zoom: Binding<Double>) {
+    init(pan: Binding<CGSize>, zoom: Binding<Double>, mousePosition: Binding<CGPoint>) {
         _pan = pan
         _zoom = zoom
+        _mousePosition = mousePosition
 
         super.init(frame: .zero)
 
@@ -114,6 +119,24 @@ class PanView: NSView {
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+    
+    deinit {
+        if trackingArea != nil {
+            removeTrackingArea(trackingArea)
+        }
+    }
+
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+
+        if trackingArea != nil {
+            removeTrackingArea(trackingArea)
+        }
+
+        trackingArea = NSTrackingArea(rect: frame, options: [.mouseEnteredAndExited, .mouseMoved, .activeInActiveApp], owner: self, userInfo: nil)
+
+        addTrackingArea(trackingArea)
     }
 
     override func scrollWheel(with event: NSEvent) {
@@ -163,6 +186,12 @@ class PanView: NSView {
         pan = newPan
         zoom = newZoom
     }
+    
+    override func mouseMoved(with event: NSEvent) {
+        var p = convert(event.locationInWindow, from: nil)
+        p.y = frame.size.height - p.y
+        mousePosition = p
+    }
 
     weak var optionPanRecognizer: NSGestureRecognizer?
 }
@@ -183,12 +212,17 @@ extension PanView: NSGestureRecognizerDelegate {
     }
 }
 
+/// Handles gestures for changing the workspace view.
 struct WorkspaceView: NSViewRepresentable {
     @Binding var pan: CGSize
     @Binding var zoom: Double
+    
+    /// Current mouse position. Note that we can't get this from hovering
+    /// in SwiftUI. `onHover` doesn't provide a position.
+    @Binding var mousePosition: CGPoint
 
     func makeNSView(context: Context) -> NSView {
-        return PanView(pan: $pan, zoom: $zoom)
+        return PanView(pan: $pan, zoom: $zoom, mousePosition: $mousePosition)
     }
 
     func updateNSView(_: NSView, context _: Context) {
@@ -201,9 +235,10 @@ struct WorkspaceView: NSViewRepresentable {
 struct WorkspaceTestView: View {
     @State var pan: CGSize = .zero
     @State var zoom: Double = 0.0
+    @State var mousePosition: CGPoint = .zero
 
     var body: some View {
-        WorkspaceView(pan: $pan, zoom: $zoom)
+        WorkspaceView(pan: $pan, zoom: $zoom, mousePosition: $mousePosition)
     }
 }
 
