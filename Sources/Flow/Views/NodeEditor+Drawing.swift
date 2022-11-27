@@ -9,31 +9,7 @@ extension GraphicsContext {
         fill(dot, with: shading)
     }
 
-    func drawInputPort(
-        node: Node,
-        index: Int,
-        layout: LayoutConstants,
-        offset: CGSize,
-        portShading: GraphicsContext.Shading,
-        isConnected: Bool,
-        textCache: TextCache
-    ) {
-        let rect = node.inputRect(input: index, layout: layout).offset(by: offset)
-        let circle = Path(ellipseIn: rect)
-        let port = node.inputs[index]
-
-        fill(circle, with: portShading)
-
-        if !isConnected {
-            drawDot(in: rect, with: .color(.black))
-        }
-
-        draw(
-            textCache.text(string: port.name, font: layout.portNameFont, self),
-            at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
-            anchor: .leading
-        )
-    }
+    
 
     func strokeWire(
         from: CGPoint,
@@ -55,36 +31,66 @@ extension GraphicsContext {
             style: StrokeStyle(lineWidth: 2.0, lineCap: .round)
         )
     }
-
-    func drawOutputPort(
-        node: Node,
-        index: Int,
-        layout: LayoutConstants,
-        offset: CGSize,
-        portShading: GraphicsContext.Shading,
-        isConnected: Bool,
-        textCache: TextCache
-    ) {
-        let rect = node.outputRect(output: index, layout: layout).offset(by: offset)
-        let circle = Path(ellipseIn: rect)
-        let port = node.outputs[index]
-
-        fill(circle, with: portShading)
-
-        if !isConnected {
-            drawDot(in: rect, with: .color(.black))
-        }
-
-        draw(textCache.text(string: port.name, font: layout.portNameFont, self),
-             at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
-             anchor: .trailing)
-    }
 }
 
 extension NodeEditor {
     @inlinable @inline(__always)
     func color(for type: PortType, isOutput: Bool) -> Color {
         style.color(for: type, isOutput: isOutput) ?? .gray
+    }
+    
+    func drawInputPort(
+        cx: GraphicsContext,
+        node: Node,
+        index: Int,
+        offset: CGSize,
+        portShading: GraphicsContext.Shading,
+        isConnected: Bool
+    ) {
+        let rect = node.inputRect(input: index, layout: layout).offset(by: offset)
+        let circle = Path(ellipseIn: rect)
+        let port = node.inputs[index]
+
+        cx.fill(circle, with: portShading)
+
+        if !isConnected {
+            cx.drawDot(in: rect, with: .color(.black))
+        } else if rect.contains(toLocal(mousePosition)) {
+            cx.stroke(circle, with: .color(.white), style: .init(lineWidth: 1.0))
+        }
+
+        cx.draw(
+            textCache.text(string: port.name, font: layout.portNameFont, cx),
+            at: rect.center + CGSize(width: layout.portSize.width / 2 + layout.portSpacing, height: 0),
+            anchor: .leading
+        )
+    }
+    
+    func drawOutputPort(
+        cx: GraphicsContext,
+        node: Node,
+        index: Int,
+        offset: CGSize,
+        portShading: GraphicsContext.Shading,
+        isConnected: Bool
+    ) {
+        let rect = node.outputRect(output: index, layout: layout).offset(by: offset)
+        let circle = Path(ellipseIn: rect)
+        let port = node.outputs[index]
+
+        cx.fill(circle, with: portShading)
+
+        if !isConnected {
+            cx.drawDot(in: rect, with: .color(.black))
+        }
+        
+        if rect.contains(toLocal(mousePosition)) {
+            cx.stroke(circle, with: .color(.white), style: .init(lineWidth: 1.0))
+        }
+
+        cx.draw(textCache.text(string: port.name, font: layout.portNameFont, cx),
+             at: rect.center + CGSize(width: -(layout.portSize.width / 2 + layout.portSpacing), height: 0),
+             anchor: .trailing)
     }
 
     func inputShading(_ type: PortType,  _ colors: inout [PortType: GraphicsContext.Shading], _ cx: GraphicsContext) -> GraphicsContext.Shading {
@@ -156,32 +162,34 @@ extension NodeEditor {
             titleBar.closeSubpath()
             
             cx.fill(titleBar, with: .color(node.titleBarColor))
+            
+            if rect.contains(toLocal(mousePosition)) {
+                cx.stroke(bg, with: .color(.white), style: .init(lineWidth: 1.0))
+            }
 
             cx.draw(textCache.text(string: node.name, font: layout.nodeTitleFont, cx),
                     at: pos + CGSize(width: rect.size.width / 2, height: layout.nodeTitleHeight / 2),
                     anchor: .center)
 
             for (i, input) in node.inputs.enumerated() {
-                cx.drawInputPort(
+                drawInputPort(
+                    cx: cx,
                     node: node,
                     index: i,
-                    layout: layout,
                     offset: offset,
                     portShading: inputShading(input.type, &resolvedInputColors, cx),
-                    isConnected: connectedInputs.contains(InputID(nodeIndex, i)),
-                    textCache: textCache
+                    isConnected: connectedInputs.contains(InputID(nodeIndex, i))
                 )
             }
 
             for (i, output) in node.outputs.enumerated() {
-                cx.drawOutputPort(
+                drawOutputPort(
+                    cx: cx,
                     node: node,
                     index: i,
-                    layout: layout,
                     offset: offset,
                     portShading: outputShading(output.type, &resolvedOutputColors, cx),
-                    isConnected: connectedOutputs.contains(OutputID(nodeIndex, i)),
-                    textCache: textCache
+                    isConnected: connectedOutputs.contains(OutputID(nodeIndex, i))
                 )
             }
         }

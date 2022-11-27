@@ -68,6 +68,7 @@ public struct NodeEditor: View {
 
     @State var pan: CGSize = .zero
     @State var zoom: Double = 1
+    @State var mousePosition: CGPoint = CGPoint(x: CGFloat.infinity, y: CGFloat.infinity)
 
     public var body: some View {
         ZStack {
@@ -84,7 +85,7 @@ public struct NodeEditor: View {
                 self.drawDraggedWire(cx: cx)
                 self.drawSelectionRect(cx: cx)
             }
-            WorkspaceView(pan: $pan, zoom: $zoom)
+            WorkspaceView(pan: $pan, zoom: $zoom, mousePosition: $mousePosition)
                 #if os(macOS)
                 .gesture(commandGesture)
                 #endif
