@@ -132,7 +132,7 @@ extension NodeEditor {
                             connect(OutputID(nodeIndex, portIndex), to: input)
                         }
                     case let .input(nodeIndex, portIndex):
-                        let type = patch.nodes[nodeIndex].outputs[portIndex].type
+                        let type = patch.nodes[nodeIndex].inputs[portIndex].type
                         // Is a wire attached to the input?
                         if let attachedWire = attachedWire(inputID: InputID(nodeIndex, portIndex)) {
                             patch.wires.remove(attachedWire)
