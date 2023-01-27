@@ -43,7 +43,15 @@ struct ContentView: View {
     @State var patch = simplePatch()
     @State var selection = Set<NodeIndex>()
 
+    func addNode() {
+        let newNode = Node(name: "processor", titleBarColor: Color.red, inputs: ["in"], outputs: ["out"])
+        patch.nodes.append(newNode)
+    }
+
     var body: some View {
-        NodeEditor(patch: $patch, selection: $selection)
+        ZStack(alignment: .topTrailing) {
+            NodeEditor(patch: $patch, selection: $selection)
+            Button("Add Node", action: addNode).padding()
+        }
     }
 }
