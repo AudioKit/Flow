@@ -84,11 +84,14 @@ extension WorkspaceView.Coordinator: UIGestureRecognizerDelegate {
 #else
 
 class PanView: NSView {
+    private static let defaultPanSpeed = 5.0
+    
     @Binding var pan: CGSize
     @Binding var zoom: Double
     @Binding var mousePosition: CGPoint
     
     var trackingArea: NSTrackingArea!
+    private var panSpeed = PanView.defaultPanSpeed
 
     init(pan: Binding<CGSize>, zoom: Binding<Double>, mousePosition: Binding<CGPoint>) {
         _pan = pan
@@ -149,7 +152,12 @@ class PanView: NSView {
             zoom(at: p, scale: scale)
 
         } else {
-            let panSpeed = 5.0
+            if event.momentumPhase == .changed {
+                panSpeed *= 0.95
+            } else {
+                panSpeed = PanView.defaultPanSpeed
+            }
+            
             pan.width += panSpeed * event.deltaX / zoom
             pan.height += panSpeed * event.deltaY / zoom
         }
