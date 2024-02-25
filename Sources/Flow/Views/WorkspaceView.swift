@@ -5,7 +5,7 @@ import SwiftUI
 /// Provides pan and zoom gestures. Unfortunately it seems this
 /// can't be accomplished using purely SwiftUI because MagnificationGesture
 /// doesn't provide a center point.
-#if os(iOS)
+#if os(iOS) || os(visionOS)
 struct WorkspaceView: UIViewRepresentable {
     @Binding var pan: CGSize
     @Binding var zoom: Double
