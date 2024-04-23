@@ -21,6 +21,7 @@ jobs:
     name: Build ${{ matrix.scheme }} (Xcode ${{ matrix.xcode_version }})
     # NOTE: macos-latest is NOT equivalent to macos-12 as of September 2022.
     # Source: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
+    runs-on: macos-13
     needs: [swift_test]
     strategy:
       # Setting 'fail-fast' to 'true' implies the build will fail the first time it encounters an error.
