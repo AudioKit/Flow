@@ -19,25 +19,14 @@ jobs:
 
   # Build the demo projects.
   build_demo:
-    name: Build ${{ matrix.scheme }} (Xcode ${{ matrix.xcode_version }})
-    # NOTE: macos-latest is NOT equivalent to macos-12 as of September 2022.
-    # Source: https://docs.github.com/en/actions/using-github-hosted-runners/about-github-hosted-runners#supported-runners-and-hardware-resources
-    runs-on: macos-13
+    name: Build Demo
+    runs-on: macos-latest
     needs: [swift_test]
-    strategy:
-      # Setting 'fail-fast' to 'true' implies the build will fail the first time it encounters an error.
-      fail-fast: true
-      matrix:
-        scheme:
-          - FlowDemo (iOS)
-          - FlowDemo (macOS)
     steps:
+      - name: Check out Flow
+        uses: actions/checkout@v4
       - name: Build Demo
-        uses: AudioKit/ci/.github/actions/build-demo@main
-        with:
-          project: Demo/FlowDemo.xcodeproj
-          scheme: ${{ matrix.scheme }}
-          xcode_version: ${{ matrix.xcode_version }}
+      - run: xcodebuild build -project Demo/FlowDemo.xcodeproj -scheme FlowDemo -destination "name=My Mac"
 
   # Send notification to Discord on failure.
   send_notification:
