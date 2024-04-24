@@ -26,7 +26,7 @@ jobs:
       - name: Check out Flow
         uses: actions/checkout@v4
       - name: Build Demo
-      - run: xcodebuild build -project Demo/FlowDemo.xcodeproj -scheme FlowDemo -destination "name=My Mac"
+        run: xcodebuild build -project Demo/FlowDemo.xcodeproj -scheme FlowDemo -destination "name=My Mac"
 
   # Send notification to Discord on failure.
   send_notification:
