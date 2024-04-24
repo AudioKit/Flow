@@ -8,13 +8,14 @@ on:
     branches: [main]
 
 jobs:
-  # Run swift test across all applicable platforms and versions.
   swift_test:
     name: Test
-    uses: AudioKit/ci/.github/workflows/swift_test.yml@main
-    with:
-      scheme: Flow
-      platforms: iOS macOS
+    runs-on: macos-latest
+    steps:
+      - name: Check out Flow
+        uses: actions/checkout@v4
+      - name: Test Flow
+        run: swift test -c release
 
   # Build the demo projects.
   build_demo:
